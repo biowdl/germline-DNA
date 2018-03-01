@@ -38,13 +38,26 @@ workflow library {
             outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".bam"
     }
 
+    call samtools.Markdup as markdup {
+        input:
+            inputBam = bamMerge.outputBam,
+            outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bam"
+    }
+
     call samtools.Index as samtoolsIndex {
         input:
-            bamFilePath = bamMerge.outputBam
+            bamFilePath = markdup.outputBam
+    }
+
+    #TODO: replace by bammetrics sub workflow
+    call samtools.Flagstat as flagstat {
+        input:
+            inputBam = markdup.outputBam,
+            outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".flagstat"
     }
 
     output {
-        File bamFile = bamMerge.outputBam
+        File bamFile = markdup.outputBam
         File bamIndexFile = samtoolsIndex.indexFile
     }
 }
