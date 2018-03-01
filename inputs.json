@@ -6,5 +6,6 @@
     "cutadapt": "export PATH=/home/pjvan_thof/test/cutadapt/bin:$PATH"
   },
   "pipeline.sample.library.readgroup.qc.extractAdaptersFastqcJar": "ExtractAdaptersFastqc-assembly-0.2.jar",
-  "pipeline.downloadSampleConfig.inputJar": "/home/pjvan_thof/src/wdl-multisample/SampleConfig-assembly-0.1.jar"
+  "pipeline.downloadSampleConfig.inputJar": "/home/pjvan_thof/src/wdl-multisample/SampleConfig-assembly-0.1.jar",
+  "pipeline.sample.library.readgroup.mapping.referenceFasta": "/exports/sasc/testing/fixtures/reference/bwa/reference.fasta"
 }

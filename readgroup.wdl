@@ -1,5 +1,6 @@
 import "sampleConfig.wdl" as sampleConfig
 import "QC-wdl/QC.wdl" as QC
+import "wdl-mapping/wdl-mapping.wdl" as wdlMapping
 
 workflow readgroup {
     Array[File] sampleConfigs
@@ -26,24 +27,19 @@ workflow readgroup {
             read2 = config.values.R2
     }
 
-    call bla {
+    call wdlMapping.Mapping as mapping {
         input:
-            R1 = config.values.R1,
-            R2 = config.values.R2
-
+            inputR1 = config.values.R1,
+            inputR2 = config.values.R2,
+            outputDir = outputDir + "/mapping",
+            sample = sampleId,
+            library = libraryId,
+            readgroup = readgroupId
     }
 
     output {
         File inputR1 = config.values.R1
         File inputR2 = config.values.R2
-    }
-
-}
-
-task bla {
-    File R1
-    File R2
-    command {
-        echo ${R1} ${R2}
+        File bamFile = mapping.bamFile
     }
 }

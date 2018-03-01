@@ -4,3 +4,6 @@
 [submodule "wdl-tasks"]
 	path = wdl-tasks
 	url = https://git.lumc.nl/sasc/wdl-tasks.git
+[submodule "wdl-mapping"]
+	path = wdl-mapping
+	url = https://github.com/ffinfo/wdl-mapping.git
