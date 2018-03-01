@@ -10,7 +10,8 @@ workflow readgroup {
     String sampleId
     File sampleConfigJar
     String outputDir
-    Int? numberChunks = size(config.values.R1) / 1000000
+    #Only at 5gb or more chunking is activated
+    Int? numberChunks = size(config.values.R1) / 5000000000
 
     call sampleConfig.SampleConfig as config {
         input:
