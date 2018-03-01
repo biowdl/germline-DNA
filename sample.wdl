@@ -22,7 +22,7 @@ workflow sample {
                 input:
                     outputDir = outputDir + "/lib_" + lb,
                     sampleConfigJar = sampleConfigJar,
-                    sampleConfigs = sampleConfigs,
+                    sampleConfigs = select_all(librariesConfigs.jsonOutput),
                     libraryId = lb,
                     sampleId = sampleId
             }
