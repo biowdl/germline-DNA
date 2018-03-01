@@ -10,7 +10,7 @@ workflow readgroup {
     String sampleId
     File sampleConfigJar
     String outputDir
-    Int numberChunks = 1
+    Int? numberChunks = size(config.values.R1) / 1000000
 
     call sampleConfig.SampleConfig as config {
         input:
