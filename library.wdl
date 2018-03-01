@@ -9,7 +9,7 @@ workflow library {
     File sampleConfigJar
     String outputDir
 
-    call sampleConfig.SampleConfig as readgroups {
+    call sampleConfig.SampleConfig as readgroupConfigs {
         input:
             jar = sampleConfigJar,
             inputFiles = sampleConfigs,
@@ -18,7 +18,7 @@ workflow library {
             tsvOutputPath = "samples/" + sampleId + "/libs/" + libraryId + "/" + libraryId + ".config.tsv"
     }
 
-    scatter (rg in readgroups.keys) {
+    scatter (rg in readgroupConfigs.keys) {
         if (rg != "") {
             call readgroup.readgroup as readgroup {
                 input:
@@ -57,6 +57,7 @@ workflow library {
     }
 
     output {
+        Array[String] readgroups = readgroupConfigs.keys
         File bamFile = markdup.outputBam
         File bamIndexFile = samtoolsIndex.indexFile
     }

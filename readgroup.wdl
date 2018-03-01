@@ -1,6 +1,7 @@
 import "sampleConfig.wdl" as sampleConfig
 import "QC-wdl/QC.wdl" as QC
 import "wdl-mapping/wdl-mapping.wdl" as wdlMapping
+import "wdl-tasks/fastqsplitter.wdl" as fastqsplitter
 
 workflow readgroup {
     Array[File] sampleConfigs
@@ -9,6 +10,7 @@ workflow readgroup {
     String sampleId
     File sampleConfigJar
     String outputDir
+    Int numberChunks = 1
 
     call sampleConfig.SampleConfig as config {
         input:
@@ -20,27 +22,43 @@ workflow readgroup {
             tsvOutputPath = "samples/" + sampleId + "/libs/" + libraryId + "/readgroups/" + readgroupId + "/" + readgroupId + ".config.tsv"
     }
 
-    call QC.QC as qc {
+    call fastqsplitter.FastqSplitter as fastqsplitterR1 {
         input:
-            outputDir = outputDir + "/qc",
-            read1 = config.values.R1,
-            read2 = config.values.R2
+            inputFastq = config.values.R1,
+            outputPath = outputDir,
+            numberChunks = numberChunks
     }
 
-    call wdlMapping.Mapping as mapping {
+    call fastqsplitter.FastqSplitter as fastqsplitterR2 {
         input:
-            inputR1 = config.values.R1,
-            inputR2 = config.values.R2,
-            outputDir = outputDir + "/mapping",
-            sample = sampleId,
-            library = libraryId,
-            readgroup = readgroupId
+            inputFastq = config.values.R2,
+            outputPath = outputDir,
+            numberChunks = numberChunks
+    }
+
+    scatter (pair in zip(fastqsplitterR1.outputFastqFiles, fastqsplitterR1.outputFastqFiles)) {
+        call QC.QC as qc {
+            input:
+                outputDir = outputDir + "/qc",
+                read1 = pair.left,
+                read2 = pair.right
+        }
+
+        call wdlMapping.Mapping as mapping {
+            input:
+                inputR1 = qc.read1afterQC,
+                inputR2 = qc.read2afterQC,
+                outputDir = outputDir,
+                sample = sampleId,
+                library = libraryId,
+                readgroup = readgroupId
+        }
     }
 
     output {
         File inputR1 = config.values.R1
         File inputR2 = config.values.R2
-        File bamFile = mapping.bamFile
-        File bamIndexFile = mapping.bamIndexFile
+        Array[File] bamFile = mapping.bamFile
+        Array[File] bamIndexFile = mapping.bamIndexFile
     }
 }
