@@ -1,7 +1,3 @@
 {
-  "pipeline.sampleConfigs": ["samples.yml"],
-  "pipeline.samplesConfigs.jar_": "SampleConfig-assembly-0.1.jar",
-  "pipeline.sample.librariesConfigs.jar_": "SampleConfig-assembly-0.1.jar",
-  "pipeline.sample.library.readgroups.jar_": "SampleConfig-assembly-0.1.jar",
-  "pipeline.sample.library.readgroup.config.jar_": "SampleConfig-assembly-0.1.jar"
+  "pipeline.sampleConfigs": ["samples.yml"]
 }

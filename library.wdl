@@ -5,9 +5,11 @@ workflow library {
     Array[File] sampleConfigs
     String sampleId
     String libraryId
+    File sampleConfigJar
 
     call sampleConfig.SampleConfig as readgroups {
         input:
+            jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             library = libraryId,
@@ -18,6 +20,7 @@ workflow library {
         if (rg != "") {
             call readgroup.readgroup {
                 input:
+                    sampleConfigJar = sampleConfigJar,
                     sampleConfigs = sampleConfigs,
                     readgroupId = rg,
                     libraryId = libraryId,

@@ -5,9 +5,11 @@ workflow readgroup {
     String readgroupId
     String libraryId
     String sampleId
+    File sampleConfigJar
 
     call sampleConfig.SampleConfig as config {
         input:
+            jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             library = libraryId,

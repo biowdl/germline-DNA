@@ -15,6 +15,7 @@ workflow pipeline {
     scatter (sm in samplesConfigs.keys) {
         call sample.sample {
             input:
+                sampleConfigJar = downloadSampleConfig.jar,
                 sampleConfigs = sampleConfigs,
                 sampleId = sm
         }

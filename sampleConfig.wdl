@@ -27,13 +27,14 @@ task SampleConfig {
 }
 
 task DownloadSampleConfig {
+    File? inputJar
     String? version = "0.1"
 
     command {
-        wget https://github.com/biopet/sampleconfig/releases/download/v${version}/SampleConfig-assembly-${version}.jar
+        ${if defined(inputJar) then "echo ${inputJar}" else "wget https://github.com/biopet/sampleconfig/releases/download/v${version}/SampleConfig-assembly-${version}.jar"}
     }
 
     output {
-        File jar = "SampleConfig-assembly-" + version + ".jar"
+        File jar = if defined(inputJar) then select_first(inputJar) else ("SampleConfig-assembly-" + version + ".jar")
     }
 }

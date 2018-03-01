@@ -4,9 +4,11 @@ import "sampleConfig.wdl" as sampleConfig
 workflow sample {
     Array[File] sampleConfigs
     String sampleId
+    File sampleConfigJar
 
     call sampleConfig.SampleConfig as librariesConfigs {
         input:
+            jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             jsonOutputPath = "samples/" + sampleId + "/" + sampleId + ".config.json",
@@ -17,6 +19,7 @@ workflow sample {
         if (lb != "") {
             call library.library {
                 input:
+                    sampleConfigJar = sampleConfigJar,
                     sampleConfigs = sampleConfigs,
                     libraryId = lb,
                     sampleId = sampleId
