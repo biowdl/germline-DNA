@@ -6,6 +6,7 @@ workflow library {
     String sampleId
     String libraryId
     File sampleConfigJar
+    String outputDir
 
     call sampleConfig.SampleConfig as readgroups {
         input:
@@ -20,6 +21,7 @@ workflow library {
         if (rg != "") {
             call readgroup.readgroup {
                 input:
+                    outputDir = outputDir + "/rg_" + rg,
                     sampleConfigJar = sampleConfigJar,
                     sampleConfigs = sampleConfigs,
                     readgroupId = rg,

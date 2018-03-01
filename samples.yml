@@ -23,12 +23,12 @@ samples:
       lib1:
         readgroups:
           rg1:
-            R1: R1.fq
-            R2: R2.fq
+            R1: R1.fq.gz
+            R2: R2.fq.gz
   sample2:
     libraries:
       lib1:
         readgroups:
           rg1:
-            R1: R1.fq
-            R2: R2.fq
+            R1: R1.fq.gz
+            R2: R2.fq.gz

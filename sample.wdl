@@ -5,6 +5,7 @@ workflow sample {
     Array[File] sampleConfigs
     String sampleId
     File sampleConfigJar
+    String outputDir
 
     call sampleConfig.SampleConfig as librariesConfigs {
         input:
@@ -19,6 +20,7 @@ workflow sample {
         if (lb != "") {
             call library.library {
                 input:
+                    outputDir = outputDir + "/lib_" + lb,
                     sampleConfigJar = sampleConfigJar,
                     sampleConfigs = sampleConfigs,
                     libraryId = lb,

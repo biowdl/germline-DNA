@@ -35,6 +35,6 @@ task DownloadSampleConfig {
     }
 
     output {
-        File jar = if defined(inputJar) then select_first(inputJar) else ("SampleConfig-assembly-" + version + ".jar")
+        File jar = if defined(inputJar) then select_first([inputJar]) else ("SampleConfig-assembly-" + version + ".jar")
     }
 }

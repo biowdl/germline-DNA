@@ -2,3 +2,4 @@
 *.jar
 cromwell-executions/
 cromwell-workflow-logs/
+output/

@@ -1,3 +1,10 @@
 {
-  "pipeline.sampleConfigs": ["samples.yml"]
+  "pipeline.sampleConfigs": ["samples.yml"],
+  "pipeline.outputDir": "/home/pjvan_thof/src/wdl-multisample/output",
+  "pipeline.sample.library.readgroup.qc.preCommands": {
+    "fastqc": "export PATH=/home/pjvan_thof/test/FastQC:$PATH",
+    "cutadapt": "export PATH=/home/pjvan_thof/test/cutadapt/bin:$PATH"
+  },
+  "pipeline.sample.library.readgroup.qc.extractAdaptersFastqcJar": "ExtractAdaptersFastqc-assembly-0.2.jar",
+  "pipeline.downloadSampleConfig.inputJar": "/home/pjvan_thof/src/wdl-multisample/SampleConfig-assembly-0.1.jar"
 }

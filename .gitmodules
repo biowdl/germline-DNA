@@ -1,0 +1,6 @@
+[submodule "QC-wdl"]
+	path = QC-wdl
+	url = https://git.lumc.nl/sasc/QC-wdl.git
+[submodule "wdl-tasks"]
+	path = wdl-tasks
+	url = https://git.lumc.nl/sasc/wdl-tasks.git
