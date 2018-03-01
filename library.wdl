@@ -15,7 +15,7 @@ workflow library {
             inputFiles = sampleConfigs,
             sample = sampleId,
             library = libraryId,
-            tsvOutputPath = "samples/" + sampleId + "/libs/" + libraryId + "/" + libraryId + ".config.tsv"
+            tsvOutputPath = libraryId + ".config.tsv"
     }
 
     scatter (rg in readgroupConfigs.keys) {

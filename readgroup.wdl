@@ -20,7 +20,7 @@ workflow readgroup {
             sample = sampleId,
             library = libraryId,
             readgroup = readgroupId,
-            tsvOutputPath = "samples/" + sampleId + "/libs/" + libraryId + "/readgroups/" + readgroupId + "/" + readgroupId + ".config.tsv"
+            tsvOutputPath = readgroupId + ".config.tsv"
     }
 
     call fastqsplitter.FastqSplitter as fastqsplitterR1 {

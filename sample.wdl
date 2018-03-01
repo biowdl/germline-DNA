@@ -12,8 +12,8 @@ workflow sample {
             jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
-            jsonOutputPath = "samples/" + sampleId + "/" + sampleId + ".config.json",
-            tsvOutputPath = "samples/" + sampleId + "/" + sampleId + ".config.tsv"
+            jsonOutputPath = sampleId + ".config.json",
+            tsvOutputPath = sampleId + ".config.tsv"
     }
 
     scatter (lb in librariesConfigs.keys) {
