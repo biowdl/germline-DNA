@@ -39,7 +39,7 @@ workflow readgroup {
     scatter (pair in zip(fastqsplitterR1.outputFastqFiles, fastqsplitterR1.outputFastqFiles)) {
         call QC.QC as qc {
             input:
-                outputDir = outputDir + "/qc",
+                outputDir = dirname(pair.left),
                 read1 = pair.left,
                 read2 = pair.right
         }
@@ -48,7 +48,7 @@ workflow readgroup {
             input:
                 inputR1 = qc.read1afterQC,
                 inputR2 = qc.read2afterQC,
-                outputDir = outputDir,
+                outputDir = dirname(pair.left),
                 sample = sampleId,
                 library = libraryId,
                 readgroup = readgroupId

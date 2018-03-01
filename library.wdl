@@ -34,7 +34,7 @@ workflow library {
 
     call samtools.Merge as bamMerge {
         input:
-            bamFiles = select_all(readgroup.bamFile),
+            bamFiles = flatten(select_all(readgroup.bamFile)),
             outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".bam"
     }
 
