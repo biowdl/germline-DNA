@@ -41,5 +41,6 @@ workflow readgroup {
         File inputR1 = config.values.R1
         File inputR2 = config.values.R2
         File bamFile = mapping.bamFile
+        File bamIndexFile = mapping.bamIndexFile
     }
 }
