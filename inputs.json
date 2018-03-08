@@ -1,6 +1,7 @@
 {
   "pipeline.sampleConfigs": ["samples.yml"],
   "pipeline.outputDir": "/home/pjvan_thof/src/wdl-multisample/output",
+  "pipeline.sample.library.readgroup.qc.fastqcRead1.getFastqcConfiguration": "export PATH=/home/pjvan_thof/test/FastQC:$PATH",
   "pipeline.sample.library.readgroup.qc.fastqcRead1.preCommand": "export PATH=/home/pjvan_thof/test/FastQC:$PATH",
   "pipeline.sample.library.readgroup.qc.fastqcRead2.preCommand": "export PATH=/home/pjvan_thof/test/FastQC:$PATH",
   "pipeline.sample.library.readgroup.qc.cutadapt.preCommand": "export PATH=/home/pjvan_thof/test/cutadapt/bin:$PATH",
