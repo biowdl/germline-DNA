@@ -47,13 +47,13 @@ workflow library {
     #TODO: replace by bammetrics sub workflow
     call samtools.Flagstat as flagstat {
         input:
-            inputBam = markdup.outputBam,
+            inputBam = markdup.output_bam,
             outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".flagstat"
     }
 
     call bqsr.BaseRecalibration as bqsr {
         input:
-            bamFile = markdup.outputBam,
+            bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
             outputBamPath = sub(markdup.outputBam, ".bam$", ".bqsr.bam"),
             ref_fasta = ref_fasta,
@@ -63,7 +63,7 @@ workflow library {
 
     output {
         Array[String] readgroups = readgroupConfigs.keys
-        File bamFile = markdup.outputBam
+        File bamFile = markdup.output_bam
         File bamIndexFile = markdup.output_bam_index
         File bqsrBamFile = bqsr.outputBamFile
         File bqsrBamIndexFile = bqsr.outputBamIndex
