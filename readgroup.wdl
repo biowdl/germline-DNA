@@ -1,7 +1,6 @@
-import "sampleConfig.wdl" as sampleConfig
 import "QC-wdl/QC.wdl" as QC
 import "wdl-mapping/wdl-mapping.wdl" as wdlMapping
-import "wdl-tasks/fastqsplitter.wdl" as fastqsplitter
+import "wdl-tasks/biopet.wdl" as biopet
 
 workflow readgroup {
     Array[File] sampleConfigs
@@ -10,12 +9,11 @@ workflow readgroup {
     String sampleId
     File sampleConfigJar
     String outputDir
-    #Only at 5gb or more chunking is activated
-    Int? numberChunks = size(config.values.R1) / 5000000000
+    Int numberChunks
 
-    call sampleConfig.SampleConfig as config {
+    call biopet.SampleConfig as config {
         input:
-            jar = sampleConfigJar,
+            tool_jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             library = libraryId,
@@ -23,14 +21,14 @@ workflow readgroup {
             tsvOutputPath = readgroupId + ".config.tsv"
     }
 
-    call fastqsplitter.FastqSplitter as fastqsplitterR1 {
+    call biopet.FastqSplitter as fastqsplitterR1 {
         input:
             inputFastq = config.values.R1,
             outputPath = outputDir,
             numberChunks = numberChunks
     }
 
-    call fastqsplitter.FastqSplitter as fastqsplitterR2 {
+    call biopet.FastqSplitter as fastqsplitterR2 {
         input:
             inputFastq = config.values.R2,
             outputPath = outputDir,

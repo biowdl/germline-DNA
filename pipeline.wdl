@@ -1,18 +1,21 @@
 import "sample.wdl" as sample
-import "sampleConfig.wdl" as sampleConfig
+import "wdl-tasks/biopet.wdl" as biopet
 
 workflow pipeline {
     Array[File] sampleConfigs
     String outputDir
+    File ref_fasta
+    File ref_dict
+    File ref_fasta_index
 
     # Downloading jar for sample parsing if 'pipeline.downloadSampleConfig.inputJar' is not set
-    call sampleConfig.DownloadSampleConfig as downloadSampleConfig
+    call biopet.DownloadSampleConfig as downloadSampleConfig
 
     #  Reading the samples from the sample config files
-    call sampleConfig.SampleConfig as samplesConfigs {
+    call biopet.SampleConfig as samplesConfigs {
         input:
             inputFiles = sampleConfigs,
-            jar = downloadSampleConfig.jar
+            tool_jar = downloadSampleConfig.jar
     }
 
     # Running sample subworkflow
@@ -22,7 +25,10 @@ workflow pipeline {
                 outputDir = outputDir + "/samples/" + sm,
                 sampleConfigJar = downloadSampleConfig.jar,
                 sampleConfigs = sampleConfigs,
-                sampleId = sm
+                sampleId = sm,
+                ref_fasta = ref_fasta,
+                ref_dict = ref_dict,
+                ref_fasta_index = ref_fasta_index
         }
     }
 

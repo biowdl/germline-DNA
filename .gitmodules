@@ -7,3 +7,6 @@
 [submodule "wdl-mapping"]
 	path = wdl-mapping
 	url = https://github.com/ffinfo/wdl-mapping.git
+[submodule "wdl-bqsr"]
+	path = wdl-bqsr
+	url = https://github.com/ffinfo/wdl-bqsr.git

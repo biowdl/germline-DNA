@@ -1,6 +1,7 @@
 import "readgroup.wdl" as readgroup
-import "sampleConfig.wdl" as sampleConfig
+import "wdl-tasks/biopet.wdl" as biopet
 import "wdl-tasks/samtools.wdl" as samtools
+import "wdl-bqsr/bqsr.wdl" as bqsr
 
 workflow library {
     Array[File] sampleConfigs
@@ -8,10 +9,13 @@ workflow library {
     String libraryId
     File sampleConfigJar
     String outputDir
+    File ref_fasta
+    File ref_dict
+    File ref_fasta_index
 
-    call sampleConfig.SampleConfig as readgroupConfigs {
+    call biopet.SampleConfig as readgroupConfigs {
         input:
-            jar = sampleConfigJar,
+            tool_jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             library = libraryId,
@@ -56,9 +60,21 @@ workflow library {
             outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".flagstat"
     }
 
+    call bqsr.BaseRecalibration as bqsr {
+        input:
+            bamFile = markdup.outputBam,
+            bamIndex = samtoolsIndex.indexFile,
+            outputBamPath = sub(markdup.outputBam, ".bam$", ".bqsr.bam"),
+            ref_fasta = ref_fasta,
+            ref_dict = ref_dict,
+            ref_fasta_index = ref_fasta_index
+    }
+
     output {
         Array[String] readgroups = readgroupConfigs.keys
         File bamFile = markdup.outputBam
         File bamIndexFile = samtoolsIndex.indexFile
+        File bqsrBamFile = bqsr.outputBamFile
+        File bqsrBamIndexFile = bqsr.outputBamIndex
     }
 }

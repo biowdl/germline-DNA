@@ -7,5 +7,18 @@
   },
   "pipeline.sample.library.readgroup.qc.extractAdaptersFastqcJar": "ExtractAdaptersFastqc-assembly-0.2.jar",
   "pipeline.downloadSampleConfig.inputJar": "/home/pjvan_thof/src/wdl-multisample/SampleConfig-assembly-0.1.jar",
-  "pipeline.sample.library.readgroup.mapping.referenceFasta": "/exports/sasc/testing/fixtures/reference/bwa/reference.fasta"
+  "pipeline.sample.library.readgroup.mapping.bwaMem.referenceFasta": "/exports/sasc/testing/fixtures/reference/bwa/reference.fasta",
+  "pipeline.ref_dict": "/exports/sasc/testing/fixtures/reference/bwa/reference.dict",
+  "pipeline.ref_fasta": "/exports/sasc/testing/fixtures/reference/bwa/reference.fasta",
+  "pipeline.ref_fasta_index": "/exports/sasc/testing/fixtures/reference/bwa/reference.fasta.fai",
+  "pipeline.sample.library.readgroup.numberChunks": 1,
+  "pipeline.sample.library.bqsr.baseRecalibrator.known_indels_sites_indices": [],
+  "pipeline.sample.library.bqsr.baseRecalibrator.known_indels_sites_VCFs": [],
+  "pipeline.sample.library.bqsr.applyBqsr.gatk_jar": "/usr/local/sasc/programs/gatk/gatk-4.0.2.1/gatk-package-4.0.2.1-local.jar",
+  "pipeline.sample.library.bqsr.baseRecalibrator.gatk_jar": "/usr/local/sasc/programs/gatk/gatk-4.0.2.1/gatk-package-4.0.2.1-local.jar",
+  "pipeline.sample.library.bqsr.gatherBqsr.gatk_jar": "/usr/local/sasc/programs/gatk/gatk-4.0.2.1/gatk-package-4.0.2.1-local.jar",
+  "pipeline.sample.library.readgroup.fastqsplitterR1.tool_jar": "FastqSplitter-assembly-0.1.jar",
+  "pipeline.sample.library.readgroup.fastqsplitterR2.tool_jar": "FastqSplitter-assembly-0.1.jar",
+  "pipeline.sample.library.bqsr.gatherBamFiles.picard_jar": "/usr/local/sasc/programs/picard-tools/picard-tools-2.15.0/picard.jar",
+  "pipeline.sample.library.bqsr.scatterList.tool_jar": "ScatterRegions-assembly-0.1-SNAPSHOT.jar"
 }

@@ -1,15 +1,18 @@
 import "library.wdl" as library
-import "sampleConfig.wdl" as sampleConfig
+import "wdl-tasks/biopet.wdl" as biopet
 
 workflow sample {
     Array[File] sampleConfigs
     String sampleId
     File sampleConfigJar
     String outputDir
+    File ref_fasta
+    File ref_dict
+    File ref_fasta_index
 
-    call sampleConfig.SampleConfig as librariesConfigs {
+    call biopet.SampleConfig as librariesConfigs {
         input:
-            jar = sampleConfigJar,
+            tool_jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             jsonOutputPath = sampleId + ".config.json",
@@ -22,9 +25,12 @@ workflow sample {
                 input:
                     outputDir = outputDir + "/lib_" + lb,
                     sampleConfigJar = sampleConfigJar,
-                    sampleConfigs = select_all(librariesConfigs.jsonOutput),
+                    sampleConfigs = [librariesConfigs.jsonOutput],
                     libraryId = lb,
-                    sampleId = sampleId
+                    sampleId = sampleId,
+                    ref_fasta = ref_fasta,
+                    ref_dict = ref_dict,
+                    ref_fasta_index = ref_fasta_index
             }
         }
     }
