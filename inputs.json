@@ -20,5 +20,6 @@
   "pipeline.sample.library.readgroup.fastqsplitterR1.tool_jar": "FastqSplitter-assembly-0.1.jar",
   "pipeline.sample.library.readgroup.fastqsplitterR2.tool_jar": "FastqSplitter-assembly-0.1.jar",
   "pipeline.sample.library.bqsr.gatherBamFiles.picard_jar": "/usr/local/sasc/programs/picard-tools/picard-tools-2.15.0/picard.jar",
+  "pipeline.sample.library.markdup.picard_jar": "/usr/local/sasc/programs/picard-tools/picard-tools-2.15.0/picard.jar",
   "pipeline.sample.library.bqsr.scatterList.tool_jar": "ScatterRegions-assembly-0.1-SNAPSHOT.jar"
 }
