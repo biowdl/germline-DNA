@@ -1,5 +1,6 @@
 import "readgroup.wdl" as readgroup
 import "wdl-tasks/biopet.wdl" as biopet
+import "wdl-tasks/picard.wdl" as picard
 import "wdl-tasks/samtools.wdl" as samtools
 import "wdl-bqsr/bqsr.wdl" as bqsr
 
@@ -36,21 +37,11 @@ workflow library {
         }
     }
 
-    call samtools.Merge as bamMerge {
+    call picard.MarkDuplicates as markdup {
         input:
-            bamFiles = flatten(select_all(readgroup.bamFile)),
-            outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".bam"
-    }
-
-    call samtools.Markdup as markdup {
-        input:
-            inputBam = bamMerge.outputBam,
-            outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bam"
-    }
-
-    call samtools.Index as samtoolsIndex {
-        input:
-            bamFilePath = markdup.outputBam
+            input_bams = flatten(select_all(readgroup.bamFile)),
+            outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bam",
+            metrics_path = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.metrics"
     }
 
     #TODO: replace by bammetrics sub workflow
@@ -63,7 +54,7 @@ workflow library {
     call bqsr.BaseRecalibration as bqsr {
         input:
             bamFile = markdup.outputBam,
-            bamIndex = samtoolsIndex.indexFile,
+            bamIndex = markdup.output_bam_index,
             outputBamPath = sub(markdup.outputBam, ".bam$", ".bqsr.bam"),
             ref_fasta = ref_fasta,
             ref_dict = ref_dict,
@@ -73,7 +64,7 @@ workflow library {
     output {
         Array[String] readgroups = readgroupConfigs.keys
         File bamFile = markdup.outputBam
-        File bamIndexFile = samtoolsIndex.indexFile
+        File bamIndexFile = markdup.output_bam_index
         File bqsrBamFile = bqsr.outputBamFile
         File bqsrBamIndexFile = bqsr.outputBamIndex
     }
