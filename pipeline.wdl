@@ -1,5 +1,6 @@
-import "sample.wdl" as sample
+import "sample.wdl" as sampleWorkflow
 import "wdl-tasks/biopet.wdl" as biopet
+import "wdl-jointgenotyping/jointgenotyping.wdl" as jointgenotyping
 
 workflow pipeline {
     Array[File] sampleConfigs
@@ -20,7 +21,7 @@ workflow pipeline {
 
     # Running sample subworkflow
     scatter (sm in samplesConfigs.keys) {
-        call sample.sample {
+        call sampleWorkflow.sample as sample {
             input:
                 outputDir = outputDir + "/samples/" + sm,
                 sampleConfigJar = downloadSampleConfig.jar,
@@ -30,6 +31,17 @@ workflow pipeline {
                 ref_dict = ref_dict,
                 ref_fasta_index = ref_fasta_index
         }
+    }
+
+    call jointgenotyping.JointGenotyping {
+        input:
+            ref_fasta = ref_fasta,
+            ref_dict = ref_dict,
+            ref_fasta_index = ref_fasta_index,
+            outputDir = outputDir,
+            gvcfFiles = sample.gvcf,
+            gvcfIndexes = sample.gvcf_index,
+            vcf_basename = "multisample"
     }
 
     output {

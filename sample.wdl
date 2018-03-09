@@ -48,6 +48,7 @@ workflow sample {
 
     output {
         File gvcf = createGvcf.output_gvcf
+        File gvcf_index = createGvcf.output_gvcf_index
         Array[String] libraries = librariesConfigs.keys
     }
 }

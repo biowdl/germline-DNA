@@ -24,5 +24,10 @@
   "pipeline.sample.library.readgroup.fastqsplitterR2.tool_jar": "/home/pjvan_thof/src/wdl-multisample/FastqSplitter-assembly-0.1.jar",
   "pipeline.sample.library.bqsr.gatherBamFiles.picard_jar": "/exports/sasc/common/programs/queue-pipelines/picard.jar",
   "pipeline.sample.library.markdup.picard_jar": "/exports/sasc/common/programs/queue-pipelines/picard.jar",
-  "pipeline.sample.library.bqsr.scatterList.tool_jar": "/home/pjvan_thof/src/wdl-multisample/ScatterRegions-assembly-0.1-SNAPSHOT.jar"
+  "pipeline.sample.library.bqsr.scatterList.tool_jar": "/home/pjvan_thof/src/wdl-multisample/ScatterRegions-assembly-0.1-SNAPSHOT.jar",
+  "pipeline.JointGenotyping.genotypeGvcfs.gatk_jar": "/exports/sasc/common/programs/queue-pipelines/gatk-package-4.0.2.1-local.jar",
+  "pipeline.JointGenotyping.gatherGvcfs.picard_jar": "/exports/sasc/common/programs/queue-pipelines/picard.jar",
+  "pipeline.JointGenotyping.scatterList.tool_jar": "/home/pjvan_thof/src/wdl-multisample/ScatterRegions-assembly-0.1-SNAPSHOT.jar",
+  "pipeline.JointGenotyping.genotypeGvcfs.dbsnp_vcf": "/exports/sasc/testing/fixtures/samples/wgs2/wgs2.vcf.gz",
+  "pipeline.JointGenotyping.genotypeGvcfs.dbsnp_vcf_index": "/exports/sasc/testing/fixtures/samples/wgs2/wgs2.vcf.gz.tbi"
 }

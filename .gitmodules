@@ -13,3 +13,6 @@
 [submodule "wdl-gvcf"]
 	path = wdl-gvcf
 	url = https://github.com/ffinfo/wdl-gvcf.git
+[submodule "wdl-jointgenotyping"]
+	path = wdl-jointgenotyping
+	url = https://github.com/ffinfo/wdl-jointgenotyping.git
