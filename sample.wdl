@@ -41,8 +41,8 @@ workflow sample {
             ref_fasta = ref_fasta,
             ref_dict = ref_dict,
             ref_fasta_index = ref_fasta_index,
-            bamFiles = library.bqsrBamFile,
-            bamIndexes = library.bqsrBamIndexFile,
+            bamFiles = flatten(select_all(library.bqsrBamFile)),
+            bamIndexes = flatten(select_all(library.bqsrBamIndexFile)),
             gvcf_basename = outputDir + "/" + sampleId + ".g"
     }
 
