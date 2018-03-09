@@ -48,7 +48,7 @@ workflow library {
     call samtools.Flagstat as flagstat {
         input:
             inputBam = markdup.output_bam,
-            outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".flagstat"
+            outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.flagstat"
     }
 
     call bqsr.BaseRecalibration as bqsr {
@@ -59,6 +59,12 @@ workflow library {
             ref_fasta = ref_fasta,
             ref_dict = ref_dict,
             ref_fasta_index = ref_fasta_index
+    }
+
+    call samtools.Flagstat as flagstatPreprocess {
+        input:
+            inputBam = bqsr.outputBamFile,
+            outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bqsr.flagstat"
     }
 
     output {
