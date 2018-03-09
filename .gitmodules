@@ -10,3 +10,6 @@
 [submodule "wdl-bqsr"]
 	path = wdl-bqsr
 	url = https://github.com/ffinfo/wdl-bqsr.git
+[submodule "wdl-gvcf"]
+	path = wdl-gvcf
+	url = https://github.com/ffinfo/wdl-gvcf.git

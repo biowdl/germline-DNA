@@ -1,5 +1,6 @@
-import "library.wdl" as library
+import "library.wdl" as libraryWorkflow
 import "wdl-tasks/biopet.wdl" as biopet
+import "wdl-gvcf/gvcf.wdl" as gvcf
 
 workflow sample {
     Array[File] sampleConfigs
@@ -21,7 +22,7 @@ workflow sample {
 
     scatter (lb in librariesConfigs.keys) {
         if (lb != "") {
-            call library.library {
+            call libraryWorkflow.library as library {
                 input:
                     outputDir = outputDir + "/lib_" + lb,
                     sampleConfigJar = sampleConfigJar,
@@ -35,7 +36,18 @@ workflow sample {
         }
     }
 
+    call gvcf.Gvcf as createGvcf {
+        input:
+            ref_fasta = ref_fasta,
+            ref_dict = ref_dict,
+            ref_fasta_index = ref_fasta_index,
+            bamFiles = library.bqsrBamFile,
+            bamIndexes = library.bqsrBamIndexFile,
+            gvcf_basename = outputDir + "/" + sampleId + ".g"
+    }
+
     output {
+        File gvcf = createGvcf.output_gvcf
         Array[String] libraries = librariesConfigs.keys
     }
 }
