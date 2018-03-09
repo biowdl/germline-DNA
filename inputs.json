@@ -19,10 +19,10 @@
   "pipeline.sample.library.bqsr.gatherBqsr.gatk_jar": "/exports/sasc/common/programs/queue-pipelines/gatk-package-4.0.2.1-local.jar",
   "pipeline.sample.createGvcf.haplotypeCallerGvcf.gatk_jar": "/exports/sasc/common/programs/queue-pipelines/gatk-package-4.0.2.1-local.jar",
   "pipeline.sample.createGvcf.gatherGvcfs.picard_jar": "/exports/sasc/common/programs/queue-pipelines/picard.jar",
-  "pipeline.sample.createGvcf.scatterList.tool_jar": "ScatterRegions-assembly-0.1-SNAPSHOT.jar",
-  "pipeline.sample.library.readgroup.fastqsplitterR1.tool_jar": "FastqSplitter-assembly-0.1.jar",
-  "pipeline.sample.library.readgroup.fastqsplitterR2.tool_jar": "FastqSplitter-assembly-0.1.jar",
+  "pipeline.sample.createGvcf.scatterList.tool_jar": "/home/pjvan_thof/src/wdl-multisample/ScatterRegions-assembly-0.1-SNAPSHOT.jar",
+  "pipeline.sample.library.readgroup.fastqsplitterR1.tool_jar": "/home/pjvan_thof/src/wdl-multisample/FastqSplitter-assembly-0.1.jar",
+  "pipeline.sample.library.readgroup.fastqsplitterR2.tool_jar": "/home/pjvan_thof/src/wdl-multisample/FastqSplitter-assembly-0.1.jar",
   "pipeline.sample.library.bqsr.gatherBamFiles.picard_jar": "/exports/sasc/common/programs/queue-pipelines/picard.jar",
   "pipeline.sample.library.markdup.picard_jar": "/exports/sasc/common/programs/queue-pipelines/picard.jar",
-  "pipeline.sample.library.bqsr.scatterList.tool_jar": "ScatterRegions-assembly-0.1-SNAPSHOT.jar"
+  "pipeline.sample.library.bqsr.scatterList.tool_jar": "/home/pjvan_thof/src/wdl-multisample/ScatterRegions-assembly-0.1-SNAPSHOT.jar"
 }
