@@ -1,8 +1,8 @@
 import "readgroup.wdl" as readgroup
-import "wdl-tasks/biopet.wdl" as biopet
-import "wdl-tasks/picard.wdl" as picard
-import "wdl-tasks/samtools.wdl" as samtools
-import "wdl-bqsr/bqsr.wdl" as bqsr
+import "tasks/biopet.wdl" as biopet
+import "tasks/picard.wdl" as picard
+import "tasks/samtools.wdl" as samtools
+import "bqsr/bqsr.wdl" as bqsr
 
 workflow library {
     Array[File] sampleConfigs

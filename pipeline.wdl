@@ -1,6 +1,6 @@
 import "sample.wdl" as sampleWorkflow
-import "wdl-tasks/biopet.wdl" as biopet
-import "wdl-jointgenotyping/jointgenotyping.wdl" as jointgenotyping
+import "tasks/biopet.wdl" as biopet
+import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
 
 workflow pipeline {
     Array[File] sampleConfigs

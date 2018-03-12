@@ -1,0 +1,18 @@
+[submodule "QC"]
+	path = QC
+	url = https://github.com/exundo/QC.git
+[submodule "tasks"]
+	path = tasks
+	url = https://github.com/exundo/tasks.git
+[submodule "jointgenotyping"]
+	path = jointgenotyping
+	url = https://github.com/exundo/jointgenotyping.git
+[submodule "bam-to-gvcf"]
+	path = bam-to-gvcf
+	url = https://github.com/exundo/bam-to-gvcf.git
+[submodule "aligning"]
+	path = aligning
+	url = https://github.com/exundo/aligning.git
+[submodule "bqsr"]
+	path = bqsr
+	url = https://github.com/exundo/bqsr.git

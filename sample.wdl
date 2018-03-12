@@ -1,6 +1,6 @@
 import "library.wdl" as libraryWorkflow
-import "wdl-tasks/biopet.wdl" as biopet
-import "wdl-gvcf/gvcf.wdl" as gvcf
+import "tasks/biopet.wdl" as biopet
+import "bam-to-gvcf/gvcf.wdl" as gvcf
 
 workflow sample {
     Array[File] sampleConfigs

@@ -1,6 +1,6 @@
-import "QC-wdl/QC.wdl" as QC
-import "wdl-mapping/wdl-mapping.wdl" as wdlMapping
-import "wdl-tasks/biopet.wdl" as biopet
+import "QC/QC.wdl" as QC
+import "aligning/align-bwamem.wdl" as wdlMapping
+import "tasks/biopet.wdl" as biopet
 
 workflow readgroup {
     Array[File] sampleConfigs
