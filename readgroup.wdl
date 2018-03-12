@@ -7,13 +7,11 @@ workflow readgroup {
     String readgroupId
     String libraryId
     String sampleId
-    File sampleConfigJar
     String outputDir
     Int numberChunks
 
     call biopet.SampleConfig as config {
         input:
-            tool_jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             library = libraryId,

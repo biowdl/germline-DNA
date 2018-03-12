@@ -8,7 +8,6 @@ workflow library {
     Array[File] sampleConfigs
     String sampleId
     String libraryId
-    File sampleConfigJar
     String outputDir
     File ref_fasta
     File ref_dict
@@ -16,7 +15,6 @@ workflow library {
 
     call biopet.SampleConfig as readgroupConfigs {
         input:
-            tool_jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             library = libraryId,
@@ -28,7 +26,6 @@ workflow library {
             call readgroup.readgroup as readgroup {
                 input:
                     outputDir = outputDir + "/rg_" + rg,
-                    sampleConfigJar = sampleConfigJar,
                     sampleConfigs = sampleConfigs,
                     readgroupId = rg,
                     libraryId = libraryId,

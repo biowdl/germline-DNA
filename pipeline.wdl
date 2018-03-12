@@ -9,14 +9,10 @@ workflow pipeline {
     File ref_dict
     File ref_fasta_index
 
-    # Downloading jar for sample parsing if 'pipeline.downloadSampleConfig.inputJar' is not set
-    call biopet.DownloadSampleConfig as downloadSampleConfig
-
     #  Reading the samples from the sample config files
     call biopet.SampleConfig as samplesConfigs {
         input:
-            inputFiles = sampleConfigs,
-            tool_jar = downloadSampleConfig.jar
+            inputFiles = sampleConfigs
     }
 
     # Running sample subworkflow
@@ -24,7 +20,6 @@ workflow pipeline {
         call sampleWorkflow.sample as sample {
             input:
                 outputDir = outputDir + "/samples/" + sm,
-                sampleConfigJar = downloadSampleConfig.jar,
                 sampleConfigs = sampleConfigs,
                 sampleId = sm,
                 ref_fasta = ref_fasta,

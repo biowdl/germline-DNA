@@ -5,7 +5,6 @@ import "bam-to-gvcf/gvcf.wdl" as gvcf
 workflow sample {
     Array[File] sampleConfigs
     String sampleId
-    File sampleConfigJar
     String outputDir
     File ref_fasta
     File ref_dict
@@ -13,7 +12,6 @@ workflow sample {
 
     call biopet.SampleConfig as librariesConfigs {
         input:
-            tool_jar = sampleConfigJar,
             inputFiles = sampleConfigs,
             sample = sampleId,
             jsonOutputPath = sampleId + ".config.json",
@@ -25,7 +23,6 @@ workflow sample {
             call libraryWorkflow.library as library {
                 input:
                     outputDir = outputDir + "/lib_" + lb,
-                    sampleConfigJar = sampleConfigJar,
                     sampleConfigs = select_all([librariesConfigs.jsonOutput]),
                     libraryId = lb,
                     sampleId = sampleId,
