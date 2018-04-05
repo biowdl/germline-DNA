@@ -41,7 +41,7 @@ workflow readgroup {
                 read2 = pair.right
         }
 
-        call wdlMapping.Mapping as mapping {
+        call wdlMapping.AlignBwaMem as mapping {
             input:
                 inputR1 = qc.read1afterQC,
                 inputR2 = qc.read2afterQC,
