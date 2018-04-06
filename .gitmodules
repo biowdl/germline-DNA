@@ -13,6 +13,6 @@
 [submodule "aligning"]
 	path = aligning
 	url = https://github.com/biowdl/aligning.git
-[submodule "bqsr"]
-	path = bqsr
-	url = https://github.com/biowdl/bqsr.git
+[submodule "gatk-preprocess"]
+	path = gatk-preprocess
+	url = https://github.com/biowdl/gatk-preprocess.git
