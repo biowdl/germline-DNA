@@ -33,7 +33,7 @@ workflow readgroup {
             numberChunks = numberChunks
     }
 
-    scatter (pair in zip(fastqsplitterR1.outputFastqFiles, fastqsplitterR1.outputFastqFiles)) {
+    scatter (pair in zip(fastqsplitterR1.outputFastqFiles, fastqsplitterR2.outputFastqFiles)) {
         call QC.QC as qc {
             input:
                 outputDir = sub(pair.left, basename(pair.left), ""),
