@@ -33,7 +33,7 @@ workflow readgroup {
             numberChunks = numberChunks
     }
 
-    scatter (pair in zip(fastqsplitterR1.outputFastqFiles, fastqsplitterR1.outputFastqFiles)) {
+    scatter (pair in zip(fastqsplitterR1.outputFastqFiles, fastqsplitterR2.outputFastqFiles)) {
         call QC.QC as qc {
             input:
                 outputDir = sub(pair.left, basename(pair.left), ""),
@@ -41,7 +41,7 @@ workflow readgroup {
                 read2 = pair.right
         }
 
-        call wdlMapping.Mapping as mapping {
+        call wdlMapping.AlignBwaMem as mapping {
             input:
                 inputR1 = qc.read1afterQC,
                 inputR2 = qc.read2afterQC,

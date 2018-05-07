@@ -2,7 +2,7 @@ import "readgroup.wdl" as readgroup
 import "tasks/biopet.wdl" as biopet
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
-import "bqsr/bqsr.wdl" as bqsr
+import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 
 workflow library {
     Array[File] sampleConfigs
@@ -48,7 +48,7 @@ workflow library {
             outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.flagstat"
     }
 
-    call bqsr.BaseRecalibration as bqsr {
+    call preprocess.GatkPreprocess as bqsr {
         input:
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
