@@ -14,11 +14,12 @@ workflow sample {
         input:
             inputFiles = sampleConfigs,
             sample = sampleId,
-            jsonOutputPath = sampleId + ".config.json",
-            tsvOutputPath = sampleId + ".config.tsv"
+            jsonOutputPath = outputDir + "/" + sampleId + ".config.json",
+            tsvOutputPath = outputDir + "/" + sampleId + ".config.tsv",
+            stdoutFile = outputDir + "/" + sampleId + ".config.keys"
     }
 
-    scatter (lb in librariesConfigs.keys) {
+    scatter (lb in read_lines(librariesConfigs.keysFile)) {
         if (lb != "") {
             call libraryWorkflow.library as library {
                 input:
@@ -46,6 +47,6 @@ workflow sample {
     output {
         File gvcf = createGvcf.output_gvcf
         File gvcf_index = createGvcf.output_gvcf_index
-        Array[String] libraries = librariesConfigs.keys
+        Array[String] libraries = read_lines(librariesConfigs.keysFile)
     }
 }

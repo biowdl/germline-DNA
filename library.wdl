@@ -18,10 +18,11 @@ workflow library {
             inputFiles = sampleConfigs,
             sample = sampleId,
             library = libraryId,
-            tsvOutputPath = libraryId + ".config.tsv"
+            tsvOutputPath = outputDir + "/" + libraryId + ".config.tsv",
+            stdoutFile = outputDir + "/" + libraryId + ".config.keys"
     }
 
-    scatter (rg in readgroupConfigs.keys) {
+    scatter (rg in read_lines(readgroupConfigs.keysFile)) {
         if (rg != "") {
             call readgroup.readgroup as readgroup {
                 input:
@@ -65,7 +66,7 @@ workflow library {
     }
 
     output {
-        Array[String] readgroups = readgroupConfigs.keys
+        Array[String] readgroups = read_lines(readgroupConfigs.keysFile)
         File bamFile = markdup.output_bam
         File bamIndexFile = markdup.output_bam_index
         File bqsrBamFile = bqsr.outputBamFile

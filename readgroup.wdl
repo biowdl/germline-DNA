@@ -16,19 +16,24 @@ workflow readgroup {
             sample = sampleId,
             library = libraryId,
             readgroup = readgroupId,
-            tsvOutputPath = readgroupId + ".config.tsv"
+            tsvOutputPath = outputDir + "/" + readgroupId + ".config.tsv",
+            stdoutFile = outputDir + "/" + readgroupId + ".config.keys"
     }
+
+    Object configValues = if (defined(config.tsvOutput) && size(config.tsvOutput) > 0)
+        then read_map(config.tsvOutput)
+        else { "": "" }
 
     call biopet.FastqSplitter as fastqsplitterR1 {
         input:
-            inputFastq = config.values.R1,
+            inputFastq = configValues.R1,
             outputPath = "./",
             numberChunks = numberChunks
     }
 
     call biopet.FastqSplitter as fastqsplitterR2 {
         input:
-            inputFastq = config.values.R2,
+            inputFastq = configValues.R2,
             outputPath = "./",
             numberChunks = numberChunks
     }
@@ -53,8 +58,8 @@ workflow readgroup {
     }
 
     output {
-        File inputR1 = config.values.R1
-        File inputR2 = config.values.R2
+        File inputR1 = configValues.R1
+        File inputR2 = configValues.R2
         Array[File] bamFile = mapping.bamFile
         Array[File] bamIndexFile = mapping.bamIndexFile
     }
