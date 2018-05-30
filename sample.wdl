@@ -6,9 +6,9 @@ workflow sample {
     Array[File] sampleConfigs
     String sampleId
     String outputDir
-    File ref_fasta
-    File ref_dict
-    File ref_fasta_index
+    File refFasta
+    File refDict
+    File refFastaIndex
 
     call biopet.SampleConfig as librariesConfigs {
         input:
@@ -16,7 +16,7 @@ workflow sample {
             sample = sampleId,
             jsonOutputPath = outputDir + "/" + sampleId + ".config.json",
             tsvOutputPath = outputDir + "/" + sampleId + ".config.tsv",
-            stdoutFile = outputDir + "/" + sampleId + ".config.keys"
+            keyFilePath = outputDir + "/" + sampleId + ".config.keys"
     }
 
     scatter (lb in read_lines(librariesConfigs.keysFile)) {
@@ -27,18 +27,18 @@ workflow sample {
                     sampleConfigs = select_all([librariesConfigs.jsonOutput]),
                     libraryId = lb,
                     sampleId = sampleId,
-                    ref_fasta = ref_fasta,
-                    ref_dict = ref_dict,
-                    ref_fasta_index = ref_fasta_index
+                    refFasta = refFasta,
+                    refDict = refDict,
+                    refFastaIndex = refFastaIndex
             }
         }
     }
 
     call gvcf.Gvcf as createGvcf {
         input:
-            ref_fasta = ref_fasta,
-            ref_dict = ref_dict,
-            ref_fasta_index = ref_fasta_index,
+            ref_fasta = refFasta,
+            ref_dict = refDict,
+            ref_fasta_index = refFastaIndex,
             bamFiles = select_all(library.bqsrBamFile),
             bamIndexes = select_all(library.bqsrBamIndexFile),
             gvcf_basename = outputDir + "/" + sampleId + ".g"

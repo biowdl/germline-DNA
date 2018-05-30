@@ -9,9 +9,9 @@ workflow library {
     String sampleId
     String libraryId
     String outputDir
-    File ref_fasta
-    File ref_dict
-    File ref_fasta_index
+    File refFasta
+    File refDict
+    File refFastaIndex
 
     call biopet.SampleConfig as readgroupConfigs {
         input:
@@ -19,7 +19,7 @@ workflow library {
             sample = sampleId,
             library = libraryId,
             tsvOutputPath = outputDir + "/" + libraryId + ".config.tsv",
-            stdoutFile = outputDir + "/" + libraryId + ".config.keys"
+            keyFilePath = outputDir + "/" + libraryId + ".config.keys"
     }
 
     scatter (rg in read_lines(readgroupConfigs.keysFile)) {
@@ -54,9 +54,9 @@ workflow library {
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
             outputBamPath = sub(markdup.output_bam, ".bam$", ".bqsr.bam"),
-            ref_fasta = ref_fasta,
-            ref_dict = ref_dict,
-            ref_fasta_index = ref_fasta_index
+            ref_fasta = refFasta,
+            ref_dict = refDict,
+            ref_fasta_index = refFastaIndex
     }
 
     call samtools.Flagstat as flagstatPreprocess {

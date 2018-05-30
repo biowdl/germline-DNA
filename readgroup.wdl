@@ -17,7 +17,7 @@ workflow readgroup {
             library = libraryId,
             readgroup = readgroupId,
             tsvOutputPath = outputDir + "/" + readgroupId + ".config.tsv",
-            stdoutFile = outputDir + "/" + readgroupId + ".config.keys"
+            keyFilePath = outputDir + "/" + readgroupId + ".config.keys"
     }
 
     Object configValues = if (defined(config.tsvOutput) && size(config.tsvOutput) > 0)

@@ -5,15 +5,15 @@ import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
 workflow pipeline {
     Array[File] sampleConfigs
     String outputDir
-    File ref_fasta
-    File ref_dict
-    File ref_fasta_index
+    File refFasta
+    File refDict
+    File refFastaIndex
 
     #  Reading the samples from the sample config files
     call biopet.SampleConfig as samplesConfigs {
         input:
             inputFiles = sampleConfigs,
-            stdoutFile = outputDir + "/config.keys"
+            keyFilePath = outputDir + "/config.keys"
     }
 
     # Running sample subworkflow
@@ -23,17 +23,17 @@ workflow pipeline {
                 outputDir = outputDir + "/samples/" + sm,
                 sampleConfigs = sampleConfigs,
                 sampleId = sm,
-                ref_fasta = ref_fasta,
-                ref_dict = ref_dict,
-                ref_fasta_index = ref_fasta_index
+                refFasta = refFasta,
+                refDict = refDict,
+                refFastaIndex = refFastaIndex
         }
     }
 
     call jointgenotyping.JointGenotyping {
         input:
-            ref_fasta = ref_fasta,
-            ref_dict = ref_dict,
-            ref_fasta_index = ref_fasta_index,
+            ref_fasta = refFasta,
+            ref_dict = refDict,
+            ref_fasta_index = refFastaIndex,
             outputDir = outputDir,
             gvcfFiles = sample.gvcf,
             gvcfIndexes = sample.gvcf_index,
