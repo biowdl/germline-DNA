@@ -27,14 +27,14 @@ workflow readgroup {
     call biopet.FastqSplitter as fastqsplitterR1 {
         input:
             inputFastq = configValues.R1,
-            outputPath = "./",
+            outputPath = outputDir,
             numberChunks = numberChunks
     }
 
     call biopet.FastqSplitter as fastqsplitterR2 {
         input:
             inputFastq = configValues.R2,
-            outputPath = "./",
+            outputPath = outputDir,
             numberChunks = numberChunks
     }
 
