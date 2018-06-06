@@ -42,8 +42,8 @@ workflow readgroup {
         call QC.QC as qc {
             input:
                 outputDir = pair.left,
-                read1 = pair.left + fastqsplitterR1.filename,
-                read2 = pair.right + fastqsplitterR2.filename
+                read1 = pair.left + "/" + fastqsplitterR1.filename,
+                read2 = pair.right + "/" + fastqsplitterR2.filename
         }
 
         call wdlMapping.AlignBwaMem as mapping {
