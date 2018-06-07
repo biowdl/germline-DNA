@@ -44,7 +44,7 @@ workflow readgroup {
     scatter (pair in zip(fastqsplitterR1.chunks, fastqsplitterR2.chunks)) {
         call QC.QC as qc {
             input:
-                outputDir = pair.left,
+                outputDir = sub(pair.left, basename(pair.left), ""),
                 read1 = pair.left,
                 read2 = pair.right
         }
