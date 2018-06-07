@@ -53,7 +53,7 @@ workflow readgroup {
             input:
                 inputR1 = qc.read1afterQC,
                 inputR2 = qc.read2afterQC,
-                outputDir = pair.left,
+                outputDir = sub(pair.left, basename(pair.left), ""),
                 sample = sampleId,
                 library = libraryId,
                 readgroup = readgroupId
