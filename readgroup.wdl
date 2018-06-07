@@ -24,26 +24,29 @@ workflow readgroup {
         then read_map(config.tsvOutput)
         else { "": "" }
 
+    scatter (chunk in range(numberChunks)){
+        String chunksR1 = "${outputDir}/chunk_${chunk}/${chunk}_1.fq.gz"
+        String chunksR2 = "${outputDir}/chunk_${chunk}/${chunk}_2.fq.gz"
+    }
+
     call biopet.FastqSplitter as fastqsplitterR1 {
         input:
             inputFastq = configValues.R1,
-            outputPath = outputDir,
-            numberChunks = numberChunks
+            outputPaths = chunksR1
     }
 
     call biopet.FastqSplitter as fastqsplitterR2 {
         input:
             inputFastq = configValues.R2,
-            outputPath = outputDir,
-            numberChunks = numberChunks
+            outputPaths = chunksR2
     }
 
-    scatter (pair in zip(fastqsplitterR1.chunkDirs, fastqsplitterR2.chunkDirs)) {
+    scatter (pair in zip(fastqsplitterR1.chunks, fastqsplitterR2.chunks)) {
         call QC.QC as qc {
             input:
                 outputDir = pair.left,
-                read1 = pair.left + "/" + fastqsplitterR1.filename,
-                read2 = pair.right + "/" + fastqsplitterR2.filename
+                read1 = pair.left,
+                read2 = pair.right
         }
 
         call wdlMapping.AlignBwaMem as mapping {
