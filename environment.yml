@@ -1,0 +1,8 @@
+name: multsample
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+  - r
+dependencies:
+  - biopet-sampleconfig==0.1
