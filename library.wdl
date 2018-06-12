@@ -54,9 +54,9 @@ workflow library {
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
             outputBamPath = sub(markdup.output_bam, ".bam$", ".bqsr.bam"),
-            ref_fasta = refFasta,
-            ref_dict = refDict,
-            ref_fasta_index = refFastaIndex
+            refFasta = refFasta,
+            refDict = refDict,
+            refFastaIndex = refFastaIndex
     }
 
     call samtools.Flagstat as flagstatPreprocess {

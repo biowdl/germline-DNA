@@ -31,13 +31,13 @@ workflow pipeline {
 
     call jointgenotyping.JointGenotyping {
         input:
-            ref_fasta = refFasta,
-            ref_dict = refDict,
-            ref_fasta_index = refFastaIndex,
+            refFasta = refFasta,
+            refDict = refDict,
+            refFastaIndex = refFastaIndex,
             outputDir = outputDir,
             gvcfFiles = sample.gvcf,
-            gvcfIndexes = sample.gvcf_index,
-            vcf_basename = "multisample"
+            gvcfIndexes = sample.gvcfIndex,
+            vcfBasename = "multisample"
     }
 
     output {

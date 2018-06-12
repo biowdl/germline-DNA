@@ -36,17 +36,17 @@ workflow sample {
 
     call gvcf.Gvcf as createGvcf {
         input:
-            ref_fasta = refFasta,
-            ref_dict = refDict,
-            ref_fasta_index = refFastaIndex,
+            refFasta = refFasta,
+            refDict = refDict,
+            refFastaIndex = refFastaIndex,
             bamFiles = select_all(library.bqsrBamFile),
             bamIndexes = select_all(library.bqsrBamIndexFile),
-            gvcf_basename = outputDir + "/" + sampleId + ".g"
+            gvcfPath = outputDir + "/" + sampleId + ".g"
     }
 
     output {
-        File gvcf = createGvcf.output_gvcf
-        File gvcf_index = createGvcf.output_gvcf_index
+        File gvcf = createGvcf.outputGVCF
+        File gvcfIndex = createGvcf.outputGVCFindex
         Array[String] libraries = read_lines(librariesConfigs.keysFile)
     }
 }
