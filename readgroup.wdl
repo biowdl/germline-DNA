@@ -16,24 +16,32 @@ workflow readgroup {
             sample = sampleId,
             library = libraryId,
             readgroup = readgroupId,
-            tsvOutputPath = readgroupId + ".config.tsv"
+            tsvOutputPath = outputDir + "/" + readgroupId + ".config.tsv",
+            keyFilePath = outputDir + "/" + readgroupId + ".config.keys"
+    }
+
+    Object configValues = if (defined(config.tsvOutput) && size(config.tsvOutput) > 0)
+        then read_map(config.tsvOutput)
+        else { "": "" }
+
+    scatter (chunk in range(numberChunks)){
+        String chunksR1 = "${outputDir}/chunk_${chunk}/${chunk}_1.fq.gz"
+        String chunksR2 = "${outputDir}/chunk_${chunk}/${chunk}_2.fq.gz"
     }
 
     call biopet.FastqSplitter as fastqsplitterR1 {
         input:
-            inputFastq = config.values.R1,
-            outputPath = "./",
-            numberChunks = numberChunks
+            inputFastq = configValues.R1,
+            outputPaths = chunksR1
     }
 
     call biopet.FastqSplitter as fastqsplitterR2 {
         input:
-            inputFastq = config.values.R2,
-            outputPath = "./",
-            numberChunks = numberChunks
+            inputFastq = configValues.R2,
+            outputPaths = chunksR2
     }
 
-    scatter (pair in zip(fastqsplitterR1.outputFastqFiles, fastqsplitterR2.outputFastqFiles)) {
+    scatter (pair in zip(fastqsplitterR1.chunks, fastqsplitterR2.chunks)) {
         call QC.QC as qc {
             input:
                 outputDir = sub(pair.left, basename(pair.left), ""),
@@ -53,8 +61,8 @@ workflow readgroup {
     }
 
     output {
-        File inputR1 = config.values.R1
-        File inputR2 = config.values.R2
+        File inputR1 = configValues.R1
+        File inputR2 = configValues.R2
         Array[File] bamFile = mapping.bamFile
         Array[File] bamIndexFile = mapping.bamIndexFile
     }

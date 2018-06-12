@@ -6,19 +6,20 @@ workflow sample {
     Array[File] sampleConfigs
     String sampleId
     String outputDir
-    File ref_fasta
-    File ref_dict
-    File ref_fasta_index
+    File refFasta
+    File refDict
+    File refFastaIndex
 
     call biopet.SampleConfig as librariesConfigs {
         input:
             inputFiles = sampleConfigs,
             sample = sampleId,
-            jsonOutputPath = sampleId + ".config.json",
-            tsvOutputPath = sampleId + ".config.tsv"
+            jsonOutputPath = outputDir + "/" + sampleId + ".config.json",
+            tsvOutputPath = outputDir + "/" + sampleId + ".config.tsv",
+            keyFilePath = outputDir + "/" + sampleId + ".config.keys"
     }
 
-    scatter (lb in librariesConfigs.keys) {
+    scatter (lb in read_lines(librariesConfigs.keysFile)) {
         if (lb != "") {
             call libraryWorkflow.library as library {
                 input:
@@ -26,26 +27,26 @@ workflow sample {
                     sampleConfigs = select_all([librariesConfigs.jsonOutput]),
                     libraryId = lb,
                     sampleId = sampleId,
-                    ref_fasta = ref_fasta,
-                    ref_dict = ref_dict,
-                    ref_fasta_index = ref_fasta_index
+                    refFasta = refFasta,
+                    refDict = refDict,
+                    refFastaIndex = refFastaIndex
             }
         }
     }
 
     call gvcf.Gvcf as createGvcf {
         input:
-            ref_fasta = ref_fasta,
-            ref_dict = ref_dict,
-            ref_fasta_index = ref_fasta_index,
+            refFasta = refFasta,
+            refDict = refDict,
+            refFastaIndex = refFastaIndex,
             bamFiles = select_all(library.bqsrBamFile),
             bamIndexes = select_all(library.bqsrBamIndexFile),
-            gvcf_basename = outputDir + "/" + sampleId + ".g"
+            gvcfPath = outputDir + "/" + sampleId + ".g"
     }
 
     output {
-        File gvcf = createGvcf.output_gvcf
-        File gvcf_index = createGvcf.output_gvcf_index
-        Array[String] libraries = librariesConfigs.keys
+        File gvcf = createGvcf.outputGVCF
+        File gvcfIndex = createGvcf.outputGVCFindex
+        Array[String] libraries = read_lines(librariesConfigs.keysFile)
     }
 }
