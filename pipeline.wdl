@@ -27,7 +27,9 @@ workflow pipeline {
                 sampleId = sm,
                 refFasta = refFasta,
                 refDict = refDict,
-                refFastaIndex = refFastaIndex
+                refFastaIndex = refFastaIndex,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFindex = dbsnpVCFindex
         }
     }
 
