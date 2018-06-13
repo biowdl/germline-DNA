@@ -8,7 +8,7 @@ workflow readgroup {
     String libraryId
     String sampleId
     String outputDir
-    Int numberChunks
+    Int? numberChunks
 
     call biopet.SampleConfig as config {
         input:
@@ -24,7 +24,7 @@ workflow readgroup {
         then read_map(config.tsvOutput)
         else { "": "" }
 
-    scatter (chunk in range(numberChunks)){
+    scatter (chunk in range(select_first([numberChunks, 1]))){
         String chunksR1 = "${outputDir}/chunk_${chunk}/${chunk}_1.fq.gz"
         String chunksR2 = "${outputDir}/chunk_${chunk}/${chunk}_2.fq.gz"
     }
