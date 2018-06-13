@@ -4,9 +4,6 @@ pipeline {
             label 'local'
         }
     }
-    triggers {
-        pollSCM('H/10 * * * *')
-    }
     tools {
         jdk 'JDK 8u162'
     }
