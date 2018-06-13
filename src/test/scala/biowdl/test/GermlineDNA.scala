@@ -24,14 +24,17 @@ package biowdl.test
 import java.io.File
 
 import nl.biopet.utils.biowdl.multisample.MultisamplePipeline
-import nl.biopet.utils.biowdl.samples.{Wgs1PairedEnd, Wgs2PairedEnd}
+import nl.biopet.utils.biowdl.references.Reference
 
 trait GermlineDNA
-    extends MultisamplePipeline {
+    extends MultisamplePipeline with Reference {
   override def inputs: Map[String, Any] =
     super.inputs ++
       Map(
-        s"$startPipelineName.outputDir" -> outputDir.getAbsolutePath
+        s"$startPipelineName.outputDir" -> outputDir.getAbsolutePath,
+        s"$startPipelineName.refFasta" -> referenceFasta.getAbsolutePath,
+        s"$startPipelineName.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
+        s"$startPipelineName.refDict" -> referenceFastaDictFile.getAbsolutePath
       )
 
   def startFile: File = new File("./pipeline.wdl")
