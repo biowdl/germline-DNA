@@ -31,10 +31,12 @@ trait GermlineDNA
   override def inputs: Map[String, Any] =
     super.inputs ++
       Map(
-        s"$startPipelineName.outputDir" -> outputDir.getAbsolutePath,
-        s"$startPipelineName.refFasta" -> referenceFasta.getAbsolutePath,
-        s"$startPipelineName.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
-        s"$startPipelineName.refDict" -> referenceFastaDictFile.getAbsolutePath
+        s"pipeline.outputDir" -> outputDir.getAbsolutePath,
+        s"pipeline.refFasta" -> referenceFasta.getAbsolutePath,
+        s"pipeline.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
+        s"pipeline.refDict" -> referenceFastaDictFile.getAbsolutePath,
+        s"pipeline.sample.library.readgroup.mapping.bwaMem.referenceFasta" -> bwaMemFasta.getOrElse(throw new IllegalStateException),
+        s"pipeline.sample.library.readgroup.mapping.bwaMem.indexFiles" -> bwaMemIndexFiles.map(_.getAbsolutePath)
       )
 
   def startFile: File = new File("./pipeline.wdl")
