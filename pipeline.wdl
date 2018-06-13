@@ -8,6 +8,8 @@ workflow pipeline {
     File refFasta
     File refDict
     File refFastaIndex
+    File dbsnpVCF
+    File dbsnpVCFindex
 
     #  Reading the samples from the sample config files
     call biopet.SampleConfig as samplesConfigs {
@@ -37,7 +39,9 @@ workflow pipeline {
             outputDir = outputDir,
             gvcfFiles = sample.gvcf,
             gvcfIndexes = sample.gvcfIndex,
-            vcfBasename = "multisample"
+            vcfBasename = "multisample",
+            dbsnpVCF = dbsnpVCF,
+            dbsnpVCFindex = dbsnpVCFindex
     }
 
     output {
