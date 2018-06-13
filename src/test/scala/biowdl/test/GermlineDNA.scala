@@ -25,18 +25,24 @@ import java.io.File
 
 import nl.biopet.utils.biowdl.multisample.MultisamplePipeline
 import nl.biopet.utils.biowdl.references.Reference
+import nl.biopet.utils.ngs.vcf.getVcfIndexFile
 
 trait GermlineDNA
     extends MultisamplePipeline with Reference {
+
+  def dbsnpFile: File
+
   override def inputs: Map[String, Any] =
     super.inputs ++
       Map(
-        s"pipeline.outputDir" -> outputDir.getAbsolutePath,
-        s"pipeline.refFasta" -> referenceFasta.getAbsolutePath,
-        s"pipeline.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
-        s"pipeline.refDict" -> referenceFastaDictFile.getAbsolutePath,
-        s"pipeline.sample.library.readgroup.mapping.bwaMem.referenceFasta" -> bwaMemFasta.getOrElse(throw new IllegalStateException),
-        s"pipeline.sample.library.readgroup.mapping.bwaMem.indexFiles" -> bwaMemIndexFiles.map(_.getAbsolutePath)
+        "pipeline.outputDir" -> outputDir.getAbsolutePath,
+        "pipeline.refFasta" -> referenceFasta.getAbsolutePath,
+        "pipeline.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
+        "pipeline.refDict" -> referenceFastaDictFile.getAbsolutePath,
+        "pipeline.sample.library.readgroup.mapping.bwaMem.referenceFasta" -> bwaMemFasta.getOrElse(throw new IllegalStateException),
+        "pipeline.sample.library.readgroup.mapping.bwaMem.indexFiles" -> bwaMemIndexFiles.map(_.getAbsolutePath),
+        "pipeline.dbsnpVCF" -> dbsnpFile.getAbsolutePath,
+        "pipeline.dbsnpVCFindex" -> getVcfIndexFile(dbsnpFile).getAbsolutePath
       )
 
   def startFile: File = new File("./pipeline.wdl")
