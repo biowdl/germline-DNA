@@ -21,4 +21,8 @@
 
 package biowdl.test
 
-class GermlineDNATest extends GermlineDNASuccess {}
+import nl.biopet.utils.biowdl.samples.{Wgs1PairedEnd, Wgs2PairedEnd}
+
+class GermlineDNATest extends GermlineDNASuccess
+  with Wgs1PairedEnd
+  with Wgs2PairedEnd {}

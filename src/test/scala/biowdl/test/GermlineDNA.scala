@@ -27,9 +27,7 @@ import nl.biopet.utils.biowdl.multisample.MultisamplePipeline
 import nl.biopet.utils.biowdl.samples.{Wgs1PairedEnd, Wgs2PairedEnd}
 
 trait GermlineDNA
-    extends MultisamplePipeline
-    with Wgs1PairedEnd
-    with Wgs2PairedEnd {
+    extends MultisamplePipeline {
   override def inputs: Map[String, Any] =
     super.inputs ++
       Map(
