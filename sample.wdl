@@ -41,7 +41,7 @@ workflow sample {
             refFastaIndex = refFastaIndex,
             bamFiles = select_all(library.bqsrBamFile),
             bamIndexes = select_all(library.bqsrBamIndexFile),
-            gvcfPath = outputDir + "/" + sampleId + ".g"
+            gvcfPath = outputDir + "/" + sampleId + ".g.vcf.gz"
     }
 
     output {
