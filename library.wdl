@@ -53,7 +53,7 @@ workflow library {
         input:
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
-            outputBamPath = sub(markdup.output_bam, ".bam$", ".bqsr.bam"),
+            outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bqsr.bam",
             refFasta = refFasta,
             refDict = refDict,
             refFastaIndex = refFastaIndex
