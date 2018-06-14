@@ -8,6 +8,12 @@ startYear := Some(2018)
 
 biopetIsTool := false
 
+concurrentRestrictions := Seq(
+  Tags.limitAll(
+    Option(System.getProperty("biowdl.threads")).map(_.toInt).getOrElse(1)),
+  Tags.limit(Tags.Compile, java.lang.Runtime.getRuntime.availableProcessors())
+)
+
 developers += Developer(id = "ffinfo",
                         name = "Peter van 't Hof",
                         email = "pjrvanthof@gmail.com",
