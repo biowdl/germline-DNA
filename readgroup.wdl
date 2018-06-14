@@ -78,20 +78,20 @@ workflow readgroup {
         }
     }
 
-    call qualityReport.QualityReport as postQualityReportR1 {
-        input:
-            read = configValues.R1,
-            outputDir = outputDir + "/QC/R1",
-            extractAdapters = true
-    }
-
-    call qualityReport.QualityReport as postQualityReportR2 {
-        input:
-            read = configValues.R2,
-            outputDir = outputDir + "/QC/R2",
-            extractAdapters = true
-    }
-
+#TODO: getting total file
+#    call qualityReport.QualityReport as postQualityReportR1 {
+#        input:
+#            read = configValues.R1,
+#            outputDir = outputDir + "/QC/R1",
+#            extractAdapters = true
+#    }
+#
+#    call qualityReport.QualityReport as postQualityReportR2 {
+#        input:
+#            read = configValues.R2,
+#            outputDir = outputDir + "/QC/R2",
+#            extractAdapters = true
+#    }
 
     output {
         File inputR1 = configValues.R1
