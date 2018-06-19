@@ -12,6 +12,8 @@ workflow library {
     File refFasta
     File refDict
     File refFastaIndex
+    File dbsnpVCF
+    File dbsnpVCFindex
 
     call biopet.SampleConfig as readgroupConfigs {
         input:
@@ -56,7 +58,9 @@ workflow library {
             outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bqsr.bam",
             refFasta = refFasta,
             refDict = refDict,
-            refFastaIndex = refFastaIndex
+            refFastaIndex = refFastaIndex,
+            dbsnpVCF = dbsnpVCF,
+            dbsnpVCFindex = dbsnpVCFindex
     }
 
     call samtools.Flagstat as flagstatPreprocess {

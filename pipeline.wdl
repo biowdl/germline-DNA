@@ -3,16 +3,18 @@ import "tasks/biopet.wdl" as biopet
 import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
 
 workflow pipeline {
-    Array[File] sampleConfigs
+    Array[File] sampleConfigFiles
     String outputDir
     File refFasta
     File refDict
     File refFastaIndex
+    File dbsnpVCF
+    File dbsnpVCFindex
 
     #  Reading the samples from the sample config files
     call biopet.SampleConfig as samplesConfigs {
         input:
-            inputFiles = sampleConfigs,
+            inputFiles = sampleConfigFiles,
             keyFilePath = outputDir + "/config.keys"
     }
 
@@ -21,11 +23,13 @@ workflow pipeline {
         call sampleWorkflow.sample as sample {
             input:
                 outputDir = outputDir + "/samples/" + sm,
-                sampleConfigs = sampleConfigs,
+                sampleConfigs = sampleConfigFiles,
                 sampleId = sm,
                 refFasta = refFasta,
                 refDict = refDict,
-                refFastaIndex = refFastaIndex
+                refFastaIndex = refFastaIndex,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFindex = dbsnpVCFindex
         }
     }
 
@@ -37,7 +41,9 @@ workflow pipeline {
             outputDir = outputDir,
             gvcfFiles = sample.gvcf,
             gvcfIndexes = sample.gvcfIndex,
-            vcfBasename = "multisample"
+            vcfBasename = "multisample",
+            dbsnpVCF = dbsnpVCF,
+            dbsnpVCFindex = dbsnpVCFindex
     }
 
     output {
