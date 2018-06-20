@@ -27,8 +27,10 @@ import nl.biopet.utils.biowdl.fixtureFile
 import nl.biopet.utils.biowdl.references.TestReference
 import nl.biopet.utils.biowdl.samples.{Wgs1PairedEnd, Wgs2PairedEnd}
 
-class GermlineDNATest extends GermlineDNASuccess with TestReference
-  with Wgs1PairedEnd
-  with Wgs2PairedEnd {
+class GermlineDNATest
+    extends GermlineDNASuccess
+    with TestReference
+    with Wgs1PairedEnd
+    with Wgs2PairedEnd {
   def dbsnpFile: File = fixtureFile("samples", "wgs2", "wgs2.vcf.gz")
 }

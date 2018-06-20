@@ -27,8 +27,7 @@ import nl.biopet.utils.biowdl.multisample.MultisamplePipeline
 import nl.biopet.utils.biowdl.references.Reference
 import nl.biopet.utils.ngs.vcf.getVcfIndexFile
 
-trait GermlineDNA
-    extends MultisamplePipeline with Reference {
+trait GermlineDNA extends MultisamplePipeline with Reference {
 
   def dbsnpFile: File
 
@@ -39,8 +38,10 @@ trait GermlineDNA
         "pipeline.refFasta" -> referenceFasta.getAbsolutePath,
         "pipeline.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
         "pipeline.refDict" -> referenceFastaDictFile.getAbsolutePath,
-        "pipeline.sample.library.readgroup.mapping.bwaMem.referenceFasta" -> bwaMemFasta.getOrElse(throw new IllegalStateException),
-        "pipeline.sample.library.readgroup.mapping.bwaMem.indexFiles" -> bwaMemIndexFiles.map(_.getAbsolutePath),
+        "pipeline.sample.library.readgroup.mapping.bwaMem.referenceFasta" -> bwaMemFasta
+          .getOrElse(throw new IllegalStateException),
+        "pipeline.sample.library.readgroup.mapping.bwaMem.indexFiles" -> bwaMemIndexFiles
+          .map(_.getAbsolutePath),
         "pipeline.dbsnpVCF" -> dbsnpFile.getAbsolutePath,
         "pipeline.dbsnpVCFindex" -> getVcfIndexFile(dbsnpFile).getAbsolutePath
       )
