@@ -26,5 +26,7 @@ import java.io.File
 import nl.biopet.utils.biowdl.PipelineSuccess
 
 trait GermlineDNASuccess extends GermlineDNA with PipelineSuccess {
+  addMustHaveFile("multisample.vcf.gz")
+  addMustHaveFile("multisample.vcf.gz.tbi")
   //TODO: add tests
 }
