@@ -9,6 +9,8 @@ workflow sample {
     File refFasta
     File refDict
     File refFastaIndex
+    File dbsnpVCF
+    File dbsnpVCFindex
 
     call biopet.SampleConfig as librariesConfigs {
         input:
@@ -29,7 +31,9 @@ workflow sample {
                     sampleId = sampleId,
                     refFasta = refFasta,
                     refDict = refDict,
-                    refFastaIndex = refFastaIndex
+                    refFastaIndex = refFastaIndex,
+                    dbsnpVCF = dbsnpVCF,
+                    dbsnpVCFindex = dbsnpVCFindex
             }
         }
     }
@@ -41,7 +45,9 @@ workflow sample {
             refFastaIndex = refFastaIndex,
             bamFiles = select_all(library.bqsrBamFile),
             bamIndexes = select_all(library.bqsrBamIndexFile),
-            gvcfPath = outputDir + "/" + sampleId + ".g.vcf.gz"
+            gvcfPath = outputDir + "/" + sampleId + ".g.vcf.gz",
+            dbsnpVCF = dbsnpVCF,
+            dbsnpVCFindex = dbsnpVCFindex
     }
 
     output {
