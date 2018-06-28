@@ -24,9 +24,23 @@ package biowdl.test
 import java.io.File
 
 import nl.biopet.utils.biowdl.PipelineSuccess
+import nl.biopet.utils.biowdl.multisample.Library
+import org.testng.annotations.Test
 
 trait GermlineDNASuccess extends GermlineDNA with PipelineSuccess {
   addMustHaveFile("multisample.vcf.gz")
   addMustHaveFile("multisample.vcf.gz.tbi")
-  //TODO: add tests
+
+  @Test(dataProvider = "libraries")
+  def testBamFile(library: Library): Unit = {
+    val bamFile = new File(libraryDir(library), s"${library.sample}-${library.library}.markdup.bam")
+    bamFile should exist
+  }
+
+  @Test(dataProvider = "libraries")
+  def testFlatStats(library: Library): Unit = {
+    val metricsDir = new File(libraryDir(library), "metrics")
+    val flagstatFile = new File(metricsDir, s"${library.sample}-${library.library}.markdup.flagstat")
+    flagstatFile should exist
+  }
 }
