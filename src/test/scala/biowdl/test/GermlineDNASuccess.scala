@@ -40,7 +40,7 @@ trait GermlineDNASuccess extends GermlineDNA with PipelineSuccess {
   @Test(dataProvider = "libraries")
   def testFlatStats(library: Library): Unit = {
     val metricsDir = new File(libraryDir(library), "metrics")
-    val flagstatFile = new File(metricsDir, s"${library.sample}-${library.library}.markdup.flagstat")
+    val flagstatFile = new File(metricsDir, s"${library.sample}-${library.library}.markdup.flagstats")
     flagstatFile should exist
   }
 }
