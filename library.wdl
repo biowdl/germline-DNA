@@ -3,6 +3,7 @@ import "tasks/biopet.wdl" as biopet
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
+import "BamMetrics/bammetrics.wdl" as bammetrics
 
 workflow library {
     Array[File] sampleConfigs
@@ -44,13 +45,6 @@ workflow library {
             metrics_path = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.metrics"
     }
 
-    #TODO: replace by bammetrics sub workflow
-    call samtools.Flagstat as flagstat {
-        input:
-            inputBam = markdup.output_bam,
-            outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.flagstat"
-    }
-
     call preprocess.GatkPreprocess as bqsr {
         input:
             bamFile = markdup.output_bam,
@@ -63,10 +57,14 @@ workflow library {
             dbsnpVCFindex = dbsnpVCFindex
     }
 
-    call samtools.Flagstat as flagstatPreprocess {
+    call bammetrics.BamMetrics as BamMetrics {
         input:
-            inputBam = bqsr.outputBamFile,
-            outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bqsr.flagstat"
+            bamFile = markdup.output_bam,
+            bamIndex = markdup.output_bam_index,
+            outputDir = outputDir + "/metrics",
+            refFasta = refFasta,
+            refDict = refDict,
+            refFastaIndex = refFastaIndex
     }
 
     output {
