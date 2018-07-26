@@ -25,6 +25,18 @@ workflow readgroup {
         then read_map(config.tsvOutput)
         else { "": "" }
 
+    call common.CheckFileMD5 as md5CheckR1 {
+        input:
+            file=configValues["R1"],
+            MD5sum=configValues["R1_md5"]
+    }
+
+    call common.CheckFileMD5 as md5CheckR2 {
+        input:
+            file=configValues["R2"],
+            MD5sum=configValues["R2_md5"]
+    }
+
     scatter (chunk in range(select_first([numberChunks, 1]))){
         String chunksR1 = "${outputDir}/chunk_${chunk}/${chunk}_1.fq.gz"
         String chunksR2 = "${outputDir}/chunk_${chunk}/${chunk}_2.fq.gz"
