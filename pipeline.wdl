@@ -18,6 +18,15 @@ workflow pipeline {
             keyFilePath = outputDir + "/config.keys"
     }
 
+    call biopet.ValidateVcf as validateVcf {
+        input:
+            vcfFile = dbsnpVCF,
+            vcfIndex = dbsnpVCFindex,
+            refFasta = refFasta,
+            refFastaIndex = refFastaIndex,
+            refDict = refDict
+    }
+
     # Running sample subworkflow
     scatter (sm in read_lines(samplesConfigs.keysFile)) {
         call sampleWorkflow.sample as sample {
