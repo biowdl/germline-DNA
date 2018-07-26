@@ -17,3 +17,4 @@ dependencies:
   - bwa==0.7.17
   - biopet-seqstat==0.1
   - biopet-validatefastq==0.1.1
+  - biopet-validatevcf==0.1
