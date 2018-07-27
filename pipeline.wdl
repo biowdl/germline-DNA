@@ -1,21 +1,21 @@
+version 1.0
+
+import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
 import "sample.wdl" as sampleWorkflow
 import "tasks/biopet.wdl" as biopet
-import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
+import "tasks/samplesheet.wdl" as samplesheet
 
 workflow pipeline {
-    Array[File] sampleConfigFiles
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
-    File dbsnpVCF
-    File dbsnpVCFindex
-
-    #  Reading the samples from the sample config files
-    call biopet.SampleConfig as samplesConfigs {
-        input:
-            inputFiles = sampleConfigFiles,
-            keyFilePath = outputDir + "/config.keys"
+    input {
+        Array[File] sampleConfigFiles
+        String outputDir
+        File refFasta
+        File refDict
+        File refFastaIndex
+        File dbsnpVCF
+        File dbsnpVCFindex
+        Array[File] indexFiles
+        File refFasta
     }
 
     call biopet.ValidateVcf as validateVcf {
@@ -27,18 +27,29 @@ workflow pipeline {
             refDict = refDict
     }
 
+    # Parse sample configs
+    scatter (sampleConfigFile in sampleConfigFiles) {
+        call samplesheet.sampleConfigFileToStruct as config {
+            input:
+                sampleConfigFile = sampleConfigFile
+        }
+    }
+
+    Array[Sample] samples = flatten(config.samples)
+
     # Running sample subworkflow
-    scatter (sm in read_lines(samplesConfigs.keysFile)) {
+    scatter (sm in samples) {
         call sampleWorkflow.sample as sample {
             input:
-                outputDir = outputDir + "/samples/" + sm,
-                sampleConfigs = sampleConfigFiles,
-                sampleId = sm,
+                outputDir = outputDir + "/samples/" + sm.id,
+                sample = sm,
                 refFasta = refFasta,
                 refDict = refDict,
                 refFastaIndex = refFastaIndex,
                 dbsnpVCF = dbsnpVCF,
-                dbsnpVCFindex = dbsnpVCFindex
+                dbsnpVCFindex = dbsnpVCFindex,
+                indexFiles = indexFiles,
+                refFasta = refFasta
         }
     }
 
@@ -56,6 +67,5 @@ workflow pipeline {
     }
 
     output {
-        Array[String] samples = read_lines(samplesConfigs.keysFile)
     }
 }

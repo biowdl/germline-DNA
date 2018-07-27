@@ -1,40 +1,36 @@
+version 1.0
+
+import "bam-to-gvcf/gvcf.wdl" as gvcf
 import "library.wdl" as libraryWorkflow
 import "tasks/biopet.wdl" as biopet
-import "bam-to-gvcf/gvcf.wdl" as gvcf
+import "tasks/samplesheet.wdl" as samplesheet
 
 workflow sample {
-    Array[File] sampleConfigs
-    String sampleId
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
-    File dbsnpVCF
-    File dbsnpVCFindex
-
-    call biopet.SampleConfig as librariesConfigs {
-        input:
-            inputFiles = sampleConfigs,
-            sample = sampleId,
-            jsonOutputPath = outputDir + "/" + sampleId + ".config.json",
-            tsvOutputPath = outputDir + "/" + sampleId + ".config.tsv",
-            keyFilePath = outputDir + "/" + sampleId + ".config.keys"
+    input {
+        Sample sample
+        String outputDir
+        File refFasta
+        File refDict
+        File refFastaIndex
+        File dbsnpVCF
+        File dbsnpVCFindex
+        Array[File] indexFiles
+        File refFasta
     }
 
-    scatter (lb in read_lines(librariesConfigs.keysFile)) {
-        if (lb != "") {
-            call libraryWorkflow.library as library {
-                input:
-                    outputDir = outputDir + "/lib_" + lb,
-                    sampleConfigs = select_all([librariesConfigs.jsonOutput]),
-                    libraryId = lb,
-                    sampleId = sampleId,
-                    refFasta = refFasta,
-                    refDict = refDict,
-                    refFastaIndex = refFastaIndex,
-                    dbsnpVCF = dbsnpVCF,
-                    dbsnpVCFindex = dbsnpVCFindex
-            }
+    scatter (lb in sample.libraries) {
+        call libraryWorkflow.library as library {
+            input:
+                outputDir = outputDir + "/lib_" + lb.id,
+                library = lb,
+                sampleId = sample.id,
+                refFasta = refFasta,
+                refDict = refDict,
+                refFastaIndex = refFastaIndex,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFindex = dbsnpVCFindex,
+                indexFiles = indexFiles,
+                refFasta = refFasta
         }
     }
 
@@ -43,9 +39,9 @@ workflow sample {
             refFasta = refFasta,
             refDict = refDict,
             refFastaIndex = refFastaIndex,
-            bamFiles = select_all(library.bqsrBamFile),
-            bamIndexes = select_all(library.bqsrBamIndexFile),
-            gvcfPath = outputDir + "/" + sampleId + ".g.vcf.gz",
+            bamFiles = library.bqsrBamFile,
+            bamIndexes = library.bqsrBamIndexFile,
+            gvcfPath = outputDir + "/" + sample.id + ".g.vcf.gz",
             dbsnpVCF = dbsnpVCF,
             dbsnpVCFindex = dbsnpVCFindex
     }
@@ -53,6 +49,5 @@ workflow sample {
     output {
         File gvcf = createGvcf.outputGVCF
         File gvcfIndex = createGvcf.outputGVCFindex
-        Array[String] libraries = read_lines(librariesConfigs.keysFile)
     }
 }
