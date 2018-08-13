@@ -2,8 +2,9 @@ version 1.0
 
 import "bam-to-gvcf/gvcf.wdl" as gvcf
 import "library.wdl" as libraryWorkflow
+import "samplesheet.wdl" as samplesheet
 import "tasks/biopet.wdl" as biopet
-import "tasks/samplesheet.wdl" as samplesheet
+
 
 workflow sample {
     input {

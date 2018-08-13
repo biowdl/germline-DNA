@@ -3,9 +3,9 @@ version 1.0
 import "BamMetrics/bammetrics.wdl" as bammetrics
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "readgroup.wdl" as readgroup
+import "samplesheet.wdl" as samplesheet
 import "tasks/biopet.wdl" as biopet
 import "tasks/picard.wdl" as picard
-import "tasks/samplesheet.wdl" as samplesheet
 import "tasks/samtools.wdl" as samtools
 
 workflow library {

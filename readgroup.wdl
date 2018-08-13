@@ -1,9 +1,9 @@
 version 1.0
 
 import "aligning/align-bwamem.wdl" as wdlMapping
+import "samplesheet.wdl" as samplesheet
 import "tasks/biopet.wdl" as biopet
 import "tasks/common.wdl" as common
-import "tasks/samplesheet.wdl" as samplesheet
 import "QC/AdapterClipping.wdl" as adapterClipping
 import "QC/QualityReport.wdl" as qualityReport
 
