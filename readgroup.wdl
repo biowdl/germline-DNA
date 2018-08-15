@@ -15,7 +15,7 @@ workflow readgroup {
         String outputDir
         Int numberChunks = 1
         Array[File] indexFiles
-        File refFasta
+        File bwaFasta
     }
 
     call common.CheckFileMD5 as md5CheckR1 {
@@ -67,7 +67,8 @@ workflow readgroup {
 
     scatter (x in range(length(chunksR1))){
         Chunk chunks = if defined(fastqsplitterR2.chunks)
-            then {"R1": fastqsplitterR1.chunks[x], "R2": fastqsplitterR2.chunks[x]}
+            then {"R1": fastqsplitterR1.chunks[x],
+                "R2": select_first([fastqsplitterR2.chunks])[x]}
             else {"R1": fastqsplitterR1.chunks[x]}
     }
 
@@ -91,7 +92,7 @@ workflow readgroup {
                 library = libraryId,
                 readgroup = readgroup.id,
                 indexFiles = indexFiles,
-                refFasta = refFasta
+                refFasta = bwaFasta
         }
     }
 

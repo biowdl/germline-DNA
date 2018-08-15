@@ -38,7 +38,7 @@ trait GermlineDNA extends MultisamplePipeline with Reference {
         "pipeline.refFasta" -> referenceFasta.getAbsolutePath,
         "pipeline.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
         "pipeline.refDict" -> referenceFastaDictFile.getAbsolutePath,
-        "pipeline.sample.refFasta" -> bwaMemFasta
+        "pipeline.bwaFasta" -> bwaMemFasta
           .getOrElse(throw new IllegalStateException),
         "pipeline.indexFiles" -> bwaMemIndexFiles
           .map(_.getAbsolutePath),

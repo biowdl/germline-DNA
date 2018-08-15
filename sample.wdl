@@ -16,7 +16,7 @@ workflow sample {
         File dbsnpVCF
         File dbsnpVCFindex
         Array[File] indexFiles
-        File refFasta
+        File bwaFasta
     }
 
     scatter (lb in sample.libraries) {
@@ -31,7 +31,7 @@ workflow sample {
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFindex = dbsnpVCFindex,
                 indexFiles = indexFiles,
-                refFasta = refFasta
+                bwaFasta = bwaFasta
         }
     }
 

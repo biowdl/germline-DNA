@@ -15,7 +15,7 @@ workflow pipeline {
         File dbsnpVCF
         File dbsnpVCFindex
         Array[File] indexFiles
-        File refFasta
+        File bwaFasta
     }
 
     call biopet.ValidateVcf as validateVcf {
@@ -49,7 +49,7 @@ workflow pipeline {
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFindex = dbsnpVCFindex,
                 indexFiles = indexFiles,
-                refFasta = refFasta
+                bwaFasta = bwaFasta
         }
     }
 

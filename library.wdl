@@ -19,7 +19,7 @@ workflow library {
         File dbsnpVCF
         File dbsnpVCFindex
         Array[File] indexFiles
-        File refFasta
+        File bwaFasta
     }
 
     scatter (rg in library.readgroups) {
@@ -30,7 +30,7 @@ workflow library {
                 libraryId = library.id,
                 sampleId = sampleId,
                 indexFiles = indexFiles,
-                refFasta = refFasta
+                bwaFasta = bwaFasta
         }
     }
 
