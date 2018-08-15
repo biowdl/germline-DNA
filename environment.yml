@@ -19,3 +19,4 @@ dependencies:
   - biopet-validatefastq==0.1.1
   - biopet-validatevcf==0.1
   - pyyaml==3.12
+  - r==3.4.3
