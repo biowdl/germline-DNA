@@ -3,34 +3,27 @@ version 1.0
 import "BamMetrics/bammetrics.wdl" as bammetrics
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "readgroup.wdl" as readgroup
-import "samplesheet.wdl" as samplesheet
+import "structs.wdl" as structs
 import "tasks/biopet.wdl" as biopet
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
 
-workflow library {
+workflow Library {
     input {
         String sampleId
         Library library
         String libraryDir
-        File refFasta
-        File refDict
-        File refFastaIndex
-        File dbsnpVCF
-        File dbsnpVCFindex
-        Array[File] indexFiles
-        File bwaFasta
+        GermlineDNAinputs germlineDNAinputs
     }
 
     scatter (rg in library.readgroups) {
-        call readgroup.readgroup as readgroup {
+        call readgroup.Readgroup as readgroup {
             input:
                 readgroupDir = libraryDir + "/rg_" + rg.id,
                 readgroup = rg,
                 libraryId = library.id,
                 sampleId = sampleId,
-                indexFiles = indexFiles,
-                bwaFasta = bwaFasta
+                germlineDNAinputs = germlineDNAinputs
         }
     }
 
@@ -46,11 +39,11 @@ workflow library {
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
             outputBamPath = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.bqsr.bam",
-            refFasta = refFasta,
-            refDict = refDict,
-            refFastaIndex = refFastaIndex,
-            dbsnpVCF = dbsnpVCF,
-            dbsnpVCFindex = dbsnpVCFindex
+            refFasta = germlineDNAinputs.reference.fasta,
+            refDict = germlineDNAinputs.reference.dict,
+            refFastaIndex = germlineDNAinputs.reference.fai,
+            dbsnpVCF = germlineDNAinputs.dbSNP,
+            dbsnpVCFindex = germlineDNAinputs.dbSNPindex
     }
 
     call bammetrics.BamMetrics as BamMetrics {
@@ -58,9 +51,9 @@ workflow library {
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
             outputDir = libraryDir + "/metrics",
-            refFasta = refFasta,
-            refDict = refDict,
-            refFastaIndex = refFastaIndex
+            refFasta = germlineDNAinputs.reference.fasta,
+            refDict = germlineDNAinputs.reference.dict,
+            refFastaIndex = germlineDNAinputs.reference.fai
     }
 
     output {

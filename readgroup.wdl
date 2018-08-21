@@ -1,21 +1,20 @@
 version 1.0
 
 import "aligning/align-bwamem.wdl" as wdlMapping
-import "samplesheet.wdl" as samplesheet
+import "structs.wdl" as structs
 import "tasks/biopet.wdl" as biopet
 import "tasks/common.wdl" as common
 import "QC/AdapterClipping.wdl" as adapterClipping
 import "QC/QualityReport.wdl" as qualityReport
 
-workflow readgroup {
+workflow Readgroup {
     input {
         Readgroup readgroup
         String libraryId
         String sampleId
         String readgroupDir
         Int numberChunks = 1
-        Array[File] indexFiles
-        File bwaFasta
+        GermlineDNAinputs germlineDNAinputs
     }
 
     call common.CheckFileMD5 as md5CheckR1 {
@@ -95,8 +94,8 @@ workflow readgroup {
                 sample = sampleId,
                 library = libraryId,
                 readgroup = readgroup.id,
-                indexFiles = indexFiles,
-                refFasta = bwaFasta
+                indexFiles = germlineDNAinputs.bwaIndex.indexFiles,
+                refFasta = germlineDNAinputs.bwaIndex.fastaFile
         }
     }
 
