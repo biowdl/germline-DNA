@@ -9,7 +9,7 @@ import "tasks/biopet.wdl" as biopet
 workflow sample {
     input {
         Sample sample
-        String outputDir
+        String sampleDir
         File refFasta
         File refDict
         File refFastaIndex
@@ -22,7 +22,7 @@ workflow sample {
     scatter (lb in sample.libraries) {
         call libraryWorkflow.library as library {
             input:
-                outputDir = outputDir + "/lib_" + lb.id,
+                libraryDir = sampleDir + "/lib_" + lb.id,
                 library = lb,
                 sampleId = sample.id,
                 refFasta = refFasta,
@@ -42,7 +42,7 @@ workflow sample {
             refFastaIndex = refFastaIndex,
             bamFiles = library.bqsrBamFile,
             bamIndexes = library.bqsrBamIndexFile,
-            gvcfPath = outputDir + "/" + sample.id + ".g.vcf.gz",
+            gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
             dbsnpVCF = dbsnpVCF,
             dbsnpVCFindex = dbsnpVCFindex
     }

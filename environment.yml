@@ -20,3 +20,4 @@ dependencies:
   - biopet-validatevcf==0.1
   - pyyaml==3.12
   - r==3.4.3
+  - biopet-vcfstats==1.2

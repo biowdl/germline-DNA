@@ -28,8 +28,9 @@ import nl.biopet.utils.biowdl.multisample.Library
 import org.testng.annotations.Test
 
 trait GermlineDNASuccess extends GermlineDNA with PipelineSuccess {
-  addMustHaveFile("multisample.vcf.gz")
-  addMustHaveFile("multisample.vcf.gz.tbi")
+  addMustHaveFile("multisample_variants/multisample.vcf.gz")
+  addMustHaveFile("multisample_variants/multisample.vcf.gz.tbi")
+  addMustHaveFile("multisample_variants/stats")
 
   @Test(dataProvider = "libraries")
   def testBamFile(library: Library): Unit = {

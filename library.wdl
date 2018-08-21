@@ -12,7 +12,7 @@ workflow library {
     input {
         String sampleId
         Library library
-        String outputDir
+        String libraryDir
         File refFasta
         File refDict
         File refFastaIndex
@@ -25,7 +25,7 @@ workflow library {
     scatter (rg in library.readgroups) {
         call readgroup.readgroup as readgroup {
             input:
-                outputDir = outputDir + "/rg_" + rg.id,
+                readgroupDir = libraryDir + "/rg_" + rg.id,
                 readgroup = rg,
                 libraryId = library.id,
                 sampleId = sampleId,
@@ -37,15 +37,15 @@ workflow library {
     call picard.MarkDuplicates as markdup {
         input:
             input_bams = flatten(readgroup.bamFile),
-            output_bam_path = outputDir + "/" + sampleId + "-" + library.id + ".markdup.bam",
-            metrics_path = outputDir + "/" + sampleId + "-" + library.id + ".markdup.metrics"
+            output_bam_path = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.bam",
+            metrics_path = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.metrics"
     }
 
     call preprocess.GatkPreprocess as bqsr {
         input:
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
-            outputBamPath = outputDir + "/" + sampleId + "-" + library.id + ".markdup.bqsr.bam",
+            outputBamPath = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.bqsr.bam",
             refFasta = refFasta,
             refDict = refDict,
             refFastaIndex = refFastaIndex,
@@ -57,7 +57,7 @@ workflow library {
         input:
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
-            outputDir = outputDir + "/metrics",
+            outputDir = libraryDir + "/metrics",
             refFasta = refFasta,
             refDict = refDict,
             refFastaIndex = refFastaIndex

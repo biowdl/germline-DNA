@@ -12,7 +12,7 @@ workflow readgroup {
         Readgroup readgroup
         String libraryId
         String sampleId
-        String outputDir
+        String readgroupDir
         Int numberChunks = 1
         Array[File] indexFiles
         File bwaFasta
@@ -33,8 +33,8 @@ workflow readgroup {
     }
 
     scatter (chunk in range(numberChunks)){
-        String chunksR1 = "${outputDir}/chunk_${chunk}/${chunk}_1.fq.gz"
-        String chunksR2 = "${outputDir}/chunk_${chunk}/${chunk}_2.fq.gz"
+        String chunksR1 = "${readgroupDir}/chunk_${chunk}/${chunk}_1.fq.gz"
+        String chunksR2 = "${readgroupDir}/chunk_${chunk}/${chunk}_2.fq.gz"
     }
 
     call biopet.FastqSplitter as fastqsplitterR1 {
@@ -43,10 +43,14 @@ workflow readgroup {
             outputPaths = chunksR1
     }
 
+
+    String qcRead1Dir = readgroupDir + "/QC/read1/"
+    String qcRead2Dir = readgroupDir + "/QC/read2/"
+
     call qualityReport.QualityReport as qualityReportR1 {
         input:
             read = readgroup.R1,
-            outputDir = outputDir + "/raw/R1",
+            outputDir = qcRead1Dir,
             extractAdapters = true
     }
 
@@ -60,7 +64,7 @@ workflow readgroup {
         call qualityReport.QualityReport as qualityReportR2 {
             input:
                 read = select_first([readgroup.R2]),
-                outputDir = outputDir + "/raw/R2",
+                outputDir = qcRead2Dir,
                 extractAdapters = true
         }
     }

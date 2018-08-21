@@ -18,6 +18,8 @@ workflow pipeline {
         File bwaFasta
     }
 
+    String genotypingDir = outputDir + "/multisample_variants/"
+
     call biopet.ValidateVcf as validateVcf {
         input:
             vcfFile = dbsnpVCF,
@@ -41,7 +43,7 @@ workflow pipeline {
     scatter (sm in samples) {
         call sampleWorkflow.sample as sample {
             input:
-                outputDir = outputDir + "/samples/" + sm.id,
+                sampleDir = outputDir + "/samples/" + sm.id,
                 sample = sm,
                 refFasta = refFasta,
                 refDict = refDict,
@@ -53,17 +55,27 @@ workflow pipeline {
         }
     }
 
-    call jointgenotyping.JointGenotyping {
+    call jointgenotyping.JointGenotyping as genotyping {
         input:
             refFasta = refFasta,
             refDict = refDict,
             refFastaIndex = refFastaIndex,
-            outputDir = outputDir,
+            outputDir = genotypingDir,
             gvcfFiles = sample.gvcf,
             gvcfIndexes = sample.gvcfIndex,
             vcfBasename = "multisample",
             dbsnpVCF = dbsnpVCF,
             dbsnpVCFindex = dbsnpVCFindex
+    }
+
+    call biopet.VcfStats as vcfStats {
+        input:
+            vcfFile = genotyping.vcfFile,
+            vcfIndex = genotyping.vcfFileIndex,
+            refFasta = refFasta,
+            refFastaIndex = refFastaIndex,
+            refDict = refDict,
+            outputDir = genotypingDir + "/stats"
     }
 
     output {
