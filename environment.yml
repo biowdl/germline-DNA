@@ -18,6 +18,7 @@ dependencies:
   - biopet-seqstat==0.1
   - biopet-validatefastq==0.1.1
   - biopet-validatevcf==0.1
-# - r==3.4.3
+  - r==3.4.3
   - biopet-vcfstats==1.2
-  - fontconfig==2.11.1
+  - fontconfig==2.13.0=1
+  - gxx_linux-64==7.2.0
