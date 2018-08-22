@@ -94,8 +94,7 @@ workflow Readgroup {
                 sample = sampleId,
                 library = libraryId,
                 readgroup = readgroup.id,
-                indexFiles = germlineDNAinputs.bwaIndex.indexFiles,
-                refFasta = germlineDNAinputs.bwaIndex.fastaFile
+                bwaIndex = germlineDNAinputs.bwaIndex
         }
     }
 
