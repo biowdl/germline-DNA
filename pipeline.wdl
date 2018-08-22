@@ -5,7 +5,7 @@ import "sample.wdl" as sampleWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet.wdl" as biopet
 
-workflow Pipeline {
+workflow pipeline {
     input {
         Array[File] sampleConfigFiles
         String outputDir
@@ -26,7 +26,7 @@ workflow Pipeline {
     call biopet.SampleConfigCromwellArrays as configFile {
         input:
             inputFiles = sampleConfigFiles,
-            outputPath = outputDir + "samples.json"
+            outputPath = outputDir + "/samples.json"
     }
 
      Root config = read_json(configFile.outputFile)
