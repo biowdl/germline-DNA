@@ -46,8 +46,9 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh "#!/bin/bash\n" +
-                        "set -e -v -o pipefail\n" +
+                        "set -e -v\n" +
                         "${activateEnv}\n" +
+                        "set -o pipefail\n" +
                         "${sbt} clean evicted scalafmt headerCreate test | tee sbt.log"
                 sh 'n=`grep -ce "\\* com.github.biopet" sbt.log || true`; if [ "$n" -ne \"0\" ]; then echo "ERROR: Found conflicting dependencies inside biopet"; exit 1; fi'
                 sh "git diff --exit-code || (echo \"ERROR: Git changes detected, please regenerate the readme, create license headers and run scalafmt: sbt biopetGenerateReadme headerCreate scalafmt\" && exit 1)"
