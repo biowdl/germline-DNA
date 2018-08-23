@@ -21,4 +21,4 @@ dependencies:
   - r==3.4.3
   - biopet-vcfstats==1.2
   - fontconfig==2.13.0
-  - gxx_linux-64==7.2.0=25
+  - gxx_linux-64==7.2.0=h550dcbe_27
