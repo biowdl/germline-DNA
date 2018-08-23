@@ -17,13 +17,15 @@ workflow Readgroup {
         GermlineDNAinputs germlineDNAinputs
     }
 
-    call common.CheckFileMD5 as md5CheckR1 {
-        input:
-            file = readgroup.R1,
-            MD5sum = readgroup.R1_md5
+    if (defined(readgroup.R1_md5)) {
+        call common.CheckFileMD5 as md5CheckR1 {
+            input:
+                file = readgroup.R1,
+                MD5sum = select_first([readgroup.R1_md5])
+        }
     }
 
-    if (defined(readgroup.R2)){
+    if (defined(readgroup.R2_md5)) {
         call common.CheckFileMD5 as md5CheckR2 {
             input:
                 file = select_first([readgroup.R2]),

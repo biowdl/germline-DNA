@@ -6,7 +6,7 @@ import "tasks/common.wdl" as common
 struct Readgroup {
     String id
     File R1
-    String R1_md5
+    String? R1_md5
     File? R2
     String? R2_md5
 }
@@ -19,7 +19,6 @@ struct Library {
 struct Sample {
     String id
     Array[Library]+ libraries
-    String? control
 }
 
 struct Root {
@@ -29,6 +28,5 @@ struct Root {
 struct GermlineDNAinputs {
     Reference reference
     BwaIndex bwaIndex
-    File dbSNP
-    File dbSNPindex
+    IndexedVcfFile dbSNP
 }

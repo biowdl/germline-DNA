@@ -46,8 +46,10 @@ trait GermlineDNA extends MultisamplePipeline with Reference {
               throw new IllegalStateException),
             "indexFiles" -> bwaMemIndexFiles.map(_.getAbsolutePath)
           ),
-          "dbSNP" -> dbsnpFile.getAbsolutePath,
-          "dbSNPindex" -> getVcfIndexFile(dbsnpFile).getAbsolutePath
+          "dbSNP" -> Map(
+            "file" -> dbsnpFile.getAbsolutePath,
+            "index" -> getVcfIndexFile(dbsnpFile).getAbsolutePath
+          )
         )
       )
 

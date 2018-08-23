@@ -42,8 +42,8 @@ workflow Library {
             refFasta = germlineDNAinputs.reference.fasta,
             refDict = germlineDNAinputs.reference.dict,
             refFastaIndex = germlineDNAinputs.reference.fai,
-            dbsnpVCF = germlineDNAinputs.dbSNP,
-            dbsnpVCFindex = germlineDNAinputs.dbSNPindex
+            dbsnpVCF = germlineDNAinputs.dbSNP.file,
+            dbsnpVCFindex = germlineDNAinputs.dbSNP.index
     }
 
     call bammetrics.BamMetrics as BamMetrics {

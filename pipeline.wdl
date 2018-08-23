@@ -16,8 +16,8 @@ workflow pipeline {
 
     call biopet.ValidateVcf as validateVcf {
         input:
-            vcfFile = germlineDNAinputs.dbSNP,
-            vcfIndex = germlineDNAinputs.dbSNPindex,
+            vcfFile = germlineDNAinputs.dbSNP.file,
+            vcfIndex = germlineDNAinputs.dbSNP.index,
             refFasta = germlineDNAinputs.reference.fasta,
             refFastaIndex = germlineDNAinputs.reference.fai,
             refDict = germlineDNAinputs.reference.dict
@@ -38,13 +38,6 @@ workflow pipeline {
                 sampleDir = outputDir + "/samples/" + sm.id,
                 sample = sm,
                 germlineDNAinputs = germlineDNAinputs
-                #refFasta = germlineDNAinputs.reference.fasta,
-                #refDict = germlineDNAinputs.reference.dict,
-                #refFastaIndex = germlineDNAinputs.reference.fai,
-                #dbsnpVCF = germlineDNAinputs.dbSNP,
-                #dbsnpVCFindex = germlineDNAinputs.dbSNPindex,
-                #indexFiles = germlineDNAinputs.bwaIndex.indexFiles,
-                #bwaFasta = germlineDNAinputs.bwaIndex.fastaFile
         }
     }
 
@@ -57,8 +50,8 @@ workflow pipeline {
             gvcfFiles = sample.gvcf,
             gvcfIndexes = sample.gvcfIndex,
             vcfBasename = "multisample",
-            dbsnpVCF = germlineDNAinputs.dbSNP,
-            dbsnpVCFindex = germlineDNAinputs.dbSNPindex
+            dbsnpVCF = germlineDNAinputs.dbSNP.file,
+            dbsnpVCFindex = germlineDNAinputs.dbSNP.index
     }
 
     call biopet.VcfStats as vcfStats {

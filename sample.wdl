@@ -31,8 +31,8 @@ workflow Sample {
             bamFiles = library.bqsrBamFile,
             bamIndexes = library.bqsrBamIndexFile,
             gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
-            dbsnpVCF = germlineDNAinputs.dbSNP,
-            dbsnpVCFindex = germlineDNAinputs.dbSNPindex
+            dbsnpVCF = germlineDNAinputs.dbSNP.file,
+            dbsnpVCFindex = germlineDNAinputs.dbSNP.index
     }
 
     output {
