@@ -1,68 +1,89 @@
+version 1.0
+
+import "aligning/align-bwamem.wdl" as wdlMapping
+import "structs.wdl" as structs
+import "tasks/biopet.wdl" as biopet
+import "tasks/common.wdl" as common
 import "QC/AdapterClipping.wdl" as adapterClipping
 import "QC/QualityReport.wdl" as qualityReport
-import "aligning/align-bwamem.wdl" as wdlMapping
-import "tasks/biopet.wdl" as biopet
 
-workflow readgroup {
-    Array[File] sampleConfigs
-    String readgroupId
-    String libraryId
-    String sampleId
-    String outputDir
-    Int? numberChunks
-
-    call biopet.SampleConfig as config {
-        input:
-            inputFiles = sampleConfigs,
-            sample = sampleId,
-            library = libraryId,
-            readgroup = readgroupId,
-            tsvOutputPath = outputDir + "/" + readgroupId + ".config.tsv",
-            keyFilePath = outputDir + "/" + readgroupId + ".config.keys"
+workflow Readgroup {
+    input {
+        Readgroup readgroup
+        String libraryId
+        String sampleId
+        String readgroupDir
+        Int numberChunks = 1
+        GermlineDNAinputs germlineDNAinputs
     }
 
-    Object configValues = if (defined(config.tsvOutput) && size(config.tsvOutput) > 0)
-        then read_map(config.tsvOutput)
-        else { "": "" }
+    if (defined(readgroup.R1_md5)) {
+        call common.CheckFileMD5 as md5CheckR1 {
+            input:
+                file = readgroup.R1,
+                MD5sum = select_first([readgroup.R1_md5])
+        }
+    }
 
-    scatter (chunk in range(select_first([numberChunks, 1]))){
-        String chunksR1 = "${outputDir}/chunk_${chunk}/${chunk}_1.fq.gz"
-        String chunksR2 = "${outputDir}/chunk_${chunk}/${chunk}_2.fq.gz"
+    if (defined(readgroup.R2_md5)) {
+        call common.CheckFileMD5 as md5CheckR2 {
+            input:
+                file = select_first([readgroup.R2]),
+                MD5sum = select_first([readgroup.R2_md5])
+        }
+    }
+
+    scatter (chunk in range(numberChunks)){
+        String chunksR1 = "${readgroupDir}/chunk_${chunk}/${chunk}_1.fq.gz"
+        String chunksR2 = "${readgroupDir}/chunk_${chunk}/${chunk}_2.fq.gz"
     }
 
     call biopet.FastqSplitter as fastqsplitterR1 {
         input:
-            inputFastq = configValues.R1,
+            inputFastq = readgroup.R1,
             outputPaths = chunksR1
     }
 
-    call biopet.FastqSplitter as fastqsplitterR2 {
-        input:
-            inputFastq = configValues.R2,
-            outputPaths = chunksR2
-    }
+
+    String qcRead1Dir = readgroupDir + "/QC/read1/"
+    String qcRead2Dir = readgroupDir + "/QC/read2/"
 
     call qualityReport.QualityReport as qualityReportR1 {
         input:
-            read = configValues.R1,
-            outputDir = outputDir + "/raw/R1",
+            read = readgroup.R1,
+            outputDir = qcRead1Dir,
             extractAdapters = true
     }
 
-    call qualityReport.QualityReport as qualityReportR2 {
-        input:
-            read = configValues.R2,
-            outputDir = outputDir + "/raw/R2",
-            extractAdapters = true
+    if (defined(readgroup.R2)){
+        call biopet.FastqSplitter as fastqsplitterR2 {
+            input:
+                inputFastq = select_first([readgroup.R2]),
+                outputPaths = chunksR2
+        }
+
+        call qualityReport.QualityReport as qualityReportR2 {
+            input:
+                read = select_first([readgroup.R2]),
+                outputDir = qcRead2Dir,
+                extractAdapters = true
+        }
     }
 
-    scatter (pair in zip(chunksR1, zip(fastqsplitterR1.chunks, fastqsplitterR2.chunks))) {
+    scatter (x in range(length(chunksR1))){
+        Chunk chunks = if defined(fastqsplitterR2.chunks)
+            then {"R1": fastqsplitterR1.chunks[x],
+                "R2": select_first([fastqsplitterR2.chunks])[x]}
+            else {"R1": fastqsplitterR1.chunks[x]}
+    }
+
+    scatter (chunk in zip(chunksR1, chunks)) {
 
         call adapterClipping.AdapterClipping as qc {
             input:
-                outputDir = sub(pair.left, basename(pair.left), ""),
-                read1 = pair.right.left,
-                read2 = pair.right.right,
+                outputDir = sub(chunk.left, basename(chunk.left), ""),
+                read1 = chunk.right.R1,
+                read2 = chunk.right.R2,
                 adapterListRead1 = qualityReportR1.adapters,
                 adapterListRead2 = qualityReportR2.adapters
         }
@@ -71,10 +92,11 @@ workflow readgroup {
             input:
                 inputR1 = qc.read1afterClipping,
                 inputR2 = qc.read2afterClipping,
-                outputDir = sub(pair.left, basename(pair.left), ""),
+                outputDir = sub(chunk.left, basename(chunk.left), ""),
                 sample = sampleId,
                 library = libraryId,
-                readgroup = readgroupId
+                readgroup = readgroup.id,
+                bwaIndex = germlineDNAinputs.bwaIndex
         }
     }
 
@@ -94,9 +116,14 @@ workflow readgroup {
 #    }
 
     output {
-        File inputR1 = configValues.R1
-        File inputR2 = configValues.R2
+        File inputR1 = readgroup.R1
+        File? inputR2 = readgroup.R2
         Array[File] bamFile = mapping.bamFile
         Array[File] bamIndexFile = mapping.bamIndexFile
     }
+}
+
+struct Chunk {
+    File R1
+    File? R2
 }

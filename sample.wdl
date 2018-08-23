@@ -1,58 +1,42 @@
-import "library.wdl" as libraryWorkflow
-import "tasks/biopet.wdl" as biopet
+version 1.0
+
 import "bam-to-gvcf/gvcf.wdl" as gvcf
+import "library.wdl" as libraryWorkflow
+import "structs.wdl" as structs
+import "tasks/biopet.wdl" as biopet
 
-workflow sample {
-    Array[File] sampleConfigs
-    String sampleId
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
-    File dbsnpVCF
-    File dbsnpVCFindex
 
-    call biopet.SampleConfig as librariesConfigs {
-        input:
-            inputFiles = sampleConfigs,
-            sample = sampleId,
-            jsonOutputPath = outputDir + "/" + sampleId + ".config.json",
-            tsvOutputPath = outputDir + "/" + sampleId + ".config.tsv",
-            keyFilePath = outputDir + "/" + sampleId + ".config.keys"
+workflow Sample {
+    input {
+        Sample sample
+        String sampleDir
+        GermlineDNAinputs germlineDNAinputs
     }
 
-    scatter (lb in read_lines(librariesConfigs.keysFile)) {
-        if (lb != "") {
-            call libraryWorkflow.library as library {
-                input:
-                    outputDir = outputDir + "/lib_" + lb,
-                    sampleConfigs = select_all([librariesConfigs.jsonOutput]),
-                    libraryId = lb,
-                    sampleId = sampleId,
-                    refFasta = refFasta,
-                    refDict = refDict,
-                    refFastaIndex = refFastaIndex,
-                    dbsnpVCF = dbsnpVCF,
-                    dbsnpVCFindex = dbsnpVCFindex
-            }
+    scatter (lb in sample.libraries) {
+        call libraryWorkflow.Library as library {
+            input:
+                libraryDir = sampleDir + "/lib_" + lb.id,
+                library = lb,
+                sampleId = sample.id,
+                germlineDNAinputs = germlineDNAinputs
         }
     }
 
     call gvcf.Gvcf as createGvcf {
         input:
-            refFasta = refFasta,
-            refDict = refDict,
-            refFastaIndex = refFastaIndex,
-            bamFiles = select_all(library.bqsrBamFile),
-            bamIndexes = select_all(library.bqsrBamIndexFile),
-            gvcfPath = outputDir + "/" + sampleId + ".g.vcf.gz",
-            dbsnpVCF = dbsnpVCF,
-            dbsnpVCFindex = dbsnpVCFindex
+            refFasta = germlineDNAinputs.reference.fasta,
+            refDict = germlineDNAinputs.reference.dict,
+            refFastaIndex = germlineDNAinputs.reference.fai,
+            bamFiles = library.bqsrBamFile,
+            bamIndexes = library.bqsrBamIndexFile,
+            gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
+            dbsnpVCF = germlineDNAinputs.dbSNP.file,
+            dbsnpVCFindex = germlineDNAinputs.dbSNP.index
     }
 
     output {
         File gvcf = createGvcf.outputGVCF
         File gvcfIndex = createGvcf.outputGVCFindex
-        Array[String] libraries = read_lines(librariesConfigs.keysFile)
     }
 }

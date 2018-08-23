@@ -25,12 +25,25 @@ import java.io.File
 
 import nl.biopet.utils.biowdl.fixtureFile
 import nl.biopet.utils.biowdl.references.TestReference
-import nl.biopet.utils.biowdl.samples.{Wgs1PairedEnd, Wgs2PairedEnd}
+import nl.biopet.utils.biowdl.samples.{
+  Wgs1SingleEnd,
+  Wgs1PairedEnd,
+  Wgs2SingleEnd,
+  Wgs2PairedEnd
+}
 
-class GermlineDNATest
+class GermlineDNATestPairedEnd
     extends GermlineDNASuccess
     with TestReference
     with Wgs1PairedEnd
     with Wgs2PairedEnd {
+  def dbsnpFile: File = fixtureFile("samples", "wgs2", "wgs2.vcf.gz")
+}
+
+class GermlineDNATestSingleEnd
+    extends GermlineDNASuccess
+    with TestReference
+    with Wgs1SingleEnd
+    with Wgs2SingleEnd {
   def dbsnpFile: File = fixtureFile("samples", "wgs2", "wgs2.vcf.gz")
 }

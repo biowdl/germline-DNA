@@ -1,74 +1,62 @@
+version 1.0
+
+import "BamMetrics/bammetrics.wdl" as bammetrics
+import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "readgroup.wdl" as readgroup
+import "structs.wdl" as structs
 import "tasks/biopet.wdl" as biopet
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
-import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
-import "BamMetrics/bammetrics.wdl" as bammetrics
 
-workflow library {
-    Array[File] sampleConfigs
-    String sampleId
-    String libraryId
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
-    File dbsnpVCF
-    File dbsnpVCFindex
-
-    call biopet.SampleConfig as readgroupConfigs {
-        input:
-            inputFiles = sampleConfigs,
-            sample = sampleId,
-            library = libraryId,
-            tsvOutputPath = outputDir + "/" + libraryId + ".config.tsv",
-            keyFilePath = outputDir + "/" + libraryId + ".config.keys"
+workflow Library {
+    input {
+        String sampleId
+        Library library
+        String libraryDir
+        GermlineDNAinputs germlineDNAinputs
     }
 
-    scatter (rg in read_lines(readgroupConfigs.keysFile)) {
-        if (rg != "") {
-            call readgroup.readgroup as readgroup {
-                input:
-                    outputDir = outputDir + "/rg_" + rg,
-                    sampleConfigs = sampleConfigs,
-                    readgroupId = rg,
-                    libraryId = libraryId,
-                    sampleId = sampleId
-            }
+    scatter (rg in library.readgroups) {
+        call readgroup.Readgroup as readgroup {
+            input:
+                readgroupDir = libraryDir + "/rg_" + rg.id,
+                readgroup = rg,
+                libraryId = library.id,
+                sampleId = sampleId,
+                germlineDNAinputs = germlineDNAinputs
         }
     }
 
     call picard.MarkDuplicates as markdup {
         input:
-            input_bams = flatten(select_all(readgroup.bamFile)),
-            output_bam_path = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bam",
-            metrics_path = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.metrics"
+            input_bams = flatten(readgroup.bamFile),
+            output_bam_path = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.bam",
+            metrics_path = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.metrics"
     }
 
     call preprocess.GatkPreprocess as bqsr {
         input:
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
-            outputBamPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bqsr.bam",
-            refFasta = refFasta,
-            refDict = refDict,
-            refFastaIndex = refFastaIndex,
-            dbsnpVCF = dbsnpVCF,
-            dbsnpVCFindex = dbsnpVCFindex
+            outputBamPath = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.bqsr.bam",
+            refFasta = germlineDNAinputs.reference.fasta,
+            refDict = germlineDNAinputs.reference.dict,
+            refFastaIndex = germlineDNAinputs.reference.fai,
+            dbsnpVCF = germlineDNAinputs.dbSNP.file,
+            dbsnpVCFindex = germlineDNAinputs.dbSNP.index
     }
 
     call bammetrics.BamMetrics as BamMetrics {
         input:
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
-            outputDir = outputDir + "/metrics",
-            refFasta = refFasta,
-            refDict = refDict,
-            refFastaIndex = refFastaIndex
+            outputDir = libraryDir + "/metrics",
+            refFasta = germlineDNAinputs.reference.fasta,
+            refDict = germlineDNAinputs.reference.dict,
+            refFastaIndex = germlineDNAinputs.reference.fai
     }
 
     output {
-        Array[String] readgroups = read_lines(readgroupConfigs.keysFile)
         File bamFile = markdup.output_bam
         File bamIndexFile = markdup.output_bam_index
         File bqsrBamFile = bqsr.outputBamFile

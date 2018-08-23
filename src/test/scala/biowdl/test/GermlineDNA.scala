@@ -35,16 +35,23 @@ trait GermlineDNA extends MultisamplePipeline with Reference {
     super.inputs ++
       Map(
         "pipeline.outputDir" -> outputDir.getAbsolutePath,
-        "pipeline.refFasta" -> referenceFasta.getAbsolutePath,
-        "pipeline.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
-        "pipeline.refDict" -> referenceFastaDictFile.getAbsolutePath,
-        "pipeline.sample.library.readgroup.mapping.bwaMem.referenceFasta" -> bwaMemFasta
-          .getOrElse(throw new IllegalStateException),
-        "pipeline.sample.library.readgroup.mapping.bwaMem.indexFiles" -> bwaMemIndexFiles
-          .map(_.getAbsolutePath),
-        "pipeline.dbsnpVCF" -> dbsnpFile.getAbsolutePath,
-        "pipeline.dbsnpVCFindex" -> getVcfIndexFile(dbsnpFile).getAbsolutePath
+        "pipeline.germlineDNAinputs" -> Map(
+          "reference" -> Map(
+            "fasta" -> referenceFasta.getAbsolutePath,
+            "fai" -> referenceFastaIndexFile.getAbsolutePath,
+            "dict" -> referenceFastaDictFile.getAbsolutePath
+          ),
+          "bwaIndex" -> Map(
+            "fastaFile" -> bwaMemFasta.getOrElse(
+              throw new IllegalStateException),
+            "indexFiles" -> bwaMemIndexFiles.map(_.getAbsolutePath)
+          ),
+          "dbSNP" -> Map(
+            "file" -> dbsnpFile.getAbsolutePath,
+            "index" -> getVcfIndexFile(dbsnpFile).getAbsolutePath
+          )
+        )
       )
 
-  def startFile: File = new File("./pipeline.wdl")
+  def startFile: File = new File("pipeline.wdl")
 }

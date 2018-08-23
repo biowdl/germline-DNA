@@ -1,52 +1,69 @@
-import "sample.wdl" as sampleWorkflow
-import "tasks/biopet.wdl" as biopet
+version 1.0
+
 import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
+import "sample.wdl" as sampleWorkflow
+import "structs.wdl" as structs
+import "tasks/biopet.wdl" as biopet
 
 workflow pipeline {
-    Array[File] sampleConfigFiles
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
-    File dbsnpVCF
-    File dbsnpVCFindex
-
-    #  Reading the samples from the sample config files
-    call biopet.SampleConfig as samplesConfigs {
-        input:
-            inputFiles = sampleConfigFiles,
-            keyFilePath = outputDir + "/config.keys"
+    input {
+        Array[File] sampleConfigFiles
+        String outputDir
+        GermlineDNAinputs germlineDNAinputs
     }
 
+    String genotypingDir = outputDir + "/multisample_variants/"
+
+    call biopet.ValidateVcf as validateVcf {
+        input:
+            vcfFile = germlineDNAinputs.dbSNP.file,
+            vcfIndex = germlineDNAinputs.dbSNP.index,
+            refFasta = germlineDNAinputs.reference.fasta,
+            refFastaIndex = germlineDNAinputs.reference.fai,
+            refDict = germlineDNAinputs.reference.dict
+    }
+
+    call biopet.SampleConfigCromwellArrays as configFile {
+        input:
+            inputFiles = sampleConfigFiles,
+            outputPath = outputDir + "/samples.json"
+    }
+
+     Root config = read_json(configFile.outputFile)
+
     # Running sample subworkflow
-    scatter (sm in read_lines(samplesConfigs.keysFile)) {
-        call sampleWorkflow.sample as sample {
+    scatter (sm in config.samples) {
+        call sampleWorkflow.Sample as sample {
             input:
-                outputDir = outputDir + "/samples/" + sm,
-                sampleConfigs = sampleConfigFiles,
-                sampleId = sm,
-                refFasta = refFasta,
-                refDict = refDict,
-                refFastaIndex = refFastaIndex,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFindex = dbsnpVCFindex
+                sampleDir = outputDir + "/samples/" + sm.id,
+                sample = sm,
+                germlineDNAinputs = germlineDNAinputs
         }
     }
 
-    call jointgenotyping.JointGenotyping {
+    call jointgenotyping.JointGenotyping as genotyping {
         input:
-            refFasta = refFasta,
-            refDict = refDict,
-            refFastaIndex = refFastaIndex,
-            outputDir = outputDir,
+            refFasta = germlineDNAinputs.reference.fasta,
+            refDict = germlineDNAinputs.reference.dict,
+            refFastaIndex = germlineDNAinputs.reference.fai,
+            outputDir = genotypingDir,
             gvcfFiles = sample.gvcf,
             gvcfIndexes = sample.gvcfIndex,
             vcfBasename = "multisample",
-            dbsnpVCF = dbsnpVCF,
-            dbsnpVCFindex = dbsnpVCFindex
+            dbsnpVCF = germlineDNAinputs.dbSNP.file,
+            dbsnpVCFindex = germlineDNAinputs.dbSNP.index
+    }
+
+    call biopet.VcfStats as vcfStats {
+        input:
+            vcfFile = genotyping.vcfFile,
+            vcfIndex = genotyping.vcfFileIndex,
+            refFasta = germlineDNAinputs.reference.fasta,
+            refFastaIndex = germlineDNAinputs.reference.fai,
+            refDict = germlineDNAinputs.reference.dict,
+            outputDir = genotypingDir + "/stats"
     }
 
     output {
-        Array[String] samples = read_lines(samplesConfigs.keysFile)
     }
 }
