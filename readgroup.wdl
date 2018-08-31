@@ -10,8 +10,8 @@ import "QC/QualityReport.wdl" as qualityReport
 workflow Readgroup {
     input {
         Readgroup readgroup
-        String libraryId
-        String sampleId
+        Library library
+        Sample sample
         String readgroupDir
         Int numberChunks = 1
         GermlineDNAinputs germlineDNAinputs
@@ -93,8 +93,8 @@ workflow Readgroup {
                 inputR1 = qc.read1afterClipping,
                 inputR2 = qc.read2afterClipping,
                 outputDir = sub(chunk.left, basename(chunk.left), ""),
-                sample = sampleId,
-                library = libraryId,
+                sample = sample.id,
+                library = library.id,
                 readgroup = readgroup.id,
                 bwaIndex = germlineDNAinputs.bwaIndex
         }
