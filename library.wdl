@@ -10,7 +10,7 @@ import "tasks/samtools.wdl" as samtools
 
 workflow Library {
     input {
-        String sampleId
+        Sample sample
         Library library
         String libraryDir
         GermlineDNAinputs germlineDNAinputs
@@ -22,7 +22,7 @@ workflow Library {
                 readgroupDir = libraryDir + "/rg_" + rg.id,
                 readgroup = rg,
                 libraryId = library.id,
-                sampleId = sampleId,
+                sampleId = sample.id,
                 germlineDNAinputs = germlineDNAinputs
         }
     }
@@ -30,15 +30,15 @@ workflow Library {
     call picard.MarkDuplicates as markdup {
         input:
             input_bams = flatten(readgroup.bamFile),
-            output_bam_path = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.bam",
-            metrics_path = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.metrics"
+            output_bam_path = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.bam",
+            metrics_path = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.metrics"
     }
 
     call preprocess.GatkPreprocess as bqsr {
         input:
             bamFile = markdup.output_bam,
             bamIndex = markdup.output_bam_index,
-            outputBamPath = libraryDir + "/" + sampleId + "-" + library.id + ".markdup.bqsr.bam",
+            outputBamPath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.bqsr.bam",
             refFasta = germlineDNAinputs.reference.fasta,
             refDict = germlineDNAinputs.reference.dict,
             refFastaIndex = germlineDNAinputs.reference.fai,

@@ -5,7 +5,6 @@ import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet.wdl" as biopet
 
-
 workflow Sample {
     input {
         Sample sample
