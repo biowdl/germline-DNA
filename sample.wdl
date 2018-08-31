@@ -17,7 +17,7 @@ workflow Sample {
             input:
                 libraryDir = sampleDir + "/lib_" + lb.id,
                 library = lb,
-                sampleId = sample.id,
+                sample = sample,
                 germlineDNAinputs = germlineDNAinputs
         }
     }

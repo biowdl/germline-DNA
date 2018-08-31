@@ -21,8 +21,8 @@ workflow Library {
             input:
                 readgroupDir = libraryDir + "/rg_" + rg.id,
                 readgroup = rg,
-                libraryId = library.id,
-                sampleId = sample.id,
+                library = library,
+                sample = sample,
                 germlineDNAinputs = germlineDNAinputs
         }
     }
