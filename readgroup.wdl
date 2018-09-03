@@ -4,7 +4,7 @@ import "aligning/align-bwamem.wdl" as wdlMapping
 import "structs.wdl" as structs
 import "tasks/biopet.wdl" as biopet
 import "tasks/common.wdl" as common
-import "QC/AdapterClipping.wdl" as adapterClipping
+import "QC/QC.wdl" as qc
 import "QC/QualityReport.wdl" as qualityReport
 
 workflow Readgroup {
@@ -45,33 +45,16 @@ workflow Readgroup {
     }
 
 
-    String qcRead1Dir = readgroupDir + "/QC/read1/"
-    String qcRead2Dir = readgroupDir + "/QC/read2/"
-
-    call qualityReport.QualityReport as qualityReportR1 {
-        input:
-            read = readgroup.R1,
-            outputDir = qcRead1Dir,
-            extractAdapters = true
-    }
-
     if (defined(readgroup.R2)){
         call biopet.FastqSplitter as fastqsplitterR2 {
             input:
                 inputFastq = select_first([readgroup.R2]),
                 outputPaths = chunksR2
         }
-
-        call qualityReport.QualityReport as qualityReportR2 {
-            input:
-                read = select_first([readgroup.R2]),
-                outputDir = qcRead2Dir,
-                extractAdapters = true
-        }
     }
 
     scatter (x in range(length(chunksR1))){
-        Chunk chunks = if defined(fastqsplitterR2.chunks)
+        FastqPair chunks = if defined(fastqsplitterR2.chunks)
             then {"R1": fastqsplitterR1.chunks[x],
                 "R2": select_first([fastqsplitterR2.chunks])[x]}
             else {"R1": fastqsplitterR1.chunks[x]}
@@ -79,19 +62,20 @@ workflow Readgroup {
 
     scatter (chunk in zip(chunksR1, chunks)) {
 
-        call adapterClipping.AdapterClipping as qc {
+        call qc.QC as qc {
             input:
                 outputDir = sub(chunk.left, basename(chunk.left), ""),
                 read1 = chunk.right.R1,
                 read2 = chunk.right.R2,
-                adapterListRead1 = qualityReportR1.adapters,
-                adapterListRead2 = qualityReportR2.adapters
+                sample = sample.id,
+                library = library.id,
+                readgroup = readgroup.id
         }
 
         call wdlMapping.AlignBwaMem as mapping {
             input:
-                inputR1 = qc.read1afterClipping,
-                inputR2 = qc.read2afterClipping,
+                inputR1 = qc.read1afterQC,
+                inputR2 = qc.read2afterQC,
                 outputDir = sub(chunk.left, basename(chunk.left), ""),
                 sample = sample.id,
                 library = library.id,
@@ -100,30 +84,10 @@ workflow Readgroup {
         }
     }
 
-#TODO: getting total file
-#    call qualityReport.QualityReport as postQualityReportR1 {
-#        input:
-#            read = configValues.R1,
-#            outputDir = outputDir + "/QC/R1",
-#            extractAdapters = true
-#    }
-#
-#    call qualityReport.QualityReport as postQualityReportR2 {
-#        input:
-#            read = configValues.R2,
-#            outputDir = outputDir + "/QC/R2",
-#            extractAdapters = true
-#    }
-
     output {
         File inputR1 = readgroup.R1
         File? inputR2 = readgroup.R2
         Array[File] bamFile = mapping.bamFile
         Array[File] bamIndexFile = mapping.bamIndexFile
     }
-}
-
-struct Chunk {
-    File R1
-    File? R2
 }
