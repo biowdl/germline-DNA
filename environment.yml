@@ -15,7 +15,7 @@ dependencies:
   - biopet-scatterregions==0.1
   - samtools==1.8
   - bwa==0.7.17
-  - biopet-seqstat==0.1
+  - biopet-seqstat==1.0.1
   - biopet-validatefastq==0.1.1
   - biopet-validatevcf==0.1
   - r==3.4.3
