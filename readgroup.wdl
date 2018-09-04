@@ -17,6 +17,11 @@ workflow Readgroup {
         GermlineDNAinputs germlineDNAinputs
     }
 
+    # FIXME: workaround for namepace issue in cromwell
+    String sampleId = sample.id
+    String libraryId = library.id
+    String readgroupId = readgroup.id
+
     if (defined(readgroup.R1_md5)) {
         call common.CheckFileMD5 as md5CheckR1 {
             input:
@@ -67,9 +72,9 @@ workflow Readgroup {
                 outputDir = sub(chunk.left, basename(chunk.left), ""),
                 read1 = chunk.right.R1,
                 read2 = chunk.right.R2,
-                sample = sample.id,
-                library = library.id,
-                readgroup = readgroup.id
+                sample = sampleId,
+                library = libraryId,
+                readgroup = readgroupId
         }
 
         call wdlMapping.AlignBwaMem as mapping {
@@ -77,9 +82,9 @@ workflow Readgroup {
                 inputR1 = qc.read1afterQC,
                 inputR2 = qc.read2afterQC,
                 outputDir = sub(chunk.left, basename(chunk.left), ""),
-                sample = sample.id,
-                library = library.id,
-                readgroup = readgroup.id,
+                sample = sampleId,
+                library = libraryId,
+                readgroup = readgroupId,
                 bwaIndex = germlineDNAinputs.bwaIndex
         }
     }
