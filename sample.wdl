@@ -3,7 +3,8 @@ version 1.0
 import "bam-to-gvcf/gvcf.wdl" as gvcf
 import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
-import "tasks/biopet.wdl" as biopet
+import "tasks/biopet/biopet.wdl" as biopet
+import "tasks/common.wdl" as common
 
 workflow Sample {
     input {
@@ -24,18 +25,13 @@ workflow Sample {
 
     call gvcf.Gvcf as createGvcf {
         input:
-            refFasta = germlineDNAinputs.reference.fasta,
-            refDict = germlineDNAinputs.reference.dict,
-            refFastaIndex = germlineDNAinputs.reference.fai,
+            reference = germlineDNAinputs.reference,
             bamFiles = library.bqsrBamFile,
-            bamIndexes = library.bqsrBamIndexFile,
             gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
-            dbsnpVCF = germlineDNAinputs.dbSNP.file,
-            dbsnpVCFindex = germlineDNAinputs.dbSNP.index
+            dbsnpVCF = germlineDNAinputs.dbSNP,
     }
 
     output {
-        File gvcf = createGvcf.outputGVCF
-        File gvcfIndex = createGvcf.outputGVCFindex
+        IndexedVcfFile gvcf = createGvcf.outputGVcf
     }
 }
