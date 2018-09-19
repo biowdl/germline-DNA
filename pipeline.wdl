@@ -3,7 +3,8 @@ version 1.0
 import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
 import "sample.wdl" as sampleWorkflow
 import "structs.wdl" as structs
-import "tasks/biopet.wdl" as biopet
+import "tasks/biopet/biopet.wdl" as biopet
+import "tasks/biopet/sampleconfig.wdl" as sampleconfig
 
 workflow pipeline {
     input {
@@ -16,14 +17,11 @@ workflow pipeline {
 
     call biopet.ValidateVcf as validateVcf {
         input:
-            vcfFile = germlineDNAinputs.dbSNP.file,
-            vcfIndex = germlineDNAinputs.dbSNP.index,
-            refFasta = germlineDNAinputs.reference.fasta,
-            refFastaIndex = germlineDNAinputs.reference.fai,
-            refDict = germlineDNAinputs.reference.dict
+            vcf = germlineDNAinputs.dbSNP,
+            reference = germlineDNAinputs.reference
     }
 
-    call biopet.SampleConfigCromwellArrays as configFile {
+    call sampleconfig.SampleConfigCromwellArrays as configFile {
         input:
             inputFiles = sampleConfigFiles,
             outputPath = outputDir + "/samples.json"
@@ -43,24 +41,17 @@ workflow pipeline {
 
     call jointgenotyping.JointGenotyping as genotyping {
         input:
-            refFasta = germlineDNAinputs.reference.fasta,
-            refDict = germlineDNAinputs.reference.dict,
-            refFastaIndex = germlineDNAinputs.reference.fai,
+            reference = germlineDNAinputs.reference,
             outputDir = genotypingDir,
             gvcfFiles = sample.gvcf,
-            gvcfIndexes = sample.gvcfIndex,
             vcfBasename = "multisample",
-            dbsnpVCF = germlineDNAinputs.dbSNP.file,
-            dbsnpVCFindex = germlineDNAinputs.dbSNP.index
+            dbsnpVCF = germlineDNAinputs.dbSNP,
     }
 
     call biopet.VcfStats as vcfStats {
         input:
-            vcfFile = genotyping.vcfFile,
-            vcfIndex = genotyping.vcfFileIndex,
-            refFasta = germlineDNAinputs.reference.fasta,
-            refFastaIndex = germlineDNAinputs.reference.fai,
-            refDict = germlineDNAinputs.reference.dict,
+            vcf = genotyping.vcfFile,
+            reference = germlineDNAinputs.reference,
             outputDir = genotypingDir + "/stats"
     }
 
