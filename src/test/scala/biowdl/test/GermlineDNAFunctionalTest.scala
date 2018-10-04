@@ -39,6 +39,11 @@ class GermlineDNASingleEndFunctionalTest
                 "dbsnp",
                 "dbsnp-149.vcf.gz")
   override def functionalTest: Boolean = true
+  override def inputs: Map[String, Any] =
+    super.inputs ++ Map(
+      "pipeline.sample.Sample.library.Library.readgroup.numberChunks" -> 20,
+      "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads" -> 8
+    )
 }
 
 class GermlineDNAPairedEndFunctionalTest
@@ -53,4 +58,9 @@ class GermlineDNAPairedEndFunctionalTest
                 "dbsnp",
                 "dbsnp-149.vcf.gz")
   override def functionalTest: Boolean = true
+  override def inputs: Map[String, Any] =
+    super.inputs ++ Map(
+      "pipeline.sample.Sample.library.Library.readgroup.numberChunks" -> 20,
+      "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads" -> 8
+    )
 }
