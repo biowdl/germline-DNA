@@ -43,7 +43,8 @@ workflow Library {
     call preprocess.GatkPreprocess as bqsr {
         input:
             bamFile = markdup.outputBam,
-            outputBamPath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.bqsr.bam",
+            basePath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup",
+            outputRecalibratedBam = true,
             reference = germlineDNAinputs.reference,
             dbsnpVCF = germlineDNAinputs.dbSNP
     }
@@ -57,6 +58,6 @@ workflow Library {
 
     output {
         IndexedBamFile bamFile = markdup.outputBam
-        IndexedBamFile bqsrBamFile = bqsr.outputBamFile
+        IndexedBamFile bqsrBamFile = select_first([bqsr.outputBamFile])
     }
 }
