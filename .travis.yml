@@ -1,7 +1,7 @@
 language: java
 script:
 - set -e
-- export CROMWELL_VERSION=35
+- export CROMWELL_VERSION=36
 - wget https://github.com/broadinstitute/cromwell/releases/download/$CROMWELL_VERSION/womtool-$CROMWELL_VERSION.jar
 - for F in *.wdl; do echo $F; java -jar womtool-*.jar validate $F; done
 - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then git submodule foreach --recursive git checkout $TRAVIS_BRANCH && git submodule foreach --recursive git pull; fi'
