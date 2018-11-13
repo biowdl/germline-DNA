@@ -12,7 +12,7 @@ dependencies:
   - cutadapt==1.16
   - fastqc==0.11.7
   - biopet-fastqsplitter==0.1
-  - biopet-scatterregions==0.1
+  - biopet-scatterregions==0.2
   - samtools==1.8
   - bwa==0.7.17
   - biopet-seqstat==1.0.1
@@ -22,3 +22,6 @@ dependencies:
   - biopet-vcfstats==1.2
   - fontconfig==2.13.0
   - gxx_linux-64==7.2.0=h550dcbe_27
+  - tabix==0.2.6
+  - biopet-bamstats==1.0.1
+
