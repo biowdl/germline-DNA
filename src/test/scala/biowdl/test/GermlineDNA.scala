@@ -35,21 +35,18 @@ trait GermlineDNA extends MultisamplePipeline with Reference {
     super.inputs ++
       Map(
         "pipeline.outputDir" -> outputDir.getAbsolutePath,
-        "pipeline.germlineDNAinputs" -> Map(
-          "reference" -> Map(
-            "fasta" -> referenceFasta.getAbsolutePath,
-            "fai" -> referenceFastaIndexFile.getAbsolutePath,
-            "dict" -> referenceFastaDictFile.getAbsolutePath
-          ),
-          "bwaIndex" -> Map(
-            "fastaFile" -> bwaMemFasta.getOrElse(
-              throw new IllegalStateException),
-            "indexFiles" -> bwaMemIndexFiles.map(_.getAbsolutePath)
-          ),
-          "dbSNP" -> Map(
-            "file" -> dbsnpFile.getAbsolutePath,
-            "index" -> getVcfIndexFile(dbsnpFile).getAbsolutePath
-          )
+        "reference" -> Map(
+          "fasta" -> referenceFasta.getAbsolutePath,
+          "fai" -> referenceFastaIndexFile.getAbsolutePath,
+          "dict" -> referenceFastaDictFile.getAbsolutePath
+        ),
+        "bwaIndex" -> Map(
+          "fastaFile" -> bwaMemFasta.getOrElse(throw new IllegalStateException),
+          "indexFiles" -> bwaMemIndexFiles.map(_.getAbsolutePath)
+        ),
+        "dbSNP" -> Map(
+          "file" -> dbsnpFile.getAbsolutePath,
+          "index" -> getVcfIndexFile(dbsnpFile).getAbsolutePath
         )
       )
 
