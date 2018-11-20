@@ -10,15 +10,17 @@ workflow pipeline {
     input {
         Array[File] sampleConfigFiles
         String outputDir
-        GermlineDNAinputs germlineDNAinputs
+        Reference reference
+        BwaIndex bwaIndex
+        IndexedVcfFile dbSNP
     }
 
     String genotypingDir = outputDir + "/multisample_variants/"
 
     call biopet.ValidateVcf as validateVcf {
         input:
-            vcf = germlineDNAinputs.dbSNP,
-            reference = germlineDNAinputs.reference
+            vcf = dbSNP,
+            reference = reference
     }
 
     call sampleconfig.SampleConfigCromwellArrays as configFile {
@@ -41,17 +43,17 @@ workflow pipeline {
 
     call jointgenotyping.JointGenotyping as genotyping {
         input:
-            reference = germlineDNAinputs.reference,
+            reference = reference,
             outputDir = genotypingDir,
             gvcfFiles = sample.gvcf,
             vcfBasename = "multisample",
-            dbsnpVCF = germlineDNAinputs.dbSNP,
+            dbsnpVCF = dbSNP,
     }
 
     call biopet.VcfStats as vcfStats {
         input:
             vcf = genotyping.vcfFile,
-            reference = germlineDNAinputs.reference,
+            reference = reference,
             outputDir = genotypingDir + "/stats"
     }
 
