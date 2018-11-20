@@ -14,7 +14,7 @@ workflow Library {
         Library library
         String libraryDir
         Reference reference
-        #BwaIndex bwaIndex
+        BwaIndex bwaIndex
         IndexedVcfFile dbSNP
     }
 
@@ -25,7 +25,7 @@ workflow Library {
                 readgroup = rg,
                 library = library,
                 sample = sample,
-                germlineDNAinputs = germlineDNAinputs
+                bwaIndex = bwaIndex
         }
     }
 

@@ -37,7 +37,9 @@ workflow pipeline {
             input:
                 sampleDir = outputDir + "/samples/" + sm.id,
                 sample = sm,
-                germlineDNAinputs = germlineDNAinputs
+                reference = reference,
+                bwaIndex = bwaIndex,
+                dbSNP = dbSNP
         }
     }
 

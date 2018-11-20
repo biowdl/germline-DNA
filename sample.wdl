@@ -11,7 +11,7 @@ workflow Sample {
         Sample sample
         String sampleDir
         Reference reference
-        #BwaIndex bwaIndex
+        BwaIndex bwaIndex
         IndexedVcfFile dbSNP
     }
 
@@ -21,7 +21,9 @@ workflow Sample {
                 libraryDir = sampleDir + "/lib_" + lb.id,
                 library = lb,
                 sample = sample,
-                germlineDNAinputs = germlineDNAinputs
+                reference = reference,
+                bwaIndex = bwaIndex,
+                dbSNP = dbSNP
         }
     }
 
