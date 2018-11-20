@@ -14,7 +14,7 @@ workflow Readgroup {
         Sample sample
         String readgroupDir
         Int numberChunks = 1
-        GermlineDNAinputs germlineDNAinputs
+        BwaIndex bwaIndex
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -68,7 +68,7 @@ workflow Readgroup {
                 sample = sampleId,
                 library = libraryId,
                 readgroup = readgroupId,
-                bwaIndex = germlineDNAinputs.bwaIndex
+                bwaIndex = bwaIndex
         }
     }
 
