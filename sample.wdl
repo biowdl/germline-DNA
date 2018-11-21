@@ -10,7 +10,9 @@ workflow Sample {
     input {
         Sample sample
         String sampleDir
-        GermlineDNAinputs germlineDNAinputs
+        Reference reference
+        BwaIndex bwaIndex
+        IndexedVcfFile dbSNP
     }
 
     scatter (lb in sample.libraries) {
@@ -19,16 +21,18 @@ workflow Sample {
                 libraryDir = sampleDir + "/lib_" + lb.id,
                 library = lb,
                 sample = sample,
-                germlineDNAinputs = germlineDNAinputs
+                reference = reference,
+                bwaIndex = bwaIndex,
+                dbSNP = dbSNP
         }
     }
 
     call gvcf.Gvcf as createGvcf {
         input:
-            reference = germlineDNAinputs.reference,
+            reference = reference,
             bamFiles = library.bqsrBamFile,
             gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
-            dbsnpVCF = germlineDNAinputs.dbSNP,
+            dbsnpVCF = dbSNP
     }
 
     output {

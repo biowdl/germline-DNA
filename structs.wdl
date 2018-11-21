@@ -21,9 +21,3 @@ struct Sample {
 struct Root {
     Array[Sample] samples
 }
-
-struct GermlineDNAinputs {
-    Reference reference
-    BwaIndex bwaIndex
-    IndexedVcfFile dbSNP
-}

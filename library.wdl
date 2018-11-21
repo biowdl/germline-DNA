@@ -13,7 +13,9 @@ workflow Library {
         Sample sample
         Library library
         String libraryDir
-        GermlineDNAinputs germlineDNAinputs
+        Reference reference
+        BwaIndex bwaIndex
+        IndexedVcfFile dbSNP
     }
 
     scatter (rg in library.readgroups) {
@@ -23,7 +25,7 @@ workflow Library {
                 readgroup = rg,
                 library = library,
                 sample = sample,
-                germlineDNAinputs = germlineDNAinputs
+                bwaIndex = bwaIndex
         }
     }
 
@@ -45,15 +47,15 @@ workflow Library {
             bamFile = markdup.outputBam,
             basePath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup",
             outputRecalibratedBam = true,
-            reference = germlineDNAinputs.reference,
-            dbsnpVCF = germlineDNAinputs.dbSNP
+            reference = reference,
+            dbsnpVCF = dbSNP
     }
 
     call bammetrics.BamMetrics as BamMetrics {
         input:
             bam = markdup.outputBam,
             outputDir = libraryDir + "/metrics",
-            reference = germlineDNAinputs.reference
+            reference = reference
     }
 
     output {
