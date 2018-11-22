@@ -5,47 +5,46 @@ version: develop
 latest: true
 ---
 
-This pipeline can be used to process germline-DNA data, starting with FastQ
-files. It will perform adapter clipping (using cutadapt), mapping (using BWA
-mem) and variantcalling (based on the GATK Best Practises).
+This pipeline can be used to process germline-DNA data with read lengths above
+70 bp, starting with FastQ files. It will perform adapter clipping (using
+cutadapt), mapping (using BWA mem) and variantcalling (based on the
+[GATK Best Practice](https://software.broadinstitute.org/gatk/best-practices/)).
 
 This pipeline is part of [BioWDL](https://biowdl.github.io/)
 developed by [the SASC team](http://sasc.lumc.nl/).
 
 ## Usage
-In order to run the complete multisample pipeline, you can
-run `pipeline.wdl` using
+You can run the pipeline using
 [Cromwell](http://cromwell.readthedocs.io/en/stable/):
 ```bash
 java -jar cromwell-<version>.jar run -i inputs.json pipeline.wdl
 ```
 
 ### Inputs
-Inputs are provided through a JSON file. The primary inputs are described
-below, but additional inputs are available.
+Inputs are provided through a JSON file. The minimally required inputs are
+described below, but additional inputs are available.
 A template containing all possible inputs can be generated using
 Womtool as described in the
 [WOMtool documentation](http://cromwell.readthedocs.io/en/stable/WOMtool/).
 See [this page](inputs.md) for some additional general notes and information
 about pipeline inputs.
 
-The following are the bare minimum inputs required:
 ```JSON
 {
   "pipeline.bwaIndex": {
-    "fastaFile": "File: The fasta file from the bwa index",
-    "indexFiles": "Array[File]: The other bwa index files"
+    "fastaFile": "A path to the fasta file from the bwa index",
+    "indexFiles": "A list containing the other bwa index files"
   },
   "pipeline.dbSNP": {
-    "file": "File: A dbSNP VCF file",
-    "index": "File: The index (.tbi) file associated with the dbSNP VCF"
+    "file": "A path to a dbSNP VCF file",
+    "index": "The path to the index (.tbi) file associated with the dbSNP VCF"
   },
-  "pipeline.sampleConfigFiles": "Array[File]: Sample configuration files (see below)",
-  "pipeline.outputDir": "String: The path to the output directory",
+  "pipeline.sampleConfigFiles": "A list of sample configuration files (see below)",
+  "pipeline.outputDir": "The path to the output directory",
   "pipeline.reference": {
-    "fasta": "File: A reference fasta",
-    "fai": "File: The index associated with the reference fasta",
-    "dict": "File: The dict associated with the reference fatsa"
+    "fasta": "A path to a reference fasta",
+    "fai": "The path to the index associated with the reference fasta",
+    "dict": "The path to the dict file associated with the reference fasta"
   }
 }
 ```
@@ -94,6 +93,11 @@ Replace the text between `< >` with appropriate values. R2 values may be
 omitted in the case of single-end data. Multiple samples, libraries (per
 sample) and readgroups (per library) may be given.
 
+## Dependency requirements Tool versions
+Included in the repository is an `environment.yml` file. This file includes
+all the tool version on which the workflow was tested. You can use conda and
+this file to create an environment with all the correct tools.
+
 ## Output
 This pipeline will produce a number of directories and files:
 - **samples**: Contains a folder per sample.
@@ -113,20 +117,19 @@ results.
 
 ## Scattering
 The pipeline performs scattering to speed up analysis on grid computing
-clusters. This means that the reference genome will be split into regions of
-roughly equal size (see the `scatterSize` inputs). For certain steps each of
-these regions will be analyzed in separate jobs, allowing them to be processed
-in parallel.
-
-## Tool versions
-Included in the repository is an `environment.yml` file. This file includes
-all the tool version on which the workflow was tested. You can use conda and
-this file to create an environment with all the correct tools.
+clusters. This is done in two ways. In the first the FastQ files are split into
+a number of chunks (see the `numberChunks` input). For each of these chunks the
+QC and alignment are performed in separate jobs, which can be processed in
+parallel. For certain other steps (such as variantcalling) a second method is
+used: The reference genome is split into regions of roughly equal size (see
+the `scatterSize` inputs). Each of these regions will be analyzed in separate
+jobs as well, allowing them to be processed in parallel.
 
 ## Contact
 <p>
   <!-- Obscure e-mail address for spammers -->
-For any question related to this pipeline, please use the
+For any questions about running this pipeline and feature request (such as
+adding additional tools and options), please use the
 <a href='https://github.com/biowdl/germline-DNA/issues'>github issue tracker</a>
 or contact
  <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
