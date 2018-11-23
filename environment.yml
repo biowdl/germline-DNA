@@ -24,4 +24,4 @@ dependencies:
   - gxx_linux-64==7.2.0=h550dcbe_27
   - tabix==0.2.6
   - biopet-bamstats==1.0.1
-
+  - multiqc==1.6
