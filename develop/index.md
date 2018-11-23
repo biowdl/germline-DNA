@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Home
-version: 0.1
-latest: true
+version: develop
+latest: false
 ---
 
 This pipeline can be used to process germline-DNA data with read lengths above
