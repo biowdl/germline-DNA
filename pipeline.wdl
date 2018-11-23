@@ -5,6 +5,8 @@ import "sample.wdl" as sampleWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biopet/sampleconfig.wdl" as sampleconfig
+import "tasks/multiqc.wdl" as multiqc
+
 
 workflow pipeline {
     input {
@@ -57,6 +59,14 @@ workflow pipeline {
             vcf = genotyping.vcfFile,
             reference = reference,
             outputDir = genotypingDir + "/stats"
+    }
+
+    call multiqc.MultiQC as multiqcTask {
+        input:
+            # Multiqc will only run if these files are created.
+            dependencies = [genotyping.vcfFile.file],
+            outDir = outputDir + "/multiqc",
+            analysisDirectory = outputDir
     }
 
     output {
