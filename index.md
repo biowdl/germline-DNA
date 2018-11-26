@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Home
-version: 0.1
+version: v0.1
 latest: true
 ---
 
