@@ -26,7 +26,7 @@ described below, but additional inputs are available.
 A template containing all possible inputs can be generated using
 Womtool as described in the
 [WOMtool documentation](http://cromwell.readthedocs.io/en/stable/WOMtool/).
-See [this page](/inputs.md) for some additional general notes and information
+See [this page](/inputs.html) for some additional general notes and information
 about pipeline inputs.
 
 ```json
@@ -155,7 +155,7 @@ samples:
 ```
 
 
-### Dependency requirements Tool versions
+### Dependency requirements and tool versions
 Included in the repository is an `environment.yml` file. This file includes
 all the tool version on which the workflow was tested. You can use conda and
 this file to create an environment with all the correct tools.

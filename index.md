@@ -155,7 +155,7 @@ samples:
 ```
 
 
-### Dependency requirements Tool versions
+### Dependency requirements and tool versions
 Included in the repository is an `environment.yml` file. This file includes
 all the tool version on which the workflow was tested. You can use conda and
 this file to create an environment with all the correct tools.
