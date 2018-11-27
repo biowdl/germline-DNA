@@ -5,12 +5,14 @@ import "sample.wdl" as sampleWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biopet/sampleconfig.wdl" as sampleconfig
+import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
 
 
 workflow pipeline {
     input {
-        Array[File] sampleConfigFiles
+        File sampleConfigFile
+        Array[Sample] samples = []
         String outputDir
         Reference reference
         BwaIndex bwaIndex
@@ -25,16 +27,17 @@ workflow pipeline {
             reference = reference
     }
 
-    call sampleconfig.SampleConfigCromwellArrays as configFile {
+    call common.YamlToJson {
         input:
-            inputFiles = sampleConfigFiles,
-            outputPath = outputDir + "/samples.json"
+            yaml = sampleConfigFile
     }
+    SampleConfig sampleConfig = read_json(YamlToJson.json)
 
-     Root config = read_json(configFile.outputFile)
+    # Adding with `+` does not seem to work. But it works with flatten.
+    Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
 
     # Running sample subworkflow
-    scatter (sm in config.samples) {
+    scatter (sm in allSamples) {
         call sampleWorkflow.Sample as sample {
             input:
                 sampleDir = outputDir + "/samples/" + sm.id,
