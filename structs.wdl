@@ -18,6 +18,6 @@ struct Sample {
     Array[Library]+ libraries
 }
 
-struct Root {
+struct SampleConfig {
     Array[Sample] samples
 }
