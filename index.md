@@ -78,11 +78,11 @@ The sample configuration should be a YML file which adheres to the following
 structure:
 ```yml
 samples: #Biological replicates
-  <sample>:
+  - <sample>:
     libraries: #Technical replicates
-      <library>:
+      - <library>:
         readgroups: #Sequencing lanes
-          <readgroup>:
+          - <readgroup>:
               reads:
                 R1: <Path to first-end FastQ file.>
                 R1_md5: <Path to MD5 checksum file of first-end FastQ file.>
@@ -126,27 +126,27 @@ The following is an example of what an inputs JSON might look like:
 And the associated sample configuration YML might look like this:
 ```yml
 samples:
-  patient1:
+  - patient1:
     libraries:
-      lib1:
+      - lib1:
         readgroups:
-          lane1:
+          - lane1:
             reads:
               R1: /home/user/data/patient1/R1.fq.gz
               R1_md5: /home/user/data/patient1/R1.fq.gz.md5
               R2: /home/user/data/patient1/R2.fq.gz
               R2_md5: /home/user/data/patient1/R2.fq.gz.md5
-  patient2:
+  - patient2:
     libraries:
-      lib1:
+      - lib1:
         readgroups:
-          lane1:
+          - lane1:
             reads:
               R1: /home/user/data/patient2/lane1_R1.fq.gz
               R1_md5: /home/user/data/patient2/lane1_R1.fq.gz.md5
               R2: /home/user/data/patient2/lane1_R2.fq.gz
               R2_md5: /home/user/data/patient2/lane1_R2.fq.gz.md5
-          lane2:
+          - lane2:
             reads:
               R1: /home/user/data/patient2/lane2_R1.fq.gz
               R1_md5: /home/user/data/patient2/lane2_R1.fq.gz.md5
@@ -175,7 +175,8 @@ This pipeline will produce a number of directories and files:
       - **&lt;readgroup>**: Contains QC metrics and preprocessed FastQ files,
       in case preprocessing was necessary.
 - **multisample.vcf.gz**: A multisample VCF file with the variantcalling
-results.
+  results.
+- **multiqc**: Contains the multiqc report.
 
 ## Scattering
 This pipeline performs scattering to speed up analysis on grid computing
