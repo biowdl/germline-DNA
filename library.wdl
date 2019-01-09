@@ -16,6 +16,8 @@ workflow Library {
         Reference reference
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
+
+        File? regions
     }
 
     scatter (rg in library.readgroups) {
@@ -48,7 +50,8 @@ workflow Library {
             basePath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup",
             outputRecalibratedBam = true,
             reference = reference,
-            dbsnpVCF = dbSNP
+            dbsnpVCF = dbSNP,
+            regions = regions
     }
 
     call bammetrics.BamMetrics as BamMetrics {
