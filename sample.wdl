@@ -13,6 +13,8 @@ workflow Sample {
         Reference reference
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
+
+        File? regions
     }
 
     scatter (lb in sample.libraries) {
@@ -23,7 +25,8 @@ workflow Sample {
                 sample = sample,
                 reference = reference,
                 bwaIndex = bwaIndex,
-                dbSNP = dbSNP
+                dbSNP = dbSNP,
+                regions = regions
         }
     }
 
@@ -32,7 +35,8 @@ workflow Sample {
             reference = reference,
             bamFiles = library.bqsrBamFile,
             gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
-            dbsnpVCF = dbSNP
+            dbsnpVCF = dbSNP,
+            regions = regions
     }
 
     output {

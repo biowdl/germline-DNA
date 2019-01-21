@@ -17,6 +17,8 @@ workflow pipeline {
         Reference reference
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
+
+        File? regions
     }
 
     String genotypingDir = outputDir + "/multisample_variants/"
@@ -44,7 +46,8 @@ workflow pipeline {
                 sample = sm,
                 reference = reference,
                 bwaIndex = bwaIndex,
-                dbSNP = dbSNP
+                dbSNP = dbSNP,
+                regions = regions
         }
     }
 
@@ -55,13 +58,15 @@ workflow pipeline {
             gvcfFiles = sample.gvcf,
             vcfBasename = "multisample",
             dbsnpVCF = dbSNP,
+            regions = regions
     }
 
     call biopet.VcfStats as vcfStats {
         input:
             vcf = genotyping.vcfFile,
             reference = reference,
-            outputDir = genotypingDir + "/stats"
+            outputDir = genotypingDir + "/stats",
+            intervals = regions
     }
 
     call multiqc.MultiQC as multiqcTask {
