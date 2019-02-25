@@ -26,3 +26,6 @@
     branch = develop
 	path = BamMetrics
 	url = https://github.com/biowdl/BamMetrics.git
+[submodule "scripts"]
+	path = scripts
+	url = https://github.com/biowdl/scripts.git
