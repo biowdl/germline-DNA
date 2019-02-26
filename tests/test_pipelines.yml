@@ -13,9 +13,9 @@
     - path: "test-output/samples/wgs1/lib_lib1/wgs1-lib1.markdup.bam"
     - path: "test-output/samples/wgs1/lib_lib1/wgs1-lib1.markdup.bai"
     - path: "test-output/samples/wgs1/lib_lib1/metrics/wgs1-lib1.markdup.flagstats"
-    - path: "test-output/samples/wgs1/lib_lib1/wgs2-lib1.markdup.bam"
-    - path: "test-output/samples/wgs1/lib_lib1/wgs2-lib1.markdup.bai"
-    - path: "test-output/samples/wgs1/lib_lib1/metrics/wgs2-lib1.markdup.flagstats"
+    - path: "test-output/samples/wgs2/lib_lib1/wgs2-lib1.markdup.bam"
+    - path: "test-output/samples/wgs2/lib_lib1/wgs2-lib1.markdup.bai"
+    - path: "test-output/samples/wgs2/lib_lib1/metrics/wgs2-lib1.markdup.flagstats"
 
 - name: PairedEnd
   tags:
@@ -32,6 +32,6 @@
     - path: "test-output/samples/wgs1/lib_lib1/wgs1-lib1.markdup.bam"
     - path: "test-output/samples/wgs1/lib_lib1/wgs1-lib1.markdup.bai"
     - path: "test-output/samples/wgs1/lib_lib1/metrics/wgs1-lib1.markdup.flagstats"
-    - path: "test-output/samples/wgs1/lib_lib1/wgs2-lib1.markdup.bam"
-    - path: "test-output/samples/wgs1/lib_lib1/wgs2-lib1.markdup.bai"
-    - path: "test-output/samples/wgs1/lib_lib1/metrics/wgs2-lib1.markdup.flagstats"
+    - path: "test-output/samples/wgs2/lib_lib1/wgs2-lib1.markdup.bam"
+    - path: "test-output/samples/wgs2/lib_lib1/wgs2-lib1.markdup.bai"
+    - path: "test-output/samples/wgs2/lib_lib1/metrics/wgs2-lib1.markdup.flagstats"
