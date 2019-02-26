@@ -35,3 +35,19 @@
     - path: "test-output/samples/wgs2/lib_lib1/wgs2-lib1.markdup.bam"
     - path: "test-output/samples/wgs2/lib_lib1/wgs2-lib1.markdup.bai"
     - path: "test-output/samples/wgs2/lib_lib1/metrics/wgs2-lib1.markdup.flagstats"
+
+- name: FunctionalPairedEnd
+  tags:
+    - functional
+  command: >-
+    bash -c '
+    TEST_JSON=tests/functional/PairedEnd.json ;
+    sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
+    cromwell run -i $TEST_JSON pipeline.wdl'
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/multisample_variants/stats"
+    - path: "test-output/samples/NA12878/lib_U0a/wgs1-lib1.markdup.bam"
+    - path: "test-output/samples/NA12878/lib_U0a/wgs1-lib1.markdup.bai"
+    - path: "test-output/samples/NA12878/lib_U0a/metrics/wgs1-lib1.markdup.flagstats"
