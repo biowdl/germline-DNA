@@ -1,0 +1,37 @@
+- name: SingleEnd
+  tags:
+    - integration
+  command: >-
+    bash -c '
+    TEST_JSON=tests/integration/SingleEnd.json ;
+    sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
+    cromwell run -i $TEST_JSON pipeline.wdl'
+  files:
+    - "test-output/multisample_variants/multisample.vcf.gz"
+    - "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - "test-output/multisample_variants/stats"
+    - "test-output/samples/wgs1/lib_lib1/wgs1-lib1.markdup.bam"
+    - "test-output/samples/wgs1/lib_lib1/wgs1-lib1.markdup.bai"
+    - "test-output/samples/wgs1/lib_lib1/metrics/wgs1-lib1.markdup.flagstats"
+    - "test-output/samples/wgs1/lib_lib1/wgs2-lib1.markdup.bam"
+    - "test-output/samples/wgs1/lib_lib1/wgs2-lib1.markdup.bai"
+    - "test-output/samples/wgs1/lib_lib1/metrics/wgs2-lib1.markdup.flagstats"
+
+- name: PairedEnd
+  tags:
+    - integration
+  command: >-
+    bash -c '
+    TEST_JSON=tests/integration/PairedEnd.json ;
+    sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
+    cromwell run -i $TEST_JSON pipeline.wdl'
+  files:
+    - "test-output/multisample_variants/multisample.vcf.gz"
+    - "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - "test-output/multisample_variants/stats"
+    - "test-output/samples/wgs1/lib_lib1/wgs1-lib1.markdup.bam"
+    - "test-output/samples/wgs1/lib_lib1/wgs1-lib1.markdup.bai"
+    - "test-output/samples/wgs1/lib_lib1/metrics/wgs1-lib1.markdup.flagstats"
+    - "test-output/samples/wgs1/lib_lib1/wgs2-lib1.markdup.bam"
+    - "test-output/samples/wgs1/lib_lib1/wgs2-lib1.markdup.bai"
+    - "test-output/samples/wgs1/lib_lib1/metrics/wgs2-lib1.markdup.flagstats"
