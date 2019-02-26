@@ -6,15 +6,15 @@
   },
   "pipeline.sampleConfigFile": "tests/samplesheets/FunctionalPairedEnd.yml",
   "pipeline.bwaIndex": {
-    "fastaFile": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fasta",
+    "fastaFile": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa",
     "indexFiles": [
       "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.dict",
-      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fasta.amb",
-      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fasta.ann",
-      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fasta.bwt",
-      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fasta.fai",
-      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fasta.pac",
-      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fasta.sa"
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.amb",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.ann",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.bwt",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.fai",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.pac",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.sa"
     ]
   },
   "pipeline.dbSNP": {
