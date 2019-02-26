@@ -1,8 +1,8 @@
 version 1.0
 
-import "aligning/align-bwamem.wdl" as wdlMapping
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
+import "tasks/bwa.wdl" as bwa
 import "tasks/common.wdl" as common
 import "QC/QC.wdl" as qc
 import "QC/QualityReport.wdl" as qualityReport
@@ -15,6 +15,7 @@ workflow Readgroup {
         String readgroupDir
         Int numberChunks = 1
         BwaIndex bwaIndex
+        String? platform = "illumina"
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -55,20 +56,16 @@ workflow Readgroup {
         call qc.QC as qc {
             input:
                 outputDir = chunkDir,
-                reads = chunk,
-                sample = sampleId,
-                library = libraryId,
-                readgroup = readgroupId
+                read1 = chunk.R1,
+                read2 = chunk.R2
         }
 
-        call wdlMapping.AlignBwaMem as mapping {
+        call bwa.Mem as mapping {
             input:
-                inputFastq = qc.readsAfterQC,
-                outputDir = chunkDir,
-                sample = sampleId,
-                library = libraryId,
-                readgroup = readgroupId,
-                bwaIndex = bwaIndex
+                inputFastq = chunk,
+                bwaIndex = bwaIndex,
+                outputPath = chunkDir + "/" + sampleId + "-" + libraryId + "-" + readgroupId + ".bam",
+                readgroup = "@RG\\tID:${sampleId}-${libraryId}-${readgroupId}\\tSM:${sampleId}\\tLB:${libraryId}\\tPL:${platform}"
         }
     }
 
