@@ -1,8 +1,8 @@
 version 1.0
 
-import "aligning/align-bwamem.wdl" as wdlMapping
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
+import "tasks/bwa.wdl" as bwa
 import "tasks/common.wdl" as common
 import "QC/QC.wdl" as qc
 import "QC/QualityReport.wdl" as qualityReport
@@ -15,6 +15,7 @@ workflow Readgroup {
         String readgroupDir
         Int numberChunks = 1
         BwaIndex bwaIndex
+        String? platform = "illumina"
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -22,6 +23,26 @@ workflow Readgroup {
     String libraryId = library.id
     String readgroupId = readgroup.id
 
+    # Check MD5sums
+    FastqPair reads = readgroup.reads
+
+    if (defined(reads.R1_md5)) {
+        call common.CheckFileMD5 as md5CheckR1 {
+            input:
+                file = reads.R1,
+                md5 = select_first([reads.R1_md5])
+        }
+    }
+
+    if (defined(reads.R2_md5) && defined(reads.R2)) {
+        call common.CheckFileMD5 as md5CheckR2 {
+            input:
+                file = select_first([reads.R2]),
+                md5 = select_first([reads.R2_md5])
+        }
+    }
+
+    # Define chunks
     scatter (chunk in range(numberChunks)){
         String chunksR1 = "${readgroupDir}/chunk_${chunk}/${chunk}_1.fq.gz"
         String chunksR2 = "${readgroupDir}/chunk_${chunk}/${chunk}_2.fq.gz"
@@ -49,26 +70,22 @@ workflow Readgroup {
             else {"R1": fastqsplitterR1.chunks[x]}
     }
 
+    # QC and Mapping
     scatter (chunk in chunks) {
-
         String chunkDir = sub(chunk.R1, basename(chunk.R1), "")
         call qc.QC as qc {
             input:
                 outputDir = chunkDir,
-                reads = chunk,
-                sample = sampleId,
-                library = libraryId,
-                readgroup = readgroupId
+                read1 = chunk.R1,
+                read2 = chunk.R2
         }
 
-        call wdlMapping.AlignBwaMem as mapping {
+        call bwa.Mem as mapping {
             input:
-                inputFastq = qc.readsAfterQC,
-                outputDir = chunkDir,
-                sample = sampleId,
-                library = libraryId,
-                readgroup = readgroupId,
-                bwaIndex = bwaIndex
+                inputFastq = chunk,
+                bwaIndex = bwaIndex,
+                outputPath = chunkDir + "/" + sampleId + "-" + libraryId + "-" + readgroupId + ".bam",
+                readgroup = "@RG\\tID:${sampleId}-${libraryId}-${readgroupId}\\tSM:${sampleId}\\tLB:${libraryId}\\tPL:${platform}"
         }
     }
 

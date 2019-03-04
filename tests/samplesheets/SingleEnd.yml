@@ -1,0 +1,21 @@
+samples:
+  - id: wgs1
+    libraries:
+      - id: lib1
+        readgroups:
+          - id: rg1
+            reads:
+              R1: tests/data/wgs1/R1.fq.gz
+              R1_md5: tests/data/wgs1/R1.fq.gz.md5
+  - id: wgs2
+    libraries:
+      - id: lib1
+        readgroups:
+          - id: rg1
+            reads:
+              R1: tests/data/wgs2/wgs2-lib1_R1.fq.gz
+              R1_md5: tests/data/wgs2/wgs2-lib1_R1.fq.gz.md5
+          - id: rg2
+            reads:
+              R1: tests/data/wgs2/wgs2-lib2_R1.fq.gz
+              R1_md5: tests/data/wgs2/wgs2-lib2_R1.fq.gz.md5
