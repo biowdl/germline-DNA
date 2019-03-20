@@ -1,0 +1,23 @@
+{
+  "pipeline.sampleConfigFile": "tests/samplesheets/PairedEnd.yml",
+  "pipeline.dockerTagsFile": "dockerTags.yml",
+  "pipeline.reference": {
+    "fasta": "tests/data/reference/reference.fasta",
+    "fai": "tests/data/reference/reference.fasta.fai",
+    "dict": "tests/data/reference/reference.dict"
+  },
+  "pipeline.bwaIndex": {
+    "fastaFile": "tests/data/reference/bwa/reference.fasta",
+    "indexFiles": [
+      "reference.fasta.amb",
+      "reference.fasta.ann",
+      "reference.fasta.bwt",
+      "reference.fasta.pac",
+      "reference.fasta.sa"
+    ]
+  },
+  "pipeline.dbsnp": {
+    "file": "tests/data/wgs2.vcf.gz",
+    "index": "tests/data/wgs2.vcf.gz.tbi"
+  }
+}
