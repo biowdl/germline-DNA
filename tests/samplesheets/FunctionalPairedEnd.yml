@@ -1,23 +1,13 @@
 samples:
-  - id: rna1
+  - id: "NA12878"
     libraries:
-      - id: "S17"
+      - id: "U0a"
         readgroups:
-          - id: "L1"
+          - id: "L001"
             reads:
-              R1: "/exports/sasc-testing/fixtures/samples/rna1/S17_L1_1.fq.gz"
-              R2: "/exports/sasc-testing/fixtures/samples/rna1/S17_L1_2.fq.gz"
-      - id: "S27"
-        readgroups:
-          - id: "L1"
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/SampleU0a/U0a_CGATGT_L001_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/SampleU0a/U0a_CGATGT_L001_R2.fastq.gz"
+          - id: "L002"
             reads:
-              R1: "/exports/sasc-testing/fixtures/samples/rna1/S27_L1_1.fq.gz"
-              R2: "/exports/sasc-testing/fixtures/samples/rna1/S27_L1_2.fq.gz"
-  - id: rna2
-    libraries:
-      - id: "S18"
-        readgroups:
-          - id: "L1"
-            reads:
-              R1: "/exports/sasc-testing/fixtures/samples/rna2/S18_L1_1.fq.gz"
-              R2: "/exports/sasc-testing/fixtures/samples/rna2/S18_L1_2.fq.gz"
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/SampleU0a/U0a_CGATGT_L002_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/SampleU0a/U0a_CGATGT_L002_R2.fastq.gz"
