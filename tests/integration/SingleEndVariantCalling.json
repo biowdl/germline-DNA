@@ -16,7 +16,7 @@
       "reference.fasta.sa"
     ]
   },
-  "pipeline.dbsnp": {
+  "pipeline.dbSNP": {
     "file": "tests/data/wgs2.vcf.gz",
     "index": "tests/data/wgs2.vcf.gz.tbi"
   }
