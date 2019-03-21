@@ -16,6 +16,7 @@ workflow Readgroup {
         Int numberChunks = 1
         BwaIndex bwaIndex
         Map[String, String] dockerTags
+        String platform = "illumina"
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -69,7 +70,7 @@ workflow Readgroup {
                 read1 = qc.qcRead1,
                 read2 = qc.qcRead2,
                 outputPath = chunkDir + "/" + basename(chunk.R1) + ".bam",
-                readgroup = "@RG" + readgroupId,
+                readgroup = "@RG\\tID:~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
                 bwaIndex = bwaIndex,
                 dockerTag = dockerTags["bwa+picard"]
         }
