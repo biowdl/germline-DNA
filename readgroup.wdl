@@ -1,9 +1,9 @@
 version 1.0
 
-import "aligning/align-bwamem.wdl" as wdlMapping
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/common.wdl" as common
+import "tasks/bwa.wdl" as bwa
 import "QC/QC.wdl" as qc
 import "QC/QualityReport.wdl" as qualityReport
 
@@ -55,18 +55,16 @@ workflow Readgroup {
         call qc.QC as qc {
             input:
                 outputDir = chunkDir,
-                reads = chunk,
-                sample = sampleId,
-                library = libraryId,
-                readgroup = readgroupId
+                read1 = chunk.R1,
+                read2 = chunk.R2
         }
 
-        call wdlMapping.AlignBwaMem as mapping {
+        call bwa.Mem as bwaMem {
             input:
-                inputFastq = qc.readsAfterQC,
-                outputDir = chunkDir,
-                sample = sampleId,
-                library = libraryId,
+                bwaIndex = bwaIndex,
+                read1 = qc.qcRead1,
+                read2 = qc.qcRead2,
+                outputPath = chunkDir + "/" + basename(chunk.R1) + ".bam",
                 readgroup = readgroupId,
                 bwaIndex = bwaIndex
         }
@@ -74,6 +72,6 @@ workflow Readgroup {
 
     output {
         FastqPair inputR1 = readgroup.reads
-        Array[IndexedBamFile] bamFile = mapping.bamFile
+        Array[IndexedBamFile] bamFile = bwaMem.bamFile
     }
 }
