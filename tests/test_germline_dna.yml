@@ -17,6 +17,10 @@
     - path: "test-output/multisample_variants/multisample.vcf.gz"
     - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
     - path: "test-output/multisample_variants/stats"
+    - path: "test-output/samples/wgs1-single-end/lib_lib1/wgs1-single-end-lib1.markdup.bam"
+    - path: "test-output/samples/wgs2-single-end/lib_lib1/wgs2-single-end-lib1.markdup.bam"
+    - path: "test-output/samples/wgs1-single-end/lib_lib1/metrics/wgs1-single-end-lib1.markdup.flagstats"
+    - path: "test-output/samples/wgs2-single-end/lib_lib1/metrics/wgs2-single-end-lib1.markdup.flagstats"
 
 - name: PairedEndVariantCalling
   tags:
@@ -26,7 +30,14 @@
     TEST_JSON=tests/integration/PairedEndVariantCalling.json ;
     sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON pipeline.wdl'
-
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/multisample_variants/stats"
+    - path: "test-output/samples/wgs1-paired-end/lib_lib1/wgs1-paired-end-lib1.markdup.bam"
+    - path: "test-output/samples/wgs2-paired-end/lib_lib1/wgs2-paired-end-lib1.markdup.bam"
+    - path: "test-output/samples/wgs1-paired-end/lib_lib1/metrics/wgs1-paired-end-lib1.markdup.flagstats"
+    - path: "test-output/samples/wgs2-paired-end/lib_lib1/metrics/wgs2-paired-end-lib1.markdup.flagstats"
 
 - name: FunctionalPairedEndVariantCalling
   tags:
@@ -36,5 +47,10 @@
     TEST_JSON=tests/functional/PairedEndVariantCalling.json ;
     sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON pipeline.wdl'
-
-
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/multisample_variants/stats"
+    - path: "test-output/samples/NA12878/lib_U0a/NA12878-U0a.markdup.bam"
+    - path: "test-output/samples/NA12878/lib_U0a/metrics/NA12878-U0a.markdup.flagstats"
+    - path: "test-output/samples/NA12878/lib_U0a/metrics/wgs2-paired-end-lib1.markdup.flagstats"
