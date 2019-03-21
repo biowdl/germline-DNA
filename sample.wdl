@@ -13,6 +13,7 @@ workflow Sample {
         Reference reference
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
+        Map[String, String] dockerTags
     }
 
     scatter (lb in sample.libraries) {
@@ -23,7 +24,8 @@ workflow Sample {
                 sample = sample,
                 reference = reference,
                 bwaIndex = bwaIndex,
-                dbSNP = dbSNP
+                dbSNP = dbSNP,
+                dockerTags = dockerTags
         }
     }
 
@@ -32,8 +34,9 @@ workflow Sample {
             reference = reference,
             bamFiles = library.bqsrBamFile,
             gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
-            dbsnpVCF = dbSNP
-    }
+            dbsnpVCF = dbSNP,
+            dockerTags = dockerTags
+        }
 
     output {
         IndexedVcfFile gvcf = createGvcf.outputGVcf

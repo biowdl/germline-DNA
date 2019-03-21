@@ -15,6 +15,7 @@ workflow Readgroup {
         String readgroupDir
         Int numberChunks = 1
         BwaIndex bwaIndex
+        Map[String, String] dockerTags
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -30,7 +31,8 @@ workflow Readgroup {
     call biopet.FastqSplitter as fastqsplitterR1 {
         input:
             inputFastq = readgroup.reads.R1,
-            outputPaths = chunksR1
+            outputPaths = chunksR1,
+            dockerTag = dockerTags["biopet-fastqsplitter"]
     }
 
 
@@ -38,7 +40,8 @@ workflow Readgroup {
         call biopet.FastqSplitter as fastqsplitterR2 {
             input:
                 inputFastq = select_first([readgroup.reads.R2]),
-                outputPaths = chunksR2
+                outputPaths = chunksR2,
+                dockerTag = dockerTags["biopet-fastqsplitter"]
         }
     }
 
@@ -56,7 +59,8 @@ workflow Readgroup {
             input:
                 outputDir = chunkDir,
                 read1 = chunk.R1,
-                read2 = chunk.R2
+                read2 = chunk.R2,
+                dockerTags = dockerTags
         }
 
         call bwa.Mem as bwaMem {
@@ -66,7 +70,8 @@ workflow Readgroup {
                 read2 = qc.qcRead2,
                 outputPath = chunkDir + "/" + basename(chunk.R1) + ".bam",
                 readgroup = readgroupId,
-                bwaIndex = bwaIndex
+                bwaIndex = bwaIndex,
+                dockerTag = dockerTags["bwa"]
         }
     }
 

@@ -16,6 +16,7 @@ workflow pipeline {
         String outputDir
         Reference reference
         BwaIndex bwaIndex
+        File dockerTagsFile
         IndexedVcfFile dbSNP
     }
 
@@ -27,13 +28,20 @@ workflow pipeline {
             reference = reference
     }
 
-    call common.YamlToJson {
+    # Parse docker Tags configuration and sample sheet
+    call common.YamlToJson as ConvertDockerTagsFile {
         input:
-            yaml = sampleConfigFile
+            yaml = dockerTagsFile,
+            outputJson = outputDir + "/dockerTags.json"
     }
-    SampleConfig sampleConfig = read_json(YamlToJson.json)
+    Map[String, String] dockerTags = read_json(ConvertDockerTagsFile.json)
 
-    # Adding with `+` does not seem to work. But it works with flatten.
+    call common.YamlToJson as ConvertSampleConfig {
+        input:
+            yaml = sampleConfigFile,
+            outputJson = outputDir + "/samples.json"
+    }
+    SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
     Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
 
     # Running sample subworkflow
@@ -44,7 +52,8 @@ workflow pipeline {
                 sample = sm,
                 reference = reference,
                 bwaIndex = bwaIndex,
-                dbSNP = dbSNP
+                dbSNP = dbSNP,
+                dockerTags = dockerTags
         }
     }
 
@@ -55,13 +64,15 @@ workflow pipeline {
             gvcfFiles = sample.gvcf,
             vcfBasename = "multisample",
             dbsnpVCF = dbSNP,
+            dockerTags = dockerTags
     }
 
     call biopet.VcfStats as vcfStats {
         input:
             vcf = genotyping.vcfFile,
             reference = reference,
-            outputDir = genotypingDir + "/stats"
+            outputDir = genotypingDir + "/stats",
+            dockerTag = dockerTags["biopet-vcfstats"]
     }
 
     call multiqc.MultiQC as multiqcTask {
@@ -69,7 +80,8 @@ workflow pipeline {
             # Multiqc will only run if these files are created.
             dependencies = [genotyping.vcfFile.file],
             outDir = outputDir + "/multiqc",
-            analysisDirectory = outputDir
+            analysisDirectory = outputDir,
+            dockerTag = dockerTags["multiqc"]
     }
 
     output {

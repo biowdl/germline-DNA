@@ -16,6 +16,7 @@ workflow Library {
         Reference reference
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
+        Map[String, String] dockerTags
     }
 
     scatter (rg in library.readgroups) {
@@ -25,7 +26,8 @@ workflow Library {
                 readgroup = rg,
                 library = library,
                 sample = sample,
-                bwaIndex = bwaIndex
+                bwaIndex = bwaIndex,
+                dockerTags = dockerTags
         }
     }
 
@@ -39,7 +41,8 @@ workflow Library {
             inputBams = bamFiles,
             inputBamIndexes = indexFiles,
             outputBamPath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.bam",
-            metricsPath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.metrics"
+            metricsPath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.metrics",
+            dockerTag = dockerTags["picard"]
     }
 
     call preprocess.GatkPreprocess as bqsr {
@@ -48,14 +51,16 @@ workflow Library {
             basePath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup",
             outputRecalibratedBam = true,
             reference = reference,
-            dbsnpVCF = dbSNP
+            dbsnpVCF = dbSNP,
+            dockerTags = dockerTags
     }
 
     call bammetrics.BamMetrics as BamMetrics {
         input:
             bam = markdup.outputBam,
             outputDir = libraryDir + "/metrics",
-            reference = reference
+            reference = reference,
+            dockerTags = dockerTags
     }
 
     output {
