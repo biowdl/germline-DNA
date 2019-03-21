@@ -15,4 +15,4 @@ samples:
               R1: tests/data/wgs2/wgs2-lib1_R1.fq.gz
           - id: rg2
             reads:
-              R1: tests/data/wgs2/wgsw-lib2_R1.fq.gz
+              R1: tests/data/wgs2/wgs2-lib2_R1.fq.gz
