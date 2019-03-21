@@ -18,6 +18,8 @@ workflow pipeline {
         BwaIndex bwaIndex
         File dockerTagsFile
         IndexedVcfFile dbSNP
+
+        File? regions
     }
 
     String genotypingDir = outputDir + "/multisample_variants/"
@@ -53,6 +55,7 @@ workflow pipeline {
                 reference = reference,
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
+                regions = regions,
                 dockerTags = dockerTags
         }
     }
@@ -64,7 +67,8 @@ workflow pipeline {
             gvcfFiles = sample.gvcf,
             vcfBasename = "multisample",
             dbsnpVCF = dbSNP,
-            dockerTags = dockerTags
+            dockerTags = dockerTags,
+            regions = regions
     }
 
     call biopet.VcfStats as vcfStats {
@@ -72,7 +76,8 @@ workflow pipeline {
             vcf = genotyping.vcfFile,
             reference = reference,
             outputDir = genotypingDir + "/stats",
-            dockerTag = dockerTags["biopet-vcfstats"]
+            dockerTag = dockerTags["biopet-vcfstats"],
+            intervals = regions
     }
 
     call multiqc.MultiQC as multiqcTask {

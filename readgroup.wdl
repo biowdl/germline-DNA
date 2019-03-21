@@ -16,7 +16,7 @@ workflow Readgroup {
         Int numberChunks = 1
         BwaIndex bwaIndex
         Map[String, String] dockerTags
-        String platform = "illumina"
+        String? platform = "illumina"
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -24,6 +24,26 @@ workflow Readgroup {
     String libraryId = library.id
     String readgroupId = readgroup.id
 
+    # Check MD5sums
+    FastqPair reads = readgroup.reads
+
+    if (defined(reads.R1_md5)) {
+        call common.CheckFileMD5 as md5CheckR1 {
+            input:
+                file = reads.R1,
+                md5 = select_first([reads.R1_md5])
+        }
+    }
+
+    if (defined(reads.R2_md5) && defined(reads.R2)) {
+        call common.CheckFileMD5 as md5CheckR2 {
+            input:
+                file = select_first([reads.R2]),
+                md5 = select_first([reads.R2_md5])
+        }
+    }
+
+    # Define chunks
     scatter (chunk in range(numberChunks)){
         String chunksR1 = "${readgroupDir}/chunk_${chunk}/${chunk}_1.fq.gz"
         String chunksR2 = "${readgroupDir}/chunk_${chunk}/${chunk}_2.fq.gz"
@@ -53,8 +73,8 @@ workflow Readgroup {
             else {"R1": fastqsplitterR1.chunks[x]}
     }
 
+    # QC and Mapping
     scatter (chunk in chunks) {
-
         String chunkDir = sub(chunk.R1, basename(chunk.R1), "")
         call qc.QC as qc {
             input:

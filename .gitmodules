@@ -14,10 +14,6 @@
     branch = develop
 	path = bam-to-gvcf
 	url = https://github.com/biowdl/bam-to-gvcf.git
-[submodule "aligning"]
-    branch = develop
-	path = aligning
-	url = https://github.com/biowdl/aligning.git
 [submodule "gatk-preprocess"]
     branch = develop
 	path = gatk-preprocess
@@ -26,3 +22,6 @@
     branch = develop
 	path = BamMetrics
 	url = https://github.com/biowdl/BamMetrics.git
+[submodule "scripts"]
+	path = scripts
+	url = https://github.com/biowdl/scripts.git

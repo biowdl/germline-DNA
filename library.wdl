@@ -17,6 +17,8 @@ workflow Library {
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
         Map[String, String] dockerTags
+
+        File? regions
     }
 
     scatter (rg in library.readgroups) {
@@ -52,6 +54,7 @@ workflow Library {
             outputRecalibratedBam = true,
             reference = reference,
             dbsnpVCF = dbSNP,
+            regions = regions
             dockerTags = dockerTags
     }
 
