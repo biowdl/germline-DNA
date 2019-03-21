@@ -9,11 +9,11 @@
   "pipeline.bwaIndex": {
     "fastaFile": "tests/data/reference/bwa/reference.fasta",
     "indexFiles": [
-      "reference.fasta.amb",
-      "reference.fasta.ann",
-      "reference.fasta.bwt",
-      "reference.fasta.pac",
-      "reference.fasta.sa"
+      "tests/data/reference/bwa/reference.fasta.amb",
+      "tests/data/reference/bwa/reference.fasta.ann",
+      "tests/data/reference/bwa/reference.fasta.bwt",
+      "tests/data/reference/bwa/reference.fasta.pac",
+      "tests/data/reference/bwa/reference.fasta.sa"
     ]
   },
   "pipeline.dbSNP": {

@@ -69,9 +69,9 @@ workflow Readgroup {
                 read1 = qc.qcRead1,
                 read2 = qc.qcRead2,
                 outputPath = chunkDir + "/" + basename(chunk.R1) + ".bam",
-                readgroup = readgroupId,
+                readgroup = "@RG" + readgroupId,
                 bwaIndex = bwaIndex,
-                dockerTag = dockerTags["bwa"]
+                dockerTag = dockerTags["bwa+picard"]
         }
     }
 
