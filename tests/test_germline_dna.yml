@@ -13,6 +13,10 @@
     TEST_JSON=tests/integration/SingleEndVariantCalling.json ;
     sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON pipeline.wdl'
+  files:
+    - "test-output/multisample_variants/multisample.vcf.gz"
+    - "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - "test-output/multisample_variants/stats"
 
 - name: PairedEndVariantCalling
   tags:
