@@ -1,16 +1,9 @@
-- name: SingleEndVariantCalling
+- name: SingleEnd
   tags:
     - integration
-  # The gruesome bash command injection using sed is needed
-  # as cromwell does not handle relative outputs well.
-  # It will put them relative to each execution folder.
-  # Therefore the output needs be an absolute path. We can
-  # accomplish this by injecting $PWD (equal to whatever absolute
-  # dir our test is running) into the inputs.json
-  # It is a gruesome hack, but it works.
   command: >-
     bash -c '
-    TEST_JSON=tests/integration/SingleEndVariantCalling.json ;
+    TEST_JSON=tests/integration/SingleEnd.json ;
     sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON pipeline.wdl'
   files:
@@ -18,16 +11,18 @@
     - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
     - path: "test-output/multisample_variants/stats"
     - path: "test-output/samples/wgs1-single-end/lib_lib1/wgs1-single-end-lib1.markdup.bam"
+    - path: "test-output/samples/wgs1-single-end/lib_lib1/wgs1-single-end-lib1.markdup.bai"
     - path: "test-output/samples/wgs2-single-end/lib_lib1/wgs2-single-end-lib1.markdup.bam"
+    - path: "test-output/samples/wgs2-single-end/lib_lib1/wgs2-single-end-lib1.markdup.bai"
     - path: "test-output/samples/wgs1-single-end/lib_lib1/metrics/wgs1-single-end-lib1.markdup.flagstats"
     - path: "test-output/samples/wgs2-single-end/lib_lib1/metrics/wgs2-single-end-lib1.markdup.flagstats"
 
-- name: PairedEndVariantCalling
+- name: PairedEnd
   tags:
     - integration
   command: >-
     bash -c '
-    TEST_JSON=tests/integration/PairedEndVariantCalling.json ;
+    TEST_JSON=tests/integration/PairedEnd.json ;
     sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON pipeline.wdl'
   files:
@@ -35,16 +30,18 @@
     - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
     - path: "test-output/multisample_variants/stats"
     - path: "test-output/samples/wgs1-paired-end/lib_lib1/wgs1-paired-end-lib1.markdup.bam"
+    - path: "test-output/samples/wgs1-paired-end/lib_lib1/wgs1-paired-end-lib1.markdup.bai"
     - path: "test-output/samples/wgs2-paired-end/lib_lib1/wgs2-paired-end-lib1.markdup.bam"
+    - path: "test-output/samples/wgs2-paired-end/lib_lib1/wgs2-paired-end-lib1.markdup.bai"
     - path: "test-output/samples/wgs1-paired-end/lib_lib1/metrics/wgs1-paired-end-lib1.markdup.flagstats"
     - path: "test-output/samples/wgs2-paired-end/lib_lib1/metrics/wgs2-paired-end-lib1.markdup.flagstats"
 
-- name: FunctionalPairedEndVariantCalling
+- name: FunctionalPairedEnd
   tags:
     - functional
   command: >-
     bash -c '
-    TEST_JSON=tests/functional/PairedEndVariantCalling.json ;
+    TEST_JSON=tests/functional/PairedEnd.json ;
     sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON pipeline.wdl'
   files:
