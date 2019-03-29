@@ -54,7 +54,7 @@ workflow Library {
             outputRecalibratedBam = true,
             reference = reference,
             dbsnpVCF = dbSNP,
-            regions = regions
+            regions = regions,
             dockerTags = dockerTags
     }
 
