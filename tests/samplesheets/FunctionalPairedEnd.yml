@@ -9,5 +9,5 @@ samples:
               R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0a/U0a_CGATGT_L001_R2.fastq.gz"
           - id: "L002"
             reads:
-              R1: "/exports/sasc-testing/fixtures/samples/NA12878/SampleU0a/U0a_CGATGT_L002_R1.fastq.gz"
-              R2: "/exports/sasc-testing/fixtures/samples/NA12878/SampleU0a/U0a_CGATGT_L002_R2.fastq.gz"
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0a/U0a_CGATGT_L002_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0a/U0a_CGATGT_L002_R2.fastq.gz"
