@@ -33,15 +33,13 @@ workflow pipeline {
     # Parse docker Tags configuration and sample sheet
     call common.YamlToJson as ConvertDockerTagsFile {
         input:
-            yaml = dockerTagsFile,
-            outputJson = outputDir + "/dockerTags.json"
+            yaml = dockerTagsFile
     }
     Map[String, String] dockerTags = read_json(ConvertDockerTagsFile.json)
 
     call common.YamlToJson as ConvertSampleConfig {
         input:
-            yaml = sampleConfigFile,
-            outputJson = outputDir + "/samples.json"
+            yaml = sampleConfigFile
     }
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
     Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
