@@ -1,24 +1,23 @@
 {
+  "pipeline.sampleConfigFile": "tests/samplesheets/SingleEnd.yml",
+  "pipeline.dockerTagsFile": "dockerTags.yml",
   "pipeline.reference": {
     "fasta": "tests/data/reference/reference.fasta",
     "fai": "tests/data/reference/reference.fasta.fai",
     "dict": "tests/data/reference/reference.dict"
   },
-  "pipeline.sampleConfigFile": "tests/samplesheets/PairedEnd.yml",
   "pipeline.bwaIndex": {
     "fastaFile": "tests/data/reference/bwa/reference.fasta",
     "indexFiles": [
-      "tests/data/reference/bwa/reference.dict",
       "tests/data/reference/bwa/reference.fasta.amb",
       "tests/data/reference/bwa/reference.fasta.ann",
       "tests/data/reference/bwa/reference.fasta.bwt",
-      "tests/data/reference/bwa/reference.fasta.fai",
       "tests/data/reference/bwa/reference.fasta.pac",
       "tests/data/reference/bwa/reference.fasta.sa"
     ]
   },
   "pipeline.dbSNP": {
-    "file": "tests/data/wgs2/wgs2.vcf.gz",
-    "index": "tests/data/wgs2/wgs2.vcf.gz.tbi"
+    "file": "tests/data/wgs2.vcf.gz",
+    "index": "tests/data/wgs2.vcf.gz.tbi"
   }
 }

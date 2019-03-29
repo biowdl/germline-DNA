@@ -22,6 +22,5 @@
     "index": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/annotation/dbsnp/dbsnp-149.vcf.gz.tbi"
   },
   "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 20,
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.threads": 8,
-  "pipeline.dockerTagsFile": "dockerTags.yml"
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.threads": 8
 }

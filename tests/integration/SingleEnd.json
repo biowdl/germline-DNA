@@ -20,6 +20,5 @@
   "pipeline.dbSNP": {
     "file": "tests/data/wgs2/wgs2.vcf.gz",
     "index": "tests/data/wgs2/wgs2.vcf.gz.tbi"
-  },
-  "pipeline.dockerTagsFile": "dockerTags.yml"
+  }
 }
