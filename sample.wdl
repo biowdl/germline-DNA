@@ -39,7 +39,7 @@ workflow Sample {
             dbsnpVCF = dbSNP,
             regions = regions,
             dockerTags = dockerTags
-        }
+    }
 
     output {
         IndexedVcfFile gvcf = createGvcf.outputGVcf

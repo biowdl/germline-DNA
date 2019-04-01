@@ -22,7 +22,6 @@ biopet-vcfstats: "1.2--0"
 cutadapt: "1.16--py36_2"
 fastqc: "0.11.7--4"
 gatk4: "4.1.0.0--0"
-#htseq: "0.9.1--py36h7eb728f_2"
 multiqc: "1.7--py_1"
 picard: "2.18.26--0"
 # "picard+r" combines picard with R for tasks for which picard relies on R.

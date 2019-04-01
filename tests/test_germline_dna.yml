@@ -49,5 +49,6 @@
     - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
     - path: "test-output/multisample_variants/stats"
     - path: "test-output/samples/NA12878/lib_U0a/NA12878-U0a.markdup.bam"
+    - path: "test-output/samples/NA12878/lib_U0a/NA12878-U0a.markdup.bai"
     - path: "test-output/samples/NA12878/lib_U0a/metrics/NA12878-U0a.markdup.flagstats"
-    - path: "test-output/samples/NA12878/lib_U0a/metrics/wgs2-paired-end-lib1.markdup.flagstats"
+
