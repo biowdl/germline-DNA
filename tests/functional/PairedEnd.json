@@ -1,26 +1,25 @@
 {
+  "pipeline.sampleConfigFile": "tests/samplesheets/FunctionalPairedEnd.yml",
+  "pipeline.dockerTagsFile": "dockerTags.yml",
   "pipeline.reference": {
     "fasta": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/reference.fa",
     "fai": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/reference.fa.fai",
     "dict": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/reference.dict"
   },
-  "pipeline.sampleConfigFile": "tests/samplesheets/FunctionalPairedEnd.yml",
   "pipeline.bwaIndex": {
     "fastaFile": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa",
     "indexFiles": [
-      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.dict",
       "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.amb",
       "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.ann",
       "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.bwt",
-      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.fai",
       "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.pac",
       "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.sa"
     ]
   },
-  "pipeline.dbSNP": {
+   "pipeline.dbSNP": {
     "file": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/annotation/dbsnp/dbsnp-149.vcf.gz",
     "index": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/annotation/dbsnp/dbsnp-149.vcf.gz.tbi"
   },
-  "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 20,
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.threads": 8
+  "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 3,
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.bwaMem.threads": 8
 }

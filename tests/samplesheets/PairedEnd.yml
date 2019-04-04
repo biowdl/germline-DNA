@@ -1,5 +1,5 @@
 samples:
-  - id: wgs1
+  - id: wgs1-paired-end
     libraries:
       - id: lib1
         readgroups:
@@ -9,7 +9,7 @@ samples:
               R1_md5: tests/data/wgs1/R1.fq.gz.md5
               R2: tests/data/wgs1/R2.fq.gz
               R2_md5: tests/data/wgs1/R2.fq.gz.md5
-  - id: wgs2
+  - id: wgs2-paired-end
     libraries:
       - id: lib1
         readgroups:

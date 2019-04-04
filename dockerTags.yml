@@ -1,0 +1,32 @@
+---
+# This file contains the docker tags used in the pipeline.
+# The containers used by default are biocontainers uploaded on quay.io.
+# https://quay.io/organization/biocontainers
+# Tags are supplied by giving the name of the tool ('bwa' for example) and the
+# desired tag on biocontainers ('0.7.17--h84994c4_5' for example). So
+# `"bwa": "0.7.17--h84994c4_5"` evaluates to
+# "quay.io/biocontainers/bwa:0.7.17--h84994c4_5" as the container used in the
+# pipeline.
+# If the container for the tool used is not from quay.io/biocontainers this is
+# noted in a comment.
+# Tools are sorted alphabetically for ease of use.
+
+biopet-extractadaptersfastqc: "0.2--1"
+biopet-fastqsplitter: "0.1--2"
+biopet-scatterregions: "0.2--0"
+biopet-vcfstats: "1.2--0"
+# A mulled container is needed to have both picard and bwa in one container.
+# quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842
+# This container contains: picard (2.18.7), bwa (0.7.17-r1188)
+"bwa+picard": "43ec6124f9f4f875515f9548733b8b4e5fed9aa6-0"
+cutadapt: "1.16--py36_2"
+fastqc: "0.11.7--4"
+gatk4: "4.1.0.0--0"
+multiqc: "1.7--py_1"
+picard: "2.18.26--0"
+# "picard+r" combines picard with R for tasks for which picard relies on R.
+# quay.io/biocontainers/mulled-v2-23d9f7c700e78129a769e78521eb86d6b8341923
+# This particular tag has versions r-base=3.4.1,picard=2.18.2
+picard+r: "8dde04faba6c9ac93fae7e846af3bafd2c331b3b-0"
+samtools: "1.8--h46bd0b3_5"
+tabix: "0.2.6--ha92aebf_0"

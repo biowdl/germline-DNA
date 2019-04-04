@@ -2,8 +2,8 @@ version 1.0
 
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
-import "tasks/bwa.wdl" as bwa
 import "tasks/common.wdl" as common
+import "tasks/bwa.wdl" as bwa
 import "QC/QC.wdl" as qc
 import "QC/QualityReport.wdl" as qualityReport
 
@@ -15,6 +15,7 @@ workflow Readgroup {
         String readgroupDir
         Int numberChunks = 1
         BwaIndex bwaIndex
+        Map[String, String] dockerTags
         String? platform = "illumina"
     }
 
@@ -51,7 +52,8 @@ workflow Readgroup {
     call biopet.FastqSplitter as fastqsplitterR1 {
         input:
             inputFastq = readgroup.reads.R1,
-            outputPaths = chunksR1
+            outputPaths = chunksR1,
+            dockerTag = dockerTags["biopet-fastqsplitter"]
     }
 
 
@@ -59,7 +61,8 @@ workflow Readgroup {
         call biopet.FastqSplitter as fastqsplitterR2 {
             input:
                 inputFastq = select_first([readgroup.reads.R2]),
-                outputPaths = chunksR2
+                outputPaths = chunksR2,
+                dockerTag = dockerTags["biopet-fastqsplitter"]
         }
     }
 
@@ -77,20 +80,24 @@ workflow Readgroup {
             input:
                 outputDir = chunkDir,
                 read1 = chunk.R1,
-                read2 = chunk.R2
+                read2 = chunk.R2,
+                dockerTags = dockerTags
         }
 
-        call bwa.Mem as mapping {
+        call bwa.Mem as bwaMem {
             input:
-                inputFastq = chunk,
                 bwaIndex = bwaIndex,
-                outputPath = chunkDir + "/" + sampleId + "-" + libraryId + "-" + readgroupId + ".bam",
-                readgroup = "@RG\\tID:${sampleId}-${libraryId}-${readgroupId}\\tSM:${sampleId}\\tLB:${libraryId}\\tPL:${platform}"
+                read1 = qc.qcRead1,
+                read2 = qc.qcRead2,
+                outputPath = chunkDir + "/" + basename(chunk.R1) + ".bam",
+                readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
+                bwaIndex = bwaIndex,
+                dockerTag = dockerTags["bwa+picard"]
         }
     }
 
     output {
         FastqPair inputR1 = readgroup.reads
-        Array[IndexedBamFile] bamFile = mapping.bamFile
+        Array[IndexedBamFile] bamFile = bwaMem.bamFile
     }
 }
