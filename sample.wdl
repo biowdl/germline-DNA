@@ -5,6 +5,7 @@ import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/common.wdl" as common
+import "tasks/samtools.wdl" as samtools
 
 workflow Sample {
     input {
@@ -41,7 +42,25 @@ workflow Sample {
             dockerTags = dockerTags
     }
 
+    scatter (bam in library.bqsrBamFile) {
+        File bqsrBamFile = bam.file
+
+    }
+
+    call samtools.Merge as merge {
+        input:
+            bamFiles = bqsrBamFile,
+            outputBamPath = sampleDir + "/" + sample.id + ".bam"
+    }
+
+    call samtools.Index as index {
+        input:
+            bamFile = merge.outputBam,
+            bamIndexPath = sampleDir + "/" + sample.id + ".bai"
+    }
+
     output {
+        IndexedBamFile bam = index.outputBam
         IndexedVcfFile gvcf = createGvcf.outputGVcf
     }
 }
