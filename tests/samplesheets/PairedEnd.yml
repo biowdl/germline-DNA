@@ -10,6 +10,7 @@ samples:
               R2: tests/data/wgs1/R2.fq.gz
               R2_md5: tests/data/wgs1/R2.fq.gz.md5
   - id: wgs2-paired-end
+    control: wgs1-paired-end
     libraries:
       - id: lib1
         readgroups:

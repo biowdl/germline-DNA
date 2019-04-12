@@ -14,6 +14,7 @@
 biopet-extractadaptersfastqc: "0.2--1"
 biopet-fastqsplitter: "0.1--2"
 biopet-scatterregions: "0.2--0"
+biopet-validatevcf: "0.1--0"
 biopet-vcfstats: "1.2--0"
 # A mulled container is needed to have both picard and bwa in one container.
 # quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842
@@ -30,3 +31,6 @@ picard: "2.18.26--0"
 picard+r: "8dde04faba6c9ac93fae7e846af3bafd2c331b3b-0"
 samtools: "1.8--h46bd0b3_5"
 tabix: "0.2.6--ha92aebf_0"
+manta: "1.4.0--py27_1"
+strelka: "2.9.7--0"
+vardict-java: "1.5.8--1"

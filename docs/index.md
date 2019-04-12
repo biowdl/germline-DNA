@@ -78,20 +78,27 @@ The sample configuration should be a YML file which adheres to the following
 structure:
 ```yml
 samples: #Biological replicates
-  - <sample>:
+  - id: <sample>
+    control: <sample id for associated control>
     libraries: #Technical replicates
-      - <library>:
+      - id: <library>
         readgroups: #Sequencing lanes
-          - <readgroup>:
-              reads:
-                R1: <Path to first-end FastQ file.>
-                R1_md5: <Path to MD5 checksum file of first-end FastQ file.>
-                R2: <Path to second-end FastQ file.>
-                R2_md5: <Path to MD5 checksum file of second-end FastQ file.>
+          - id: <readgroup>
+            reads:
+              R1: <Path to first-end FastQ file.>
+              R1_md5: <Path to MD5 checksum file of first-end FastQ file.>
+              R2: <Path to second-end FastQ file.>
+              R2_md5: <Path to MD5 checksum file of second-end FastQ file.>
 ```
 Replace the text between `< >` with appropriate values. R2 values may be
 omitted in the case of single-end data. Multiple samples, libraries (per
 sample) and readgroups (per library) may be given.
+
+The control value on the sample level should specify the control sample
+associated with this sample. This control sample should be present in the
+sample configuration as well. This is an optional field. Should it be
+specified then somatic-variantcalling will be performed for the indicated
+pair.
 
 #### Example
 The following is an example of what an inputs JSON might look like:
@@ -126,32 +133,33 @@ The following is an example of what an inputs JSON might look like:
 And the associated sample configuration YML might look like this:
 ```yml
 samples:
-  - patient1:
+  - id: patient1-case
+    control: patient1-control
     libraries:
-      - lib1:
+      - id: lib1
         readgroups:
-          - lane1:
+          - id: lane1
             reads:
-              R1: /home/user/data/patient1/R1.fq.gz
-              R1_md5: /home/user/data/patient1/R1.fq.gz.md5
-              R2: /home/user/data/patient1/R2.fq.gz
-              R2_md5: /home/user/data/patient1/R2.fq.gz.md5
-  - patient2:
+              R1: /home/user/data/patient1-case/R1.fq.gz
+              R1_md5: /home/user/data/patient1-case/R1.fq.gz.md5
+              R2: /home/user/data/patient1-case/R2.fq.gz
+              R2_md5: /home/user/data/patient1-case/R2.fq.gz.md5
+  - id: patient1-control
     libraries:
-      - lib1:
+      - id: lib1
         readgroups:
-          - lane1:
+          - id: lane1
             reads:
-              R1: /home/user/data/patient2/lane1_R1.fq.gz
-              R1_md5: /home/user/data/patient2/lane1_R1.fq.gz.md5
-              R2: /home/user/data/patient2/lane1_R2.fq.gz
-              R2_md5: /home/user/data/patient2/lane1_R2.fq.gz.md5
-          - lane2:
+              R1: /home/user/data/patient1-control/lane1_R1.fq.gz
+              R1_md5: /home/user/data/patient1-control/lane1_R1.fq.gz.md5
+              R2: /home/user/data/patient1-control/lane1_R2.fq.gz
+              R2_md5: /home/user/data/patient1-control/lane1_R2.fq.gz.md5
+          - id: lane2
             reads:
-              R1: /home/user/data/patient2/lane2_R1.fq.gz
-              R1_md5: /home/user/data/patient2/lane2_R1.fq.gz.md5
-              R2: /home/user/data/patient2/lane2_R2.fq.gz
-              R2_md5: /home/user/data/patient2/lane2_R2.fq.gz.md5
+              R1: /home/user/data/patient1-control/lane2_R1.fq.gz
+              R1_md5: /home/user/data/patient1-control/lane2_R1.fq.gz.md5
+              R2: /home/user/data/patient1-control/lane2_R2.fq.gz
+              R2_md5: /home/user/data/patient1-control/lane2_R2.fq.gz.md5
 ```
 
 
@@ -166,6 +174,7 @@ This pipeline will produce a number of directories and files:
   - **&lt;sample>**: Contains a variety of files, including the BAM and gVCF
   files for this sample, as well as their indexes. It also contains a directory
   per library.
+    - **somatic-variantcalling**: Contains somatic variantcalling results.
     - **&lt;library>**: Contains the BAM files for this library
     (`*.markdup.bam`) and a BAM file with additional preprocessing performed
     used for variantcalling (`*.markdup.bsqr.bam`). This second BAM file should

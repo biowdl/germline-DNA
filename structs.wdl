@@ -16,6 +16,7 @@ struct Library {
 struct Sample {
     String id
     Array[Library]+ libraries
+    String? control
 }
 
 struct SampleConfig {

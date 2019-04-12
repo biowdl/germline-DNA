@@ -25,3 +25,6 @@
 [submodule "scripts"]
 	path = scripts
 	url = https://github.com/biowdl/scripts.git
+[submodule "somatic-variantcalling"]
+	path = somatic-variantcalling
+	url = https://github.com/biowdl/somatic-variantcalling.git
