@@ -11,3 +11,53 @@ samples:
             reads:
               R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0a/U0a_CGATGT_L002_R1.fastq.gz"
               R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0a/U0a_CGATGT_L002_R2.fastq.gz"
+      - id: "U0b"
+        readgroups:
+          - id: "L001"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0b/U0b_TGACCA_L001_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0b/U0b_TGACCA_L001_R2.fastq.gz"
+          - id: "L002"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0b/U0b_TGACCA_L002_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0b/U0b_TGACCA_L002_R2.fastq.gz"
+      - id: "U0c"
+        readgroups:
+          - id: "L001"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0c/U0c_CAGATC_L001_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0c/U0c_CAGATC_L001_R2.fastq.gz"
+          - id: "L002"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0c/U0c_CAGATC_L002_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0c/U0c_CAGATC_L002_R2.fastq.gz"
+      - id: "U5a"
+        readgroups:
+          - id: "L001"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5a/U5a_AGTCAA_L001_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5a/U5a_AGTCAA_L001_R2.fastq.gz"
+          - id: "L002"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5a/U5a_AGTCAA_L002_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5a/U5a_AGTCAA_L002_R2.fastq.gz"
+      - id: "U5b"
+        readgroups:
+          - id: "L001"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5b/U5b_AGTTCC_L001_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5b/U5b_AGTTCC_L001_R2.fastq.gz"
+          - id: "L002"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5b/U5b_AGTTCC_L002_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5b/U5b_AGTTCC_L002_R2.fastq.gz"
+      - id: "U5c"
+        readgroups:
+          - id: "L001"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5c/U5c_CCGTCC_L001_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5c/U5c_CCGTCC_L001_R2.fastq.gz"
+          - id: "L002"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5c/U5c_CCGTCC_L002_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U5c/U5c_CCGTCC_L002_R2.fastq.gz"
