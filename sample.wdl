@@ -70,7 +70,7 @@ workflow Sample {
             bamFile = bam,
             reference = reference,
             bwaIndex =  bwaIndex,
-            sample = sample,
+            sample = sample.id,
             outputDir = sampleDir         
     }
     
