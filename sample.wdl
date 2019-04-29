@@ -66,11 +66,12 @@ workflow Sample {
     }
     
     call svcall.SVcalling as svmerging {
-        bamFile = bam,
-        reference = reference,
-        bwaIndex =  bwaIndex,
-        sample = sample,
-        outputDir = sampleDir         
+        input:
+            bamFile = bam,
+            reference = reference,
+            bwaIndex =  bwaIndex,
+            sample = sample,
+            outputDir = sampleDir         
     }
     
 }
