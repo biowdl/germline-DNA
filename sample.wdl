@@ -6,6 +6,7 @@ import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/common.wdl" as common
 import "tasks/samtools.wdl" as samtools
+import "structural-variantcalling/pipeline.wdl" as sv-calling
 
 workflow Sample {
     input {
@@ -63,4 +64,13 @@ workflow Sample {
         IndexedBamFile bam = index.outputBam
         IndexedVcfFile gvcf = createGvcf.outputGVcf
     }
+    
+    call sv-calling.SVcalling as svmerging {
+        bamFile = bam,
+        reference = reference,
+        bwaIndex =  bwaIndex,
+        sample = sample,
+        outputDir = sampleDir         
+    }
+    
 }
