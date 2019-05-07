@@ -16,7 +16,7 @@ workflow Readgroup {
         BwaIndex bwaIndex
         Map[String, String] dockerTags
         String? platform = "illumina"
-        # Fixme: Remove as soon as cromwell can overwrite subworkflows
+        # Fixme: Remove as soon as cromwell can overwrite subworkflow inputs
         Array[String]+? adapters = ["AGATCGGAAGAG"]
     }
 
