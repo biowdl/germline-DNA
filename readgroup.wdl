@@ -5,7 +5,6 @@ import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/common.wdl" as common
 import "tasks/bwa.wdl" as bwa
 import "QC/QC.wdl" as qc
-import "QC/QualityReport.wdl" as qualityReport
 
 workflow Readgroup {
     input {
