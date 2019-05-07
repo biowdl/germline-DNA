@@ -16,6 +16,9 @@ workflow Sample {
         IndexedVcfFile dbSNP
         Map[String, String] dockerTags
         File? regions
+        # Fixme: Remove as soon as cromwell can overwrite subworkflows
+        Array[String]+? adapters = ["AGATCGGAAGAG"]
+
     }
 
     scatter (lb in sample.libraries) {
@@ -28,6 +31,7 @@ workflow Sample {
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
                 regions = regions,
+                adapters = adapters,
                 dockerTags = dockerTags
         }
     }
