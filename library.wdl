@@ -17,6 +17,8 @@ workflow Library {
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
         Map[String, String] dockerTags
+        # Fixme: Remove as soon as cromwell can overwrite subworkflow inputs
+        Array[String]+? adapters = ["AGATCGGAAGAG"]
 
         File? regions
     }
@@ -29,6 +31,7 @@ workflow Library {
                 library = library,
                 sample = sample,
                 bwaIndex = bwaIndex,
+                adapters = adapters,
                 dockerTags = dockerTags
         }
     }
