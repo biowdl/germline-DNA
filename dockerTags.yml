@@ -20,7 +20,7 @@ biopet-vcfstats: "1.2--0"
 # quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842
 # This container contains: picard (2.18.7), bwa (0.7.17-r1188)
 "bwa+picard": "43ec6124f9f4f875515f9548733b8b4e5fed9aa6-0"
-cutadapt: "1.16--py36_2"
+cutadapt: "2.3--py36h14c3975_0"
 fastqc: "0.11.7--4"
 gatk4: "4.1.0.0--0"
 multiqc: "1.7--py_1"
