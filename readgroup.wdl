@@ -16,8 +16,6 @@ workflow Readgroup {
         BwaIndex bwaIndex
         Map[String, String] dockerTags
         String? platform = "illumina"
-        # Fixme: Remove as soon as cromwell can overwrite subworkflow inputs
-        Array[String]+? adapters = ["AGATCGGAAGAG"]
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -98,7 +96,6 @@ workflow Readgroup {
                 outputDir = chunkDir,
                 read1 = chunk.R1,
                 read2 = chunk.R2,
-                adapters = adapters,
                 dockerTags = dockerTags
         }
 
