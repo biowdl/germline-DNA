@@ -64,38 +64,34 @@ workflow Readgroup {
         String chunksR2 = "${readgroupDir}/chunk_${chunk}/${chunk}_2.fq.gz"
     }
 
-    call biopet.FastqSplitter as fastqsplitterR1 {
-        input:
-            inputFastq = copyR1.outputFile,
-            outputPaths = chunksR1,
-            dockerTag = dockerTags["biopet-fastqsplitter"]
-    }
-
-
-    if (defined(readgroup.reads.R2)){
-        call biopet.FastqSplitter as fastqsplitterR2 {
+    if (numberChunks > 1) {
+        call biopet.FastqSplitter as fastqsplitterR1 {
             input:
-                inputFastq = select_first([copyR2.outputFile]),
-                outputPaths = chunksR2,
+                inputFastq = copyR1.outputFile,
+                outputPaths = chunksR1,
                 dockerTag = dockerTags["biopet-fastqsplitter"]
+        }
+        if (defined(readgroup.reads.R2)){
+            call biopet.FastqSplitter as fastqsplitterR2 {
+                input:
+                    inputFastq = select_first([copyR2.outputFile]),
+                    outputPaths = chunksR2,
+                    dockerTag = dockerTags["biopet-fastqsplitter"]
+            }
         }
     }
 
-    scatter (x in range(length(chunksR1))) {
-        FastqPair chunks = if defined(fastqsplitterR2.chunks)
-            then {"R1": fastqsplitterR1.chunks[x],
-                "R2": select_first([fastqsplitterR2.chunks])[x]}
-            else {"R1": fastqsplitterR1.chunks[x]}
-    }
 
     # QC and Mapping
-    scatter (chunk in chunks) {
-        String chunkDir = sub(chunk.R1, basename(chunk.R1), "")
+    scatter (x in range(length(chunksR1))) {
+        File  chunk_read1 = if defined(fastqsplitterR1.chunks) then select_first([fastqsplitterR1.chunks])[x] else reads.R1
+        File? chunk_read2 = if defined(fastqsplitterR2.chunks) then select_first([fastqsplitterR2.chunks])[x] else reads.R2
+        String chunkDir = sub(chunk_read1, basename(chunk_read1), "")
         call qc.QC as qc {
             input:
                 outputDir = chunkDir,
-                read1 = chunk.R1,
-                read2 = chunk.R2,
+                read1 = chunk_read1,
+                read2 = chunk_read2,
                 dockerTags = dockerTags
         }
 
@@ -104,7 +100,7 @@ workflow Readgroup {
                 bwaIndex = bwaIndex,
                 read1 = qc.qcRead1,
                 read2 = qc.qcRead2,
-                outputPath = chunkDir + "/" + basename(chunk.R1) + ".bam",
+                outputPath = chunkDir + "/" + basename(chunk_read1) + ".bam",
                 readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
                 bwaIndex = bwaIndex,
                 dockerTag = dockerTags["bwa+picard"]
