@@ -19,8 +19,6 @@ workflow pipeline {
         BwaIndex bwaIndex
         File dockerTagsFile
         IndexedVcfFile dbSNP
-        # Fixme: Remove as soon as cromwell can overwrite subworkflow inputs
-        Array[String]+? adapters = ["AGATCGGAAGAG"]
         File? regions
     }
 
@@ -129,7 +127,6 @@ workflow pipeline {
                 bwaIndex = effectiveBWAindex,
                 dbSNP = effectiveDBsnp,
                 regions = regions,
-                adapters = adapters,
                 dockerTags = dockerTags
         }
 
