@@ -86,7 +86,7 @@ workflow Readgroup {
     scatter (x in range(length(chunksR1))) {
         File  chunk_read1 = if defined(fastqsplitterR1.chunks) then select_first([fastqsplitterR1.chunks])[x] else reads.R1
         File? chunk_read2 = if defined(fastqsplitterR2.chunks) then select_first([fastqsplitterR2.chunks])[x] else reads.R2
-        String chunkDir = sub(chunk_read1, basename(chunk_read1), "")
+        String chunkDir = if defined(fastqsplitterR1.chunks) then sub(chunk_read1, basename(chunk_read1), "") else readgroupDir
         call qc.QC as qc {
             input:
                 outputDir = chunkDir,
