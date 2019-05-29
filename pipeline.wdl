@@ -14,7 +14,7 @@ workflow pipeline {
     input {
         File sampleConfigFile
         Array[Sample] samples = []
-        String outputDir
+        String outputDir = "."
         Reference reference
         BwaIndex bwaIndex
         File dockerTagsFile

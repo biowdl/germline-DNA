@@ -2,10 +2,8 @@
   tags:
     - integration
   command: >-
-    bash -c '
-    TEST_JSON=tests/integration/SingleEnd.json ;
-    sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
-    cromwell run -i $TEST_JSON pipeline.wdl'
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/SingleEnd.json pipeline.wdl
   files:
     - path: "test-output/multisample_variants/multisample.vcf.gz"
     - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
@@ -21,10 +19,8 @@
   tags:
     - integration
   command: >-
-    bash -c '
-    TEST_JSON=tests/integration/PairedEnd.json ;
-    sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
-    cromwell run -i $TEST_JSON pipeline.wdl'
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/PairedEnd.json pipeline.wdl
   files:
     - path: "test-output/multisample_variants/multisample.vcf.gz"
     - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
@@ -46,10 +42,8 @@
   tags:
     - functional
   command: >-
-    bash -c '
-    TEST_JSON=tests/functional/PairedEnd.json ;
-    sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
-    cromwell run -i $TEST_JSON pipeline.wdl'
+    cromwell run -o tests/cromwell_options.json
+    -i tests/functional/PairedEnd.json pipeline.wdl
   files:
     - path: "test-output/multisample_variants/multisample.vcf.gz"
     - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
