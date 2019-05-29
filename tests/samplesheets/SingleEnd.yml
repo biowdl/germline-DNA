@@ -6,7 +6,7 @@ samples:
           - id: rg1
             reads:
               R1: tests/data/wgs1/R1.fq.gz
-              R1_md5: tests/data/wgs1/R1.fq.gz.md5
+              R1_md5: b859d6dd76a6861ce7e9a978ae2e530e
   - id: wgs2-single-end
     libraries:
       - id: lib1
@@ -14,8 +14,8 @@ samples:
           - id: rg1
             reads:
               R1: tests/data/wgs2/wgs2-lib1_R1.fq.gz
-              R1_md5: tests/data/wgs2/wgs2-lib1_R1.fq.gz.md5
+              R1_md5: 6fb02af910026041f9ea76cd28968732
           - id: rg2
             reads:
               R1: tests/data/wgs2/wgs2-lib2_R1.fq.gz
-              R1_md5: tests/data/wgs2/wgs2-lib2_R1.fq.gz.md5
+              R1_md5: df64e84fdc9a2d7a9301f2aac0071aee
