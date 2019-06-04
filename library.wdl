@@ -47,9 +47,14 @@ workflow Library {
             dockerTag = dockerTags["picard"]
     }
 
+    IndexedBamFile markdupBamFile = object {
+            file: markdup.outputBam,
+            index: markdup.outputBamIndex,
+    }
+
     call preprocess.GatkPreprocess as bqsr {
         input:
-            bamFile = markdup.outputBam,
+            bamFile = markdupBamFile,
             basePath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup",
             outputRecalibratedBam = true,
             reference = reference,
@@ -60,14 +65,14 @@ workflow Library {
 
     call bammetrics.BamMetrics as BamMetrics {
         input:
-            bam = markdup.outputBam,
+            bam = markdupBamFile ,
             outputDir = libraryDir + "/metrics",
             reference = reference,
             dockerTags = dockerTags
     }
 
     output {
-        IndexedBamFile bamFile = markdup.outputBam
+        IndexedBamFile bamFile = markdupBamFile
         IndexedBamFile bqsrBamFile = select_first([bqsr.outputBamFile])
     }
 }

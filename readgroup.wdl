@@ -89,10 +89,15 @@ workflow Readgroup {
                 bwaIndex = bwaIndex,
                 dockerTag = dockerTags["bwa+picard"]
         }
+
+        IndexedBamFile bwaBamFile = object {
+            file: bwaMem.outputBam,
+            index: bwaMem.outputBamIndex
+        }
     }
 
     output {
         FastqPair inputR1 = readgroup.reads
-        Array[IndexedBamFile] bamFile = bwaMem.bamFile
+        Array[IndexedBamFile] bamFile = bwaBamFile
     }
 }

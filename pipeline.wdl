@@ -102,19 +102,10 @@ workflow pipeline {
             regions = regions
     }
 
-    call biopet.VcfStats as vcfStats {
-        input:
-            vcf = genotyping.vcfFile,
-            reference = reference,
-            outputDir = genotypingDir + "/stats",
-            dockerTag = dockerTags["biopet-vcfstats"],
-            intervals = regions
-    }
-
     call multiqc.MultiQC as multiqcTask {
         input:
             # Multiqc will only run if these files are created.
-            dependencies = [genotyping.vcfFile.file],
+            dependencies = [genotyping.vcfFile.index],
             outDir = outputDir + "/multiqc",
             analysisDirectory = outputDir,
             dockerTag = dockerTags["multiqc"]
