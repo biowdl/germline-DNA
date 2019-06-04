@@ -20,6 +20,8 @@ workflow pipeline {
         File dockerTagsFile
         IndexedVcfFile dbSNP
         File? regions
+        # Only run multiQC if the user specified an outputDir
+        Boolean runMultiQC = if (outputDir == ".") then false else true
     }
 
     String genotypingDir = outputDir + "/multisample_variants/"
@@ -102,13 +104,15 @@ workflow pipeline {
             regions = regions
     }
 
-    call multiqc.MultiQC as multiqcTask {
-        input:
-            # Multiqc will only run if these files are created.
-            dependencies = [genotyping.vcfFile.index],
-            outDir = outputDir + "/multiqc",
-            analysisDirectory = outputDir,
-            dockerTag = dockerTags["multiqc"]
+    if (runMultiQC) {
+        call multiqc.MultiQC as multiqcTask {
+            input:
+                # Multiqc will only run if these files are created.
+                dependencies = [genotyping.vcfFile.index],
+                outDir = outputDir + "/multiqc",
+                analysisDirectory = outputDir,
+                dockerTag = dockerTags["multiqc"]
+        }
     }
 
     output {
