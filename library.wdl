@@ -74,5 +74,6 @@ workflow Library {
     output {
         IndexedBamFile bamFile = markdupBamFile
         IndexedBamFile bqsrBamFile = select_first([bqsr.outputBamFile])
+        Array[File] metricsFiles = flatten([[BamMetrics.flagstats], BamMetrics.picardMetricsFiles])
     }
 }

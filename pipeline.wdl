@@ -125,6 +125,11 @@ workflow pipeline {
     }
 
     output {
+        IndexedVcfFile multiSampleVcf = genotyping.vcfFile
+        Array[File] vcfStatsFiles = vcfStats.allStats
+        Array[IndexedBamFile] sampleBams = bamFiles
+        Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
+
     }
 }
 

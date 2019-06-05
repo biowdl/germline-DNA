@@ -59,5 +59,6 @@ workflow Sample {
           index: merge.outputBamIndex
         }
         IndexedVcfFile gvcf = createGvcf.outputGVcf
+        Array[File] metricsFiles = flatten(library.metricsFiles)
     }
 }
