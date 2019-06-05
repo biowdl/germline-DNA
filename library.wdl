@@ -32,6 +32,7 @@ workflow Library {
                 dockerTags = dockerTags
         }
     }
+    Array[File] qcReports = flatten(readgroup.qcReports)
 
     scatter (bam in flatten(readgroup.bamFile)) {
         File bamFiles = bam.file
@@ -55,7 +56,7 @@ workflow Library {
     call preprocess.GatkPreprocess as bqsr {
         input:
             bamFile = markdupBamFile,
-            basePath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup",
+            basePath = libraryDir + "/" + sample.id + "-" + library.id + ".bqsr",
             outputRecalibratedBam = true,
             reference = reference,
             dbsnpVCF = dbSNP,
@@ -74,6 +75,6 @@ workflow Library {
     output {
         IndexedBamFile bamFile = markdupBamFile
         IndexedBamFile bqsrBamFile = select_first([bqsr.outputBamFile])
-        Array[File] metricsFiles = flatten([[BamMetrics.flagstats], BamMetrics.picardMetricsFiles, readgroup.qcReports])
+        Array[File] metricsFiles = flatten([[BamMetrics.flagstats], BamMetrics.picardMetricsFiles, qcReports])
     }
 }
