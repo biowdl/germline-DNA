@@ -99,5 +99,6 @@ workflow Readgroup {
     output {
         FastqPair inputR1 = readgroup.reads
         Array[IndexedBamFile] bamFile = bwaBamFile
+        Array[File] qcReports = flatten(qc.reports)
     }
 }
