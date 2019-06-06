@@ -104,15 +104,6 @@ workflow pipeline {
             regions = regions
     }
 
-    call biopet.VcfStats as vcfStats {
-        input:
-            vcf = genotyping.vcfFile,
-            reference = reference,
-            outputDir = genotypingDir + "/stats",
-            dockerTag = dockerTags["biopet-vcfstats"],
-            intervals = regions
-    }
-
     if (runMultiQC) {
         call multiqc.MultiQC as multiqcTask {
             input:
@@ -126,7 +117,6 @@ workflow pipeline {
 
     output {
         IndexedVcfFile multiSampleVcf = genotyping.vcfFile
-        Array[File] vcfStatsFiles = vcfStats.allStats
         Array[IndexedBamFile] sampleBams = bamFiles
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
 
