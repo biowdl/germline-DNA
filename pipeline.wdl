@@ -116,6 +116,7 @@ workflow pipeline {
     }
 
     output {
+        Array[IndexedBamFile] libraryBamFiles = flatten(sample.libraryBamFiles)
         IndexedVcfFile multiSampleVcf = genotyping.vcfFile
         Array[IndexedBamFile] sampleBams = bamFiles
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
