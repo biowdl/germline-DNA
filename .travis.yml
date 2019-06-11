@@ -29,7 +29,9 @@ script:
 matrix:
   include:
     - env: TEST=SingleEnd
-    - env: TEST=PairedEnd,_JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
+    - env:
+      - TEST=PairedEnd
+      - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
     # Below is for testing if all files are valid and if all submodules are up to date.
     - env: TEST=Womtool validate and submodule up to date
       install:
