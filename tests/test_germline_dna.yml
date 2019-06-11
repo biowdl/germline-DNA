@@ -21,7 +21,6 @@
   # Run this pipeline with a fixed output dir.
   command: >-
     bash -c '
-    export _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
     TEST_JSON=tests/integration/PairedEnd.json ;
     sed -i "2i\"pipeline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON pipeline.wdl'
