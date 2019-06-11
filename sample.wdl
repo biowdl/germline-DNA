@@ -54,7 +54,8 @@ workflow Sample {
     }
 
     output {
-        Array[IndexedBamFile] libraryBamFiles = flatten([library.bqsrBamFile, library.bamFile])
+        Array[IndexedBamFile] libraryMarkdupBamFiles = library.bamFile
+        Array[IndexedBamFile] libraryBqsrBamFiles = library.bqsrBamFile
         IndexedBamFile bam = object {
           file: merge.outputBam,
           index: merge.outputBamIndex
