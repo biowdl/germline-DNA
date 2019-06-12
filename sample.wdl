@@ -53,14 +53,14 @@ workflow Sample {
             outputBamPath = sampleDir + "/" + sample.id + ".bam"
     }
 
-    call samtools.Index as index {
-        input:
-            bamFile = merge.outputBam,
-            bamIndexPath = sampleDir + "/" + sample.id + ".bai"
-    }
-
     output {
-        IndexedBamFile bam = index.outputBam
+        Array[IndexedBamFile] libraryMarkdupBamFiles = library.bamFile
+        Array[IndexedBamFile] libraryBqsrBamFiles = library.bqsrBamFile
+        IndexedBamFile bam = object {
+          file: merge.outputBam,
+          index: merge.outputBamIndex
+        }
         IndexedVcfFile gvcf = createGvcf.outputGVcf
+        Array[File] metricsFiles = flatten(library.metricsFiles)
     }
 }
