@@ -6,6 +6,7 @@ import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/common.wdl" as common
 import "tasks/samtools.wdl" as samtools
+import "structural-variantcalling/pipeline.wdl" as svcall
 
 workflow Sample {
     input {
@@ -62,5 +63,14 @@ workflow Sample {
         }
         IndexedVcfFile gvcf = createGvcf.outputGVcf
         Array[File] metricsFiles = flatten(library.metricsFiles)
+    }
+    
+    call svcall.SVcalling as svmerging {
+        input:
+            bamFile = bam,
+            reference = reference,
+            bwaIndex = bwaIndex,
+            sample = sample.id,
+            outputDir = sampleDir
     }
 }
