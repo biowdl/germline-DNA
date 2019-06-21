@@ -28,3 +28,6 @@
 [submodule "somatic-variantcalling"]
 	path = somatic-variantcalling
 	url = https://github.com/biowdl/somatic-variantcalling.git
+[submodule "structural-variantcalling"]
+	path = structural-variantcalling
+	url = https://github.com/biowdl/structural-variantcalling.git
