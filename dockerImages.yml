@@ -20,7 +20,7 @@ cutadapt: "quay.io/biocontainers/cutadapt:2.3--py36h14c3975_0"
 fastqc: "quay.io/biocontainers/fastqc:0.11.7--4"
 gatk4: "4.1.0.0--0"
 multiqc: "1.7--py_1"
-picard: "2.18.26--0"
+picard: "quay.io/biocontainers/picard:2.18.26--0"
 # "picard+r" combines picard with R for tasks for which picard relies on R.
 # quay.io/biocontainers/mulled-v2-23d9f7c700e78129a769e78521eb86d6b8341923
 # This particular tag has versions r-base=3.4.1,picard=2.18.2
