@@ -1,7 +1,7 @@
 version 1.0
 
 import "structs.wdl" as structs
-import "tasks/biopet/biopet.wdl" as biopet
+import "tasks/fastqsplitter.wdl" as fastqsplitter
 import "tasks/common.wdl" as common
 import "tasks/bwa.wdl" as bwa
 import "QC/QC.wdl" as qc
@@ -14,7 +14,7 @@ workflow Readgroup {
         String readgroupDir
         Int numberChunks = 1
         BwaIndex bwaIndex
-        Map[String, String] dockerTags
+        Map[String, String] dockerImages
         String? platform = "illumina"
     }
 
@@ -49,18 +49,18 @@ workflow Readgroup {
     }
 
     if (numberChunks > 1) {
-        call biopet.FastqSplitter as fastqsplitterR1 {
+        call fastqsplitter.Fastqsplitter as fastqsplitterR1 {
             input:
                 inputFastq = reads.R1,
                 outputPaths = chunksR1,
-                dockerTag = dockerTags["biopet-fastqsplitter"]
+                dockerImage = dockerImages["fastqsplitter"]
         }
         if (defined(readgroup.reads.R2)){
-            call biopet.FastqSplitter as fastqsplitterR2 {
+            call fastqsplitter.Fastqsplitter as fastqsplitterR2 {
                 input:
                     inputFastq = select_first([reads.R2]),
                     outputPaths = chunksR2,
-                    dockerTag = dockerTags["biopet-fastqsplitter"]
+                    dockerImage = dockerImages["fastqsplitter"]
             }
         }
     }
@@ -76,7 +76,7 @@ workflow Readgroup {
                 outputDir = chunkDir,
                 read1 = chunk_read1,
                 read2 = chunk_read2,
-                dockerTags = dockerTags
+                dockerImages = dockerImages
         }
 
         call bwa.Mem as bwaMem {
@@ -87,7 +87,7 @@ workflow Readgroup {
                 outputPath = chunkDir + "/" + basename(chunk_read1) + ".bam",
                 readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
                 bwaIndex = bwaIndex,
-                dockerTag = dockerTags["bwa+picard"]
+                dockerImage = dockerImages["bwa+picard"]
         }
 
         IndexedBamFile bwaBamFile = object {
