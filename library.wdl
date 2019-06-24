@@ -45,7 +45,7 @@ workflow Library {
             inputBamIndexes = indexFiles,
             outputBamPath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.bam",
             metricsPath = libraryDir + "/" + sample.id + "-" + library.id + ".markdup.metrics",
-            dockerTag = dockerImages["picard"]
+            dockerImage = dockerImages["picard"]
     }
 
     IndexedBamFile markdupBamFile = object {
@@ -56,7 +56,8 @@ workflow Library {
     call preprocess.GatkPreprocess as bqsr {
         input:
             bamFile = markdupBamFile,
-            basePath = libraryDir + "/" + sample.id + "-" + library.id + ".bqsr",
+            outputDir = libraryDir,
+            bamName =  sample.id + "-" + library.id + ".bqsr",
             outputRecalibratedBam = true,
             reference = reference,
             dbsnpVCF = dbSNP,
