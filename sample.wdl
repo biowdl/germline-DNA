@@ -50,7 +50,8 @@ workflow Sample {
     call samtools.Merge as merge {
         input:
             bamFiles = bqsrBamFile,
-            outputBamPath = sampleDir + "/" + sample.id + ".bam"
+            outputBamPath = sampleDir + "/" + sample.id + ".bam",
+            dockerImage = dockerImages["samtools"]
     }
 
     output {
