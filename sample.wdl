@@ -34,12 +34,16 @@ workflow Sample {
 
     call gvcf.Gvcf as createGvcf {
         input:
-            reference = reference,
+            referenceFasta = reference.fasta,
+            referenceFastaFai = reference.fai,
+            referenceFastaDict = reference.dict,
             bamFiles = library.bqsrBamFile,
-            gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
-            dbsnpVCF = dbSNP,
+            outputDir = sampleDir,
+            gvcfName = sample.id + ".g.vcf.gz",
+            dbsnpVCF = dbSNP.file,
+            dbsnpVCFIndex = dbSNP.index,
             regions = regions,
-            dockerTags = dockerTags
+            dockerImages = dockerImages
     }
 
     scatter (bam in library.bqsrBamFile) {
@@ -61,7 +65,7 @@ workflow Sample {
           file: merge.outputBam,
           index: merge.outputBamIndex
         }
-        IndexedVcfFile gvcf = createGvcf.outputGVcf
+        IndexedVcfFile gvcf = object {file: createGvcf.outputGVcf, index: createGvcf.outputGVcf.index }
         Array[File] metricsFiles = flatten(library.metricsFiles)
     }
 }
