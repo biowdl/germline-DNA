@@ -14,7 +14,7 @@ workflow Sample {
         Reference reference
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
-        Map[String, String] dockerTags
+        Map[String, String] dockerImages
         File? regions
     }
 
@@ -28,7 +28,7 @@ workflow Sample {
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
                 regions = regions,
-                dockerTags = dockerTags
+                dockerImages = dockerImages
         }
     }
 
