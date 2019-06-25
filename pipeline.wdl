@@ -17,7 +17,7 @@ workflow pipeline {
         String outputDir = "."
         Reference reference
         BwaIndex bwaIndex
-        File dockerTagsFile
+        File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
         # Only run multiQC if the user specified an outputDir
@@ -27,11 +27,11 @@ workflow pipeline {
     String genotypingDir = outputDir + "/multisample_variants/"
 
     # Parse docker Tags configuration and sample sheet
-    call common.YamlToJson as ConvertDockerTagsFile {
+    call common.YamlToJson as ConvertDockerImagesFile {
         input:
-            yaml = dockerTagsFile
+            yaml = dockerImagesFile
     }
-    Map[String, String] dockerTags = read_json(ConvertDockerTagsFile.json)
+    Map[String, String] dockerImages = read_json(ConvertDockerImagesFile.json)
 
     call common.YamlToJson as ConvertSampleConfig {
         input:
@@ -40,13 +40,6 @@ workflow pipeline {
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
     Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
 
-
-    call biopet.ValidateVcf as validateVcf {
-        input:
-            vcf = dbSNP,
-            reference = reference,
-            dockerTag = dockerTags["biopet-validatevcf"]
-    }
 
     # Running sample subworkflow
     scatter (sm in allSamples) {
@@ -58,7 +51,7 @@ workflow pipeline {
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
                 regions = regions,
-                dockerTags = dockerTags
+                dockerImages = dockerImages
         }
 
         String sampleIds = sm.id
@@ -88,7 +81,7 @@ workflow pipeline {
                     controlSample = sampleIds[contolPosition.position],
                     controlBam = bamFiles[contolPosition.position],
                     regions = regions,
-                    dockerTags = dockerTags
+                    dockerImages = dockerImages
             }
         }
     }
@@ -100,7 +93,7 @@ workflow pipeline {
             gvcfFiles = sample.gvcf,
             vcfBasename = "multisample",
             dbsnpVCF = dbSNP,
-            dockerTags = dockerTags,
+            dockerImages = dockerImages,
             regions = regions
     }
 
@@ -111,7 +104,7 @@ workflow pipeline {
                 dependencies = [genotyping.vcfFile.index],
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
-                dockerTag = dockerTags["multiqc"]
+                dockerImages = dockerImages["multiqc"]
         }
     }
 
