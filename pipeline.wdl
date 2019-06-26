@@ -60,7 +60,7 @@ workflow pipeline {
 
     scatter (sm in allSamples) {
         if (defined(sm.control)) {
-            call GetSamplePositionInArray as contolPosition  {
+            call GetSamplePositionInArray as controlPostition  {
                 input:
                     sampleIds = sampleIds,
                     sample = select_first([sm.control])
@@ -75,11 +75,15 @@ workflow pipeline {
             call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
                 input:
                     outputDir = outputDir + "/samples/" + sm.id + "/somatic-variantcalling/",
-                    reference = reference,
+                    referenceFasta = reference.fasta,
+                    referenceFastaFai = reference.fai,
+                    referenceFastaDict = reference.dict,
                     tumorSample = sm.id,
-                    tumorBam = bamFiles[casePosition.position],
-                    controlSample = sampleIds[contolPosition.position],
-                    controlBam = bamFiles[contolPosition.position],
+                    tumorBam = bamFiles[casePosition.position].file,
+                    tumorBamIndex = bamFiles[casePosition.position].index,
+                    controlSample = sampleIds[controlPostition.position],
+                    controlBam = bamFiles[controlPostition.position].file,
+                    controlBamIndex = bamFiles[controlPostition.position].index,
                     regions = regions,
                     dockerImages = dockerImages
             }
