@@ -20,11 +20,10 @@ before_install:
   - conda config --add channels conda-forge
 
 install:
-  - conda install cromwell
-  - python3 -m pip install pytest-workflow pysam
+  - conda install --file requirements-test.txt
 
 script:
-  - travis_wait 30 python3 -m pytest --tag $TEST tests/
+  - travis_wait 30 pytest --tag $TEST tests/
 
 matrix:
   include:
