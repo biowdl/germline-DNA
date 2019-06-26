@@ -108,7 +108,7 @@ workflow pipeline {
                 dependencies = [genotyping.vcfFile.index],
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
-                dockerImages = dockerImages["multiqc"]
+                dockerImage = dockerImages["multiqc"]
         }
     }
 
@@ -127,7 +127,7 @@ task GetSamplePositionInArray {
         Array[String] sampleIds
         String sample
 
-        String dockerTag = "3.7-slim"
+        String dockerImage = "python:3.7-slim"
     }
 
     command <<<
@@ -144,7 +144,7 @@ task GetSamplePositionInArray {
     }
 
     runtime {
-        docker: "python:" + dockerTag
+        docker: dockerImage
         # 4 gigs of memory to be able to build the docker image in singularity
         memory: 4
     }
