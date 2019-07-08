@@ -16,6 +16,7 @@ workflow Readgroup {
         BwaIndex bwaIndex
         Map[String, String] dockerTags
         String? platform = "illumina"
+        Boolean useBwaKit = false
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -79,21 +80,40 @@ workflow Readgroup {
                 dockerTags = dockerTags
         }
 
-        call bwa.Mem as bwaMem {
-            input:
-                bwaIndex = bwaIndex,
-                read1 = qc.qcRead1,
-                read2 = qc.qcRead2,
-                outputPath = chunkDir + "/" + basename(chunk_read1) + ".bam",
-                readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
-                bwaIndex = bwaIndex,
-                dockerTag = dockerTags["bwa+picard"]
+        if (! useBwaKit) {
+            call bwa.Mem as bwaMem {
+                input:
+                    bwaIndex = bwaIndex,
+                    read1 = qc.qcRead1,
+                    read2 = qc.qcRead2,
+                    outputPath = chunkDir + "/" + basename(chunk_read1) + ".bam",
+                    readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
+                    bwaIndex = bwaIndex,
+                    dockerTag = dockerTags["bwa+picard"]
+            }
         }
 
-        IndexedBamFile bwaBamFile = object {
-            file: bwaMem.outputBam,
-            index: bwaMem.outputBamIndex
+        if (useBwaKit) {
+            call bwa.Kit as bwakit {
+                input:
+                    bwaIndex = bwaIndex,
+                    read1 = qc.qcRead1,
+                    read2 = qc.qcRead2,
+                    outputPrefix = chunkDir + "/" + basename(chunk_read1),
+                    readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
+                    bwaIndex = bwaIndex
+            }
         }
+
+        IndexedBamFile bwaBamFile = if useBwaKit
+            then object {
+                file: bwakit.outputBam,
+                index: bwakit.outputBamIndex
+            }
+            else object {
+                file: bwaMem.outputBam,
+                index: bwaMem.outputBamIndex
+            }
     }
 
     output {
