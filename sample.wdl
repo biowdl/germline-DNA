@@ -14,7 +14,7 @@ workflow Sample {
         Reference reference
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
-        Map[String, String] dockerTags
+        Map[String, String] dockerImages
         File? regions
     }
 
@@ -28,18 +28,22 @@ workflow Sample {
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
                 regions = regions,
-                dockerTags = dockerTags
+                dockerImages = dockerImages
         }
     }
 
     call gvcf.Gvcf as createGvcf {
         input:
-            reference = reference,
+            referenceFasta = reference.fasta,
+            referenceFastaFai = reference.fai,
+            referenceFastaDict = reference.dict,
             bamFiles = library.bqsrBamFile,
-            gvcfPath = sampleDir + "/" + sample.id + ".g.vcf.gz",
-            dbsnpVCF = dbSNP,
+            outputDir = sampleDir,
+            gvcfName = sample.id + ".g.vcf.gz",
+            dbsnpVCF = dbSNP.file,
+            dbsnpVCFIndex = dbSNP.index,
             regions = regions,
-            dockerTags = dockerTags
+            dockerImages = dockerImages
     }
 
     scatter (bam in library.bqsrBamFile) {
@@ -50,7 +54,8 @@ workflow Sample {
     call samtools.Merge as merge {
         input:
             bamFiles = bqsrBamFile,
-            outputBamPath = sampleDir + "/" + sample.id + ".bam"
+            outputBamPath = sampleDir + "/" + sample.id + ".bam",
+            dockerImage = dockerImages["samtools"]
     }
 
     output {
@@ -60,7 +65,7 @@ workflow Sample {
           file: merge.outputBam,
           index: merge.outputBamIndex
         }
-        IndexedVcfFile gvcf = createGvcf.outputGVcf
+        IndexedVcfFile gvcf = object {file: createGvcf.outputGVcf, index: createGvcf.outputGVcfIndex }
         Array[File] metricsFiles = flatten(library.metricsFiles)
     }
 }
