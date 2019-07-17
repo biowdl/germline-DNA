@@ -17,7 +17,7 @@ workflow pipeline {
         String outputDir = "."
         Reference reference
         BwaIndex bwaIndex
-        File dockerTagsFile
+        File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
         # Only run multiQC if the user specified an outputDir
@@ -27,11 +27,11 @@ workflow pipeline {
     String genotypingDir = outputDir + "/multisample_variants/"
 
     # Parse docker Tags configuration and sample sheet
-    call common.YamlToJson as ConvertDockerTagsFile {
+    call common.YamlToJson as ConvertDockerImagesFile {
         input:
-            yaml = dockerTagsFile
+            yaml = dockerImagesFile
     }
-    Map[String, String] dockerTags = read_json(ConvertDockerTagsFile.json)
+    Map[String, String] dockerImages = read_json(ConvertDockerImagesFile.json)
 
     call common.YamlToJson as ConvertSampleConfig {
         input:
@@ -40,13 +40,6 @@ workflow pipeline {
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
     Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
 
-
-    call biopet.ValidateVcf as validateVcf {
-        input:
-            vcf = dbSNP,
-            reference = reference,
-            dockerTag = dockerTags["biopet-validatevcf"]
-    }
 
     # Running sample subworkflow
     scatter (sm in allSamples) {
@@ -58,7 +51,7 @@ workflow pipeline {
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
                 regions = regions,
-                dockerTags = dockerTags
+                dockerImages = dockerImages
         }
 
         String sampleIds = sm.id
@@ -67,7 +60,7 @@ workflow pipeline {
 
     scatter (sm in allSamples) {
         if (defined(sm.control)) {
-            call GetSamplePositionInArray as contolPosition  {
+            call GetSamplePositionInArray as controlPostition  {
                 input:
                     sampleIds = sampleIds,
                     sample = select_first([sm.control])
@@ -82,13 +75,17 @@ workflow pipeline {
             call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
                 input:
                     outputDir = outputDir + "/samples/" + sm.id + "/somatic-variantcalling/",
-                    reference = reference,
+                    referenceFasta = reference.fasta,
+                    referenceFastaFai = reference.fai,
+                    referenceFastaDict = reference.dict,
                     tumorSample = sm.id,
-                    tumorBam = bamFiles[casePosition.position],
-                    controlSample = sampleIds[contolPosition.position],
-                    controlBam = bamFiles[contolPosition.position],
+                    tumorBam = bamFiles[casePosition.position].file,
+                    tumorBamIndex = bamFiles[casePosition.position].index,
+                    controlSample = sampleIds[controlPostition.position],
+                    controlBam = bamFiles[controlPostition.position].file,
+                    controlBamIndex = bamFiles[controlPostition.position].index,
                     regions = regions,
-                    dockerTags = dockerTags
+                    dockerImages = dockerImages
             }
         }
     }
@@ -100,7 +97,7 @@ workflow pipeline {
             gvcfFiles = sample.gvcf,
             vcfBasename = "multisample",
             dbsnpVCF = dbSNP,
-            dockerTags = dockerTags,
+            dockerImages = dockerImages,
             regions = regions
     }
 
@@ -111,7 +108,7 @@ workflow pipeline {
                 dependencies = [genotyping.vcfFile.index],
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
-                dockerTag = dockerTags["multiqc"]
+                dockerImage = dockerImages["multiqc"]
         }
     }
 
@@ -130,7 +127,7 @@ task GetSamplePositionInArray {
         Array[String] sampleIds
         String sample
 
-        String dockerTag = "3.7-slim"
+        String dockerImage = "python:3.7-slim"
     }
 
     command <<<
@@ -147,7 +144,7 @@ task GetSamplePositionInArray {
     }
 
     runtime {
-        docker: "python:" + dockerTag
+        docker: dockerImage
         # 4 gigs of memory to be able to build the docker image in singularity
         memory: 4
     }
