@@ -14,7 +14,7 @@ biopet-scatterregions: "quay.io/biocontainers/biopet-scatterregions:0.2--0"
 # quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842
 # This container contains: picard (2.18.7), bwa (0.7.17-r1188)
 "bwa+picard": "quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842:43ec6124f9f4f875515f9548733b8b4e5fed9aa6-0"
-cutadapt: "quay.io/biocontainers/cutadapt:2.3--py36h14c3975_0"
+cutadapt: "quay.io/biocontainers/cutadapt:2.4--py37h14c3975_0"
 fastqc: "quay.io/biocontainers/fastqc:0.11.7--4"
 gatk4: "quay.io/biocontainers/gatk4:4.1.0.0--0"
 multiqc: "quay.io/biocontainers/multiqc:1.7--py_1"
