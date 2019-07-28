@@ -16,9 +16,9 @@ biopet-scatterregions: "quay.io/biocontainers/biopet-scatterregions:0.2--0"
 "bwa+picard": "quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842:43ec6124f9f4f875515f9548733b8b4e5fed9aa6-0"
 cutadapt: "quay.io/biocontainers/cutadapt:2.4--py37h14c3975_0"
 fastqc: "quay.io/biocontainers/fastqc:0.11.7--4"
-gatk4: "quay.io/biocontainers/gatk4:4.1.0.0--0"
+gatk4: "quay.io/biocontainers/gatk4:4.1.2.0--1"
 multiqc: "quay.io/biocontainers/multiqc:1.7--py_1"
-picard: "quay.io/biocontainers/picard:2.18.26--0"
+picard: "quay.io/biocontainers/picard:2.19.0--0"
 # "picard+r" combines picard with R for tasks for which picard relies on R.
 # quay.io/biocontainers/mulled-v2-23d9f7c700e78129a769e78521eb86d6b8341923
 # This particular image has versions r-base=3.4.1,picard=2.18.2
