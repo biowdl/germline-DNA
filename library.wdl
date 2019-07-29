@@ -57,7 +57,7 @@ workflow Library {
         input:
             bamFile = markdupBamFile,
             outputDir = libraryDir,
-            bamName =  sample.id + "-" + library.id + ".bqsr",
+            bamName =  sample.id + "-" + library.id,
             outputRecalibratedBam = true,
             reference = reference,
             dbsnpVCF = dbSNP,
