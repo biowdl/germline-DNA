@@ -18,11 +18,7 @@ cutadapt: "quay.io/biocontainers/cutadapt:2.4--py37h14c3975_0"
 fastqc: "quay.io/biocontainers/fastqc:0.11.7--4"
 gatk4: "quay.io/biocontainers/gatk4:4.1.2.0--1"
 multiqc: "quay.io/biocontainers/multiqc:1.7--py_1"
-picard: "quay.io/biocontainers/picard:2.19.0--0"
-# "picard+r" combines picard with R for tasks for which picard relies on R.
-# quay.io/biocontainers/mulled-v2-23d9f7c700e78129a769e78521eb86d6b8341923
-# This particular image has versions r-base=3.4.1,picard=2.18.2
-picard+r: "quay.io/biocontainers/mulled-v2-23d9f7c700e78129a769e78521eb86d6b8341923:8dde04faba6c9ac93fae7e846af3bafd2c331b3b-0"
+picard: "quay.io/biocontainers/picard:2.20.5--0"
 samtools: "quay.io/biocontainers/samtools:1.8--h46bd0b3_5"
 tabix: "quay.io/biocontainers/tabix:0.2.6--ha92aebf_0"
 manta: "quay.io/biocontainers/manta:1.4.0--py27_1"
