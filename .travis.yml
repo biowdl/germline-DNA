@@ -28,6 +28,7 @@ script:
 matrix:
   include:
     - env: TEST=SingleEnd
+    - env: TEST=SingleEnd_noVariantCalling
     - env:
       - TEST=PairedEnd
       - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
