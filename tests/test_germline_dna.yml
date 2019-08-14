@@ -15,6 +15,25 @@
     - path: "test-output/samples/wgs1-single-end/lib_lib1/metrics/wgs1-single-end-lib1.markdup.flagstats"
     - path: "test-output/samples/wgs2-single-end/lib_lib1/metrics/wgs2-single-end-lib1.markdup.flagstats"
 
+- name: SingleEnd_noVariantCalling
+  tags:
+    - integration
+  # Run this pipeline with a relative output dir.
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/SingleEnd_noVariantCalling.json pipeline.wdl
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+      should_exist: false
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+      should_exist: false
+    - path: "test-output/samples/wgs1-single-end/lib_lib1/wgs1-single-end-lib1.bqsr.bam"
+    - path: "test-output/samples/wgs1-single-end/lib_lib1/wgs1-single-end-lib1.bqsr.bai"
+    - path: "test-output/samples/wgs2-single-end/lib_lib1/wgs2-single-end-lib1.bqsr.bam"
+    - path: "test-output/samples/wgs2-single-end/lib_lib1/wgs2-single-end-lib1.bqsr.bai"
+    - path: "test-output/samples/wgs1-single-end/lib_lib1/metrics/wgs1-single-end-lib1.markdup.flagstats"
+    - path: "test-output/samples/wgs2-single-end/lib_lib1/metrics/wgs2-single-end-lib1.markdup.flagstats"
+
 - name: PairedEnd
   tags:
     - integration
