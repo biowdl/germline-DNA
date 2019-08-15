@@ -21,5 +21,7 @@
     "index": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/annotation/dbsnp/dbsnp-149.vcf.gz.tbi"
   },
   "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 3,
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.bwaMem.threads": 8
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.bwaMem.threads": 8,
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapter": ["AGATCGGAAGAG"],
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapterRead2": ["AGATCGGAAGAG"]
 }
