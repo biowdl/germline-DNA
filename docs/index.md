@@ -45,7 +45,9 @@ about pipeline inputs.
     "fasta": "A path to a reference fasta",
     "fai": "The path to the index associated with the reference fasta",
     "dict": "The path to the dict file associated with the reference fasta"
-  }
+  },
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapter": "The adapters to be cut from the forward reads",
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapterRead2": "The adapters to be cut from the reverse reads (if paired-end reads are used)"
 }
 ```
 
@@ -126,7 +128,9 @@ The following is an example of what an inputs JSON might look like:
     "dict": "/home/user/genomes/human/GRCh38.dict"
   },
   "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 20,
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads": 8
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads": 8,
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapter": ["AGATCGGAAGAG"],
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapterRead2": ["AGATCGGAAGAG"]
 }
 ```
 
