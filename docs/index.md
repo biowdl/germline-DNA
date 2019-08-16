@@ -128,7 +128,7 @@ The following is an example of what an inputs JSON might look like:
     "dict": "/home/user/genomes/human/GRCh38.dict"
   },
   "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 20,
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads": 8,
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads": 8
 }
 ```
 
