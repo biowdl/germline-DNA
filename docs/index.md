@@ -45,9 +45,7 @@ about pipeline inputs.
     "fasta": "A path to a reference fasta",
     "fai": "The path to the index associated with the reference fasta",
     "dict": "The path to the dict file associated with the reference fasta"
-  },
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapter": "The adapters to be cut from the forward reads",
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapterRead2": "The adapters to be cut from the reverse reads (if paired-end reads are used)"
+  }
 }
 ```
 
@@ -71,7 +69,9 @@ Some additional inputs which may be of interest are:
   "pipeline.genotyping.scatterSize":
     "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)",
   "pipeline.sample.Sample.createGvcf.scatterSize":
-    "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)"
+    "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)",
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterForward": "The adapters to be cut from the forward reads. Default: Illumina Universal Adapter",
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterReverse": "The adapters to be cut from the reverse reads (if paired-end reads are used). Default: Illumina Universal Adapter."  
 }
 ```
 
@@ -129,8 +129,6 @@ The following is an example of what an inputs JSON might look like:
   },
   "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 20,
   "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads": 8,
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapter": ["AGATCGGAAGAG"],
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.adapterRead2": ["AGATCGGAAGAG"]
 }
 ```
 
