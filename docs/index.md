@@ -69,7 +69,9 @@ Some additional inputs which may be of interest are:
   "pipeline.genotyping.scatterSize":
     "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)",
   "pipeline.sample.Sample.createGvcf.scatterSize":
-    "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)"
+    "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)",
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterForward": "The adapters to be cut from the forward reads. Default: Illumina Universal Adapter",
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterReverse": "The adapters to be cut from the reverse reads (if paired-end reads are used). Default: Illumina Universal Adapter."  
 }
 ```
 

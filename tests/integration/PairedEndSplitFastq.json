@@ -21,5 +21,6 @@
     "index": "tests/data/wgs2.vcf.gz.tbi"
   },
   "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterForward": "AGATCGGAAGAG",
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterReverse": "AGATCGGAAGAG"
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterReverse": "AGATCGGAAGAG",
+  "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 3
 }
