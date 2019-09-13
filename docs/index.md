@@ -128,7 +128,8 @@ The following is an example of what an inputs JSON might look like:
     "dict": "/home/user/genomes/human/GRCh38.dict"
   },
   "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 20,
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads": 8
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads": 8,
+  "pipeline.dockerImages.yml": "dockerImages.yml"
 }
 ```
 
@@ -164,11 +165,18 @@ samples:
               R2_md5: /home/user/data/patient1-control/lane2_R2.fq.gz.md5
 ```
 
-
 ### Dependency requirements and tool versions
-Included in the repository is an `environment.yml` file. This file includes
-all the tool version on which the workflow was tested. You can use conda and
-this file to create an environment with all the correct tools.
+Biowdl pipelines use docker images to ensure  reproducibility. This
+means that biowdl pipelines will run on any system that has docker
+installed. Alternatively they can be run with singularity.
+
+For more advanced configuration of docker or singularity please check
+the [cromwell documentation on containers](
+https://cromwell.readthedocs.io/en/stable/tutorials/Containers/).
+
+Images from [biocontainers](https://biocontainers.pro) are preferred for
+biowdl pipelines. The list of default images for this pipeline can be
+found in the default for the `dockerImages` input.
 
 ### Output
 This pipeline will produce a number of directories and files:
