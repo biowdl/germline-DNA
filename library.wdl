@@ -34,7 +34,7 @@ workflow Library {
     }
     Array[File] qcReports = flatten(readgroup.qcReports)
 
-    scatter (bam in flatten(readgroup.bamFile)) {
+    scatter (bam in readgroup.bamFile) {
         File bamFiles = bam.file
         File indexFiles = bam.index
     }
