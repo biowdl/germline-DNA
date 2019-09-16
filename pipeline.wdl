@@ -69,7 +69,8 @@ workflow pipeline {
             call GetSamplePositionInArray as casePosition  {
                 input:
                     sampleIds = sampleIds,
-                    sample = sm.id
+                    sample = sm.id,
+                    dockerImage = dockerImages["python"]
             }
 
             call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
