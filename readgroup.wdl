@@ -22,7 +22,6 @@ workflow Readgroup {
     String libraryId = library.id
     String readgroupId = readgroup.id
 
-    # Check MD5sums
     FastqPair reads = readgroup.reads
 
     call qc.QC as qc {
