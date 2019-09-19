@@ -3,8 +3,7 @@ layout: default
 title: Home
 ---
 
-This pipeline can be used to process germline-DNA data with read lengths above
-70 bp, starting with FastQ files. It will perform adapter clipping (using
+This pipeline can be used to process germline-DNA data (WES or WGS), starting with FastQ files. It will perform quality control (using FastQC and MultiQC), adapter clipping (using
 cutadapt), mapping (using BWA mem) and variantcalling (based on the
 [GATK Best Practice](https://software.broadinstitute.org/gatk/best-practices/)).
 
