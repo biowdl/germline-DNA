@@ -113,7 +113,7 @@ workflow pipeline {
             input:
                 # Multiqc will only run if these files are created.
                 dependencies = select_all([genotypingIndex,
-                    somaticVariantcalling.somaticSeqSnvVcfIndex]),
+                    select_all(somaticVariantcalling.somaticSeqSnvVcfIndex)]),
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
                 dockerImage = dockerImages["multiqc"]
