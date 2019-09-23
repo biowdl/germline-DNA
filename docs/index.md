@@ -1,12 +1,9 @@
 ---
 layout: default
 title: Home
-version: develop
-latest: false
 ---
 
-This pipeline can be used to process germline-DNA data with read lengths above
-70 bp, starting with FastQ files. It will perform adapter clipping (using
+This pipeline can be used to process germline-DNA data (WES or WGS), starting with FastQ files. It will perform quality control (using FastQC and MultiQC), adapter clipping (using
 cutadapt), mapping (using BWA mem) and variantcalling (based on the
 [GATK Best Practice](https://software.broadinstitute.org/gatk/best-practices/)).
 
@@ -26,8 +23,6 @@ described below, but additional inputs are available.
 A template containing all possible inputs can be generated using
 Womtool as described in the
 [WOMtool documentation](http://cromwell.readthedocs.io/en/stable/WOMtool/).
-See [this page](/inputs.html) for some additional general notes and information
-about pipeline inputs.
 
 ```json
 {
@@ -39,39 +34,32 @@ about pipeline inputs.
     "file": "A path to a dbSNP VCF file",
     "index": "The path to the index (.tbi) file associated with the dbSNP VCF"
   },
-  "pipeline.sampleConfigFiles": "A list of sample configuration files (see below)",
+  "pipeline.sampleConfigFile": "A sample configuration file (see below)",
   "pipeline.outputDir": "The path to the output directory",
   "pipeline.reference": {
     "fasta": "A path to a reference fasta",
     "fai": "The path to the index associated with the reference fasta",
     "dict": "The path to the dict file associated with the reference fasta"
-  }
+  },
+  "pipeline.dockerImagesFile": "A file listing the used docker images."
 }
 ```
 
 Some additional inputs which may be of interest are:
 ```json
 {
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.platform":
-    "String? (optional, default = \"illumina\"): The sequencing platform used",
+  "pipeline.sample.Sample.library.Library.readgroup.platform":
+    "The sequencing platform used. Default: illumina",
   "pipeline.sample.Sample.library.Library.readgroup.Readgroup.bwaMem.threads":
-    "Int (optional, default = 2): Number of threads used for alignment",
+    "Number of threads used for alignment. Default: 2",
   "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.cores": 
-  "Int (optional default = 1): Number of threads used for cutadapt",
-  "pipeline.sample.Sample.createGvcf.Gvcf.scatterList.regions":
-    "File? (optional): Bed file with regions used for variantcalling",
-  "pipeline.sample.Sample.library.Library.bqsr.GatkPreprocess.scatterList.regions":
-    "File? (optional): Bed file with regions used for variantcalling",
-  "pipeline.genotyping.JointGenotyping.scatterList.regions":
-    "File? (optional): Bed file with regions used for variantcalling",
-  "pipeline.sample.Sample.library.Library.bqsr.scatterSize":
-    "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)",
-  "pipeline.genotyping.scatterSize":
-    "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)",
-  "pipeline.sample.Sample.createGvcf.scatterSize":
-    "Int (optional, default = 10000000): Size of scatter regions (see explanation of scattering below)",
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterForward": "The adapters to be cut from the forward reads. Default: Illumina Universal Adapter",
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterReverse": "The adapters to be cut from the reverse reads (if paired-end reads are used). Default: Illumina Universal Adapter."  
+    "Number of threads used for cutadapt. Default: 1",
+  "pipeline.regions":
+    "Bed file with regions used for variantcalling",
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterForward":
+    "The adapters to be cut from the forward reads. Default: Illumina Universal Adapter",
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterReverse":
+    "The adapters to be cut from the reverse reads (if paired-end reads are used). Default: Illumina Universal Adapter."
 }
 ```
 
