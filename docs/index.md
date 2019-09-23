@@ -52,12 +52,12 @@ about pipeline inputs.
 Some additional inputs which may be of interest are:
 ```json
 {
-  "pipeline.sample.Sample.library.Library.readgroup.numberChunks":
-    "Int (optional, default = 1): The number of chunks each fastq file should be split into for QC and alignment",
   "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.platform":
     "String? (optional, default = \"illumina\"): The sequencing platform used",
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads":
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.bwaMem.threads":
     "Int (optional, default = 2): Number of threads used for alignment",
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.cores": 
+  "Int (optional default = 1): Number of threads used for cutadapt",
   "pipeline.sample.Sample.createGvcf.Gvcf.scatterList.regions":
     "File? (optional): Bed file with regions used for variantcalling",
   "pipeline.sample.Sample.library.Library.bqsr.GatkPreprocess.scatterList.regions":
@@ -127,8 +127,9 @@ The following is an example of what an inputs JSON might look like:
     "fai": "/home/user/genomes/human/GRCh38.fasta.fai",
     "dict": "/home/user/genomes/human/GRCh38.dict"
   },
-  "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 20,
-  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.mapping.AlignBwaMem.bwaMem.threads": 8
+  "pipeline.sample.Sample.library.Library.readgroup.bwaMem.threads": 8,
+  "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.cores": 4,
+  "pipeline.dockerImages.yml": "dockerImages.yml"
 }
 ```
 
@@ -164,11 +165,18 @@ samples:
               R2_md5: /home/user/data/patient1-control/lane2_R2.fq.gz.md5
 ```
 
-
 ### Dependency requirements and tool versions
-Included in the repository is an `environment.yml` file. This file includes
-all the tool version on which the workflow was tested. You can use conda and
-this file to create an environment with all the correct tools.
+Biowdl pipelines use docker images to ensure  reproducibility. This
+means that biowdl pipelines will run on any system that has docker
+installed. Alternatively they can be run with singularity.
+
+For more advanced configuration of docker or singularity please check
+the [cromwell documentation on containers](
+https://cromwell.readthedocs.io/en/stable/tutorials/Containers/).
+
+Images from [biocontainers](https://biocontainers.pro) are preferred for
+biowdl pipelines. The list of default images for this pipeline can be
+found in the default for the `dockerImages` input.
 
 ### Output
 This pipeline will produce a number of directories and files:
@@ -191,11 +199,8 @@ This pipeline will produce a number of directories and files:
 
 ## Scattering
 This pipeline performs scattering to speed up analysis on grid computing
-clusters. This is done in two ways. In the first the FastQ files are split into
-a number of chunks (see the `numberChunks` input). For each of these chunks the
-QC and alignment are performed in separate jobs, which can be processed in
-parallel. For certain other steps (such as variantcalling) a second method is
-used: The reference genome is split into regions of roughly equal size (see
+clusters. For steps such as variantcalling the reference genome is split 
+into regions of roughly equal size (see
 the `scatterSize` inputs). Each of these regions will be analyzed in separate
 jobs as well, allowing them to be processed in parallel.
 

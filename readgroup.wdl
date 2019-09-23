@@ -12,7 +12,6 @@ workflow Readgroup {
         Library library
         Sample sample
         String readgroupDir
-        Int numberChunks = 1
         BwaIndex bwaIndex
         Map[String, String] dockerImages
         String? platform = "illumina"
@@ -24,14 +23,15 @@ workflow Readgroup {
     String libraryId = library.id
     String readgroupId = readgroup.id
 
-    # Check MD5sums
     FastqPair reads = readgroup.reads
 
-     if (defined(reads.R1_md5)) {
+    # Check MD5sums
+    if (defined(reads.R1_md5)) {
         call common.CheckFileMD5 as md5CheckR1 {
             input:
                 file = reads.R1,
-                md5 = select_first([reads.R1_md5])
+                md5 = select_first([reads.R1_md5]),
+                dockerImage=dockerImages['debian']
         }
     }
 
@@ -39,86 +39,57 @@ workflow Readgroup {
         call common.CheckFileMD5 as md5CheckR2 {
             input:
                 file = select_first([reads.R2]),
-                md5 = select_first([reads.R2_md5])
+                md5 = select_first([reads.R2_md5]),
+                dockerImage=dockerImages['debian']
         }
     }
 
-    # Define chunks
-    scatter (chunk in range(numberChunks)){
-        String chunksR1 = "${readgroupDir}/chunk_${chunk}/${chunk}_1.fq.gz"
-        String chunksR2 = "${readgroupDir}/chunk_${chunk}/${chunk}_2.fq.gz"
+    call qc.QC as qc {
+        input:
+            outputDir = readgroupDir,
+            read1 = reads.R1,
+            read2 = reads.R2,
+            dockerImages = dockerImages
     }
 
-    if (numberChunks > 1) {
-        call fastqsplitter.Fastqsplitter as fastqsplitterR1 {
+    if (! useBwaKit) {
+        call bwa.Mem as bwaMem {
             input:
-                inputFastq = reads.R1,
-                outputPaths = chunksR1,
-                dockerImage = dockerImages["fastqsplitter"]
-        }
-        if (defined(readgroup.reads.R2)){
-            call fastqsplitter.Fastqsplitter as fastqsplitterR2 {
-                input:
-                    inputFastq = select_first([reads.R2]),
-                    outputPaths = chunksR2,
-                    dockerImage = dockerImages["fastqsplitter"]
-            }
+                bwaIndex = bwaIndex,
+                read1 = qc.qcRead1,
+                read2 = qc.qcRead2,
+                outputPath = readgroupDir + "/" + basename(reads.R1) + ".bam",
+                readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
+                bwaIndex = bwaIndex,
+                dockerImage = dockerImages["bwa+picard"]
         }
     }
 
-
-    # QC and Mapping
-    scatter (x in range(length(chunksR1))) {
-        File  chunk_read1 = if defined(fastqsplitterR1.chunks) then select_first([fastqsplitterR1.chunks])[x] else reads.R1
-        File? chunk_read2 = if defined(fastqsplitterR2.chunks) then select_first([fastqsplitterR2.chunks])[x] else reads.R2
-        String chunkDir = if defined(fastqsplitterR1.chunks) then sub(chunk_read1, basename(chunk_read1), "") else readgroupDir
-        call qc.QC as qc {
+    if (useBwaKit) {
+        call bwa.Kit as bwakit {
             input:
-                outputDir = chunkDir,
-                read1 = chunk_read1,
-                read2 = chunk_read2,
-                dockerImages = dockerImages
+                bwaIndex = bwaIndex,
+                read1 = qc.qcRead1,
+                read2 = qc.qcRead2,
+                outputPrefix = readgroupDir + "/" + basename(reads.R1),
+                readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
+                bwaIndex = bwaIndex
         }
-
-        if (! useBwaKit) {
-            call bwa.Mem as bwaMem {
-                input:
-                    bwaIndex = bwaIndex,
-                    read1 = qc.qcRead1,
-                    read2 = qc.qcRead2,
-                    outputPath = chunkDir + "/" + basename(chunk_read1) + ".bam",
-                    readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
-                    bwaIndex = bwaIndex,
-                    dockerImage = dockerImages["bwa+picard"]
-            }
-        }
-
-        if (useBwaKit) {
-            call bwa.Kit as bwakit {
-                input:
-                    bwaIndex = bwaIndex,
-                    read1 = qc.qcRead1,
-                    read2 = qc.qcRead2,
-                    outputPrefix = chunkDir + "/" + basename(chunk_read1),
-                    readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
-                    bwaIndex = bwaIndex
-            }
-        }
-
-        IndexedBamFile bwaBamFile = if useBwaKit
-            then object {
-                file: bwakit.outputBam,
-                index: bwakit.outputBamIndex
-            }
-            else object {
-                file: bwaMem.outputBam,
-                index: bwaMem.outputBamIndex
-            }
     }
+
+    IndexedBamFile bwaBamFile = if useBwaKit
+        then object {
+            file: bwakit.outputBam,
+            index: bwakit.outputBamIndex
+        }
+        else object {
+            file: bwaMem.outputBam,
+            index: bwaMem.outputBamIndex
+        }
 
     output {
         FastqPair inputR1 = readgroup.reads
-        Array[IndexedBamFile] bamFile = bwaBamFile
-        Array[File] qcReports = flatten(qc.reports)
+        IndexedBamFile bamFile = bwaBamFile
+        Array[File] qcReports = qc.reports
     }
 }
