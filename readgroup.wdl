@@ -73,7 +73,8 @@ workflow Readgroup {
                 read2 = qc.qcRead2,
                 outputPrefix = readgroupDir + "/" + basename(reads.R1),
                 readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
-                bwaIndex = bwaIndex
+                bwaIndex = bwaIndex,
+                dockerImage = dockerImages["bwakit"]
         }
     }
 
