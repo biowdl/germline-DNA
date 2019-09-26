@@ -20,6 +20,7 @@ workflow pipeline {
         File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
+        Boolean performGermlineVariantcalling = true
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
     }
@@ -51,7 +52,8 @@ workflow pipeline {
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
                 regions = regions,
-                dockerImages = dockerImages
+                dockerImages = dockerImages,
+                performGermlineVariantcalling = performGermlineVariantcalling
         }
 
         String sampleIds = sm.id
@@ -91,22 +93,31 @@ workflow pipeline {
         }
     }
 
-    call jointgenotyping.JointGenotyping as genotyping {
-        input:
-            reference = reference,
-            outputDir = genotypingDir,
-            gvcfFiles = sample.gvcf,
-            vcfBasename = "multisample",
-            dbsnpVCF = dbSNP,
-            dockerImages = dockerImages,
-            regions = regions
+    if (performGermlineVariantcalling) {
+        call jointgenotyping.JointGenotyping as genotyping {
+            input:
+                reference = reference,
+                outputDir = genotypingDir,
+                gvcfFiles = select_all(sample.gvcf),
+                vcfBasename = "multisample",
+                dbsnpVCF = dbSNP,
+                dockerImages = dockerImages,
+                regions = regions
+        }
+
+        # In order to pass just the index to multiQC we need to unpack it first.
+        File genotypingIndex = genotyping.vcfFile.index
     }
 
     if (runMultiQC) {
         call multiqc.MultiQC as multiqcTask {
             input:
                 # Multiqc will only run if these files are created.
-                dependencies = [genotyping.vcfFile.index],
+                dependencies = select_all(
+                    flatten([
+                        [genotypingIndex],
+                        somaticVariantcalling.somaticSeqSnvVcfIndex
+                    ])),
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
                 dockerImage = dockerImages["multiqc"]
@@ -116,7 +127,7 @@ workflow pipeline {
     output {
         Array[IndexedBamFile] libraryMarkdupBamFiles = flatten(sample.libraryMarkdupBamFiles)
         Array[IndexedBamFile] libraryBqsrBamFiles = flatten(sample.libraryBqsrBamFiles)
-        IndexedVcfFile multiSampleVcf = genotyping.vcfFile
+        IndexedVcfFile? multiSampleVcf = genotyping.vcfFile
         Array[IndexedBamFile] sampleBams = bamFiles
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
 

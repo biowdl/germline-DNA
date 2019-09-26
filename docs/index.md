@@ -59,7 +59,9 @@ Some additional inputs which may be of interest are:
   "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterForward":
     "The adapters to be cut from the forward reads. Default: Illumina Universal Adapter",
   "pipeline.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterReverse":
-    "The adapters to be cut from the reverse reads (if paired-end reads are used). Default: Illumina Universal Adapter."
+    "The adapters to be cut from the reverse reads (if paired-end reads are used). Default: Illumina Universal Adapter.",
+  "pipeline.sample.Sample.library.Library.readgroup.useBwaKit": 
+    "Whether bwakit should be used instead of plain BWA mem, this will required an '.alt' file to be present in the index."
 }
 ```
 

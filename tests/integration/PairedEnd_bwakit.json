@@ -13,12 +13,13 @@
       "tests/data/reference/bwa/reference.fasta.ann",
       "tests/data/reference/bwa/reference.fasta.bwt",
       "tests/data/reference/bwa/reference.fasta.pac",
-      "tests/data/reference/bwa/reference.fasta.sa"
+      "tests/data/reference/bwa/reference.fasta.sa",
+      "tests/data/reference/bwa/reference.fasta.alt"
     ]
   },
   "pipeline.dbSNP": {
     "file": "tests/data/wgs2.vcf.gz",
     "index": "tests/data/wgs2.vcf.gz.tbi"
   },
-  "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 3
+  "pipeline.sample.Sample.library.Library.readgroup.useBwaKit": true
 }

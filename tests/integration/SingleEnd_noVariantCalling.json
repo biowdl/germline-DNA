@@ -1,5 +1,5 @@
 {
-  "pipeline.sampleConfigFile": "tests/samplesheets/PairedEnd.yml",
+  "pipeline.sampleConfigFile": "tests/samplesheets/SingleEnd.yml",
   "pipeline.dockerImagesFile": "dockerImages.yml",
   "pipeline.reference": {
     "fasta": "tests/data/reference/reference.fasta",
@@ -20,5 +20,5 @@
     "file": "tests/data/wgs2.vcf.gz",
     "index": "tests/data/wgs2.vcf.gz.tbi"
   },
-  "pipeline.sample.Sample.library.Library.readgroup.numberChunks": 3
+  "pipeline.performGermlineVariantcalling": false
 }

@@ -15,6 +15,7 @@ workflow Readgroup {
         BwaIndex bwaIndex
         Map[String, String] dockerImages
         String? platform = "illumina"
+        Boolean useBwaKit = false
     }
 
     # FIXME: workaround for namepace issue in cromwell
@@ -51,21 +52,41 @@ workflow Readgroup {
             dockerImages = dockerImages
     }
 
-    call bwa.Mem as bwaMem {
-        input:
-            bwaIndex = bwaIndex,
-            read1 = qc.qcRead1,
-            read2 = qc.qcRead2,
-            outputPath = readgroupDir + "/" + basename(reads.R1) + ".bam",
-            readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
-            bwaIndex = bwaIndex,
-            dockerImage = dockerImages["bwa+picard"]
+    if (! useBwaKit) {
+        call bwa.Mem as bwaMem {
+            input:
+                bwaIndex = bwaIndex,
+                read1 = qc.qcRead1,
+                read2 = qc.qcRead2,
+                outputPath = readgroupDir + "/" + basename(reads.R1) + ".bam",
+                readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
+                bwaIndex = bwaIndex,
+                dockerImage = dockerImages["bwa+picard"]
+        }
     }
 
-    IndexedBamFile bwaBamFile = object {
-        file: bwaMem.outputBam,
-        index: bwaMem.outputBamIndex
+    if (useBwaKit) {
+        call bwa.Kit as bwakit {
+            input:
+                bwaIndex = bwaIndex,
+                read1 = qc.qcRead1,
+                read2 = qc.qcRead2,
+                outputPrefix = readgroupDir + "/" + basename(reads.R1),
+                readgroup = "@RG\\tID:~{sampleId}-~{libraryId}-~{readgroupId}\\tLB:~{libraryId}\\tSM:~{sampleId}\\tPL:~{platform}",
+                bwaIndex = bwaIndex,
+                dockerImage = dockerImages["bwakit"]
+        }
     }
+
+    IndexedBamFile bwaBamFile = if useBwaKit
+        then object {
+            file: bwakit.outputBam,
+            index: bwakit.outputBamIndex
+        }
+        else object {
+            file: bwaMem.outputBam,
+            index: bwaMem.outputBamIndex
+        }
 
     output {
         FastqPair inputR1 = readgroup.reads

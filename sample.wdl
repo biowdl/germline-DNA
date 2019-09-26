@@ -16,6 +16,7 @@ workflow Sample {
         IndexedVcfFile dbSNP
         Map[String, String] dockerImages
         File? regions
+        Boolean performGermlineVariantcalling
     }
 
     scatter (lb in sample.libraries) {
@@ -27,23 +28,26 @@ workflow Sample {
                 reference = reference,
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
-                regions = regions,
                 dockerImages = dockerImages
         }
     }
+    if (performGermlineVariantcalling) {
+        call gvcf.Gvcf as createGvcf {
+            input:
+                referenceFasta = reference.fasta,
+                referenceFastaFai = reference.fai,
+                referenceFastaDict = reference.dict,
+                bamFiles = library.bqsrBamFile,
+                outputDir = sampleDir,
+                gvcfName = sample.id + ".g.vcf.gz",
+                dbsnpVCF = dbSNP.file,
+                dbsnpVCFIndex = dbSNP.index,
+                regions = regions,
+                dockerImages = dockerImages
+        }
 
-    call gvcf.Gvcf as createGvcf {
-        input:
-            referenceFasta = reference.fasta,
-            referenceFastaFai = reference.fai,
-            referenceFastaDict = reference.dict,
-            bamFiles = library.bqsrBamFile,
-            outputDir = sampleDir,
-            gvcfName = sample.id + ".g.vcf.gz",
-            dbsnpVCF = dbSNP.file,
-            dbsnpVCFIndex = dbSNP.index,
-            regions = regions,
-            dockerImages = dockerImages
+        IndexedVcfFile outputGvcf = object {file: createGvcf.outputGVcf,
+            index: createGvcf.outputGVcfIndex }
     }
 
     scatter (bam in library.bqsrBamFile) {
@@ -65,7 +69,7 @@ workflow Sample {
           file: merge.outputBam,
           index: merge.outputBamIndex
         }
-        IndexedVcfFile gvcf = object {file: createGvcf.outputGVcf, index: createGvcf.outputGVcfIndex }
+        IndexedVcfFile? gvcf = outputGvcf
         Array[File] metricsFiles = flatten(library.metricsFiles)
     }
 }

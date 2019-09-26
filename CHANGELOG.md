@@ -9,6 +9,12 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
+version 1.1.0-dev
+---------------------------
++ added option to use bwakit as aligner
++ region input is no longer passed to gatk-preprocess
++ added option to skip germline variant calling 
+
 version 1.0.0
 ---------------------------
 + Explicitly list all images in dockerimages.yml.
