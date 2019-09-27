@@ -8,6 +8,7 @@ samples:
               R1: tests/data/wgs1/R1.fq.gz
               R1_md5: b859d6dd76a6861ce7e9a978ae2e530e
   - id: wgs2-single-end
+    control: wgs1-single-end
     libraries:
       - id: lib1
         readgroups:

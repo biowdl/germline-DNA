@@ -1,6 +1,5 @@
 version 1.0
 
-import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
 import "sample.wdl" as sampleWorkflow
 import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
 import "structs.wdl" as structs
@@ -10,7 +9,7 @@ import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
 
 
-workflow pipeline {
+workflow Somatic {
     input {
         File sampleConfigFile
         Array[Sample] samples = []
@@ -40,7 +39,6 @@ workflow pipeline {
     }
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
     Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
-
 
     # Running sample subworkflow
     scatter (sm in allSamples) {
@@ -88,36 +86,17 @@ workflow pipeline {
                     controlBam = bamFiles[controlPostition.position].file,
                     controlBamIndex = bamFiles[controlPostition.position].index,
                     regions = regions,
+
                     dockerImages = dockerImages
             }
         }
-    }
-
-    if (performGermlineVariantcalling) {
-        call jointgenotyping.JointGenotyping as genotyping {
-            input:
-                reference = reference,
-                outputDir = genotypingDir,
-                gvcfFiles = select_all(sample.gvcf),
-                vcfBasename = "multisample",
-                dbsnpVCF = dbSNP,
-                dockerImages = dockerImages,
-                regions = regions
-        }
-
-        # In order to pass just the index to multiQC we need to unpack it first.
-        File genotypingIndex = genotyping.vcfFile.index
     }
 
     if (runMultiQC) {
         call multiqc.MultiQC as multiqcTask {
             input:
                 # Multiqc will only run if these files are created.
-                dependencies = select_all(
-                    flatten([
-                        [genotypingIndex],
-                        somaticVariantcalling.somaticSeqSnvVcfIndex
-                    ])),
+                dependencies = select_all(somaticVariantcalling.somaticSeqSnvVcfIndex),
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
                 dockerImage = dockerImages["multiqc"]
@@ -127,10 +106,28 @@ workflow pipeline {
     output {
         Array[IndexedBamFile] libraryMarkdupBamFiles = flatten(sample.libraryMarkdupBamFiles)
         Array[IndexedBamFile] libraryBqsrBamFiles = flatten(sample.libraryBqsrBamFiles)
-        IndexedVcfFile? multiSampleVcf = genotyping.vcfFile
         Array[IndexedBamFile] sampleBams = bamFiles
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
-
+        Array[File?] somaticSeqSnvVcf = somaticVariantcalling.somaticSeqSnvVcf
+        Array[File?] somaticSeqSnvVcfIndex = somaticVariantcalling.somaticSeqSnvVcfIndex
+        Array[File?] somaticSeqIndelVcf = somaticVariantcalling.somaticSeqIndelVcf
+        Array[File?] somaticSeqIndelVcfIndex = somaticVariantcalling.somaticSeqIndelVcfIndex
+        Array[File?] mutect2Vcf = somaticVariantcalling.mutect2Vcf
+        Array[File?] mutect2VcfIndex = somaticVariantcalling.mutect2VcfIndex
+        Array[File?] vardictVcf = somaticVariantcalling.vardictVcf
+        Array[File?] vardictVcfIndex = somaticVariantcalling.vardictVcfIndex
+        Array[File?] strelkaSnvsVcf = somaticVariantcalling.strelkaSnvsVcf
+        Array[File?] strelkaSnvsVcfIndex = somaticVariantcalling.strelkaSnvsVcfIndex
+        Array[File?] strelkaIndelsVcf = somaticVariantcalling.strelkaIndelsVcf
+        Array[File?] strelkaIndelsVcfIndex = somaticVariantcalling.strelkaIndelsVcfIndex
+        Array[File?] strelkaCombinedVcf = somaticVariantcalling.strelkaCombinedVcf
+        Array[File?] strelkaCombinedVcfIndex = somaticVariantcalling.strelkaCombinedVcfIndex
+        Array[File?] mantaVcf = somaticVariantcalling.mantaVcf
+        Array[File?] mantaVcfIndex = somaticVariantcalling.mantaVcfIndex
+        Array[File?] combinedVcf = somaticVariantcalling.combinedVcf
+        Array[File?] combinedVcfIndex = somaticVariantcalling.combinedVcfIndex
+        Array[File?] ensembleIndelsClassifier = somaticVariantcalling.ensembleIndelsClassifier
+        Array[File?] ensembleSNVClassifier = somaticVariantcalling.ensembleSNVClassifier
     }
 }
 

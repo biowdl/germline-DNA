@@ -1,25 +1,23 @@
 {
-  "pipeline.sampleConfigFile": "tests/samplesheets/PairedEnd.yml",
-  "pipeline.dockerImagesFile": "dockerImages.yml",
-  "pipeline.reference": {
+  "Germline.sampleConfigFile": "tests/samplesheets/PairedEnd.yml",
+  "Germline.dockerImagesFile": "dockerImages.yml",
+  "Germline.reference": {
     "fasta": "tests/data/reference/reference.fasta",
     "fai": "tests/data/reference/reference.fasta.fai",
     "dict": "tests/data/reference/reference.dict"
   },
-  "pipeline.bwaIndex": {
+  "Germline.bwaIndex": {
     "fastaFile": "tests/data/reference/bwa/reference.fasta",
     "indexFiles": [
       "tests/data/reference/bwa/reference.fasta.amb",
       "tests/data/reference/bwa/reference.fasta.ann",
       "tests/data/reference/bwa/reference.fasta.bwt",
       "tests/data/reference/bwa/reference.fasta.pac",
-      "tests/data/reference/bwa/reference.fasta.sa",
-      "tests/data/reference/bwa/reference.fasta.alt"
+      "tests/data/reference/bwa/reference.fasta.sa"
     ]
   },
-  "pipeline.dbSNP": {
+  "Germline.dbSNP": {
     "file": "tests/data/wgs2.vcf.gz",
     "index": "tests/data/wgs2.vcf.gz.tbi"
-  },
-  "pipeline.sample.Sample.library.Library.readgroup.useBwaKit": true
+  }
 }

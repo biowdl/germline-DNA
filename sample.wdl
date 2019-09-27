@@ -1,6 +1,6 @@
 version 1.0
 
-import "bam-to-gvcf/gvcf.wdl" as gvcf
+
 import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
@@ -31,28 +31,9 @@ workflow Sample {
                 dockerImages = dockerImages
         }
     }
-    if (performGermlineVariantcalling) {
-        call gvcf.Gvcf as createGvcf {
-            input:
-                referenceFasta = reference.fasta,
-                referenceFastaFai = reference.fai,
-                referenceFastaDict = reference.dict,
-                bamFiles = library.bqsrBamFile,
-                outputDir = sampleDir,
-                gvcfName = sample.id + ".g.vcf.gz",
-                dbsnpVCF = dbSNP.file,
-                dbsnpVCFIndex = dbSNP.index,
-                regions = regions,
-                dockerImages = dockerImages
-        }
-
-        IndexedVcfFile outputGvcf = object {file: createGvcf.outputGVcf,
-            index: createGvcf.outputGVcfIndex }
-    }
 
     scatter (bam in library.bqsrBamFile) {
         File bqsrBamFile = bam.file
-
     }
 
     call samtools.Merge as merge {
@@ -69,7 +50,6 @@ workflow Sample {
           file: merge.outputBam,
           index: merge.outputBamIndex
         }
-        IndexedVcfFile? gvcf = outputGvcf
         Array[File] metricsFiles = flatten(library.metricsFiles)
     }
 }
