@@ -76,7 +76,6 @@
     - path: "test-output/samples/wgs1-paired-end/somatic-variantcalling"
       should_exist: false
 
-# TODO add somatic calling output paths
 - name: Somatic_FunctionalPairedEnd
   tags:
     - functional
@@ -84,8 +83,16 @@
     cromwell run -o tests/cromwell_options.json
     -i tests/functional/Somatic_PairedEnd.json somatic.wdl
   files:
+    - path: "test-output/samples/NA12878_2/lib_U0b/NA12878_2-U0b.markdup.bam"
+    - path: "test-output/samples/NA12878_2/lib_U0b/NA12878_2-U0b.markdup.bai"
+    - path: "test-output/samples/NA12878_2/lib_U0b/metrics/NA12878_2-U0b.markdup.flagstats"
     - path: "test-output/samples/NA12878/lib_U0a/NA12878-U0a.markdup.bam"
     - path: "test-output/samples/NA12878/lib_U0a/NA12878-U0a.markdup.bai"
     - path: "test-output/samples/NA12878/lib_U0a/metrics/NA12878-U0a.markdup.flagstats"
-
+    - path: "test-output/samples/NA12878/somatic-variantcalling/somaticSeq/Consensus.sINDEL.vcf.gz"
+    - path: "test-output/samples/NA12878/somatic-variantcalling/somaticSeq/Consensus.sINDEL.vcf.gz.tbi"
+    - path: "test-output/samples/NA12878/somatic-variantcalling/somaticSeq/Consensus.sSNV.vcf.gz"
+    - path: "test-output/samples/NA12878/somatic-variantcalling/somaticSeq/Consensus.sSNV.vcf.gz.tbi"
+    - path: "test-output/samples/NA12878_2/somatic-variantcalling"
+      should_exist: false
 

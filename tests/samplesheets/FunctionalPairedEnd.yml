@@ -1,5 +1,6 @@
 samples:
   - id: "NA12878"
+    control: "NA12878_2"
     libraries:
       - id: "U0a"
         readgroups:
@@ -11,3 +12,15 @@ samples:
             reads:
               R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0a/U0a_CGATGT_L002_R1.fastq.gz"
               R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0a/U0a_CGATGT_L002_R2.fastq.gz"
+  - id: "NA12878_2"
+    libraries:
+      - id: "U0b"
+        readgroups:
+          - id: "L001"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0b/U0b_TGACCA_L001_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0b/U0b_TGACCA_L001_R2.fastq.gz"
+          - id: "L002"
+            reads:
+              R1: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0b/U0b_TGACCA_L002_R1.fastq.gz"
+              R2: "/exports/sasc-testing/fixtures/samples/NA12878/Sample_U0b/U0b_TGACCA_L002_R2.fastq.gz"
