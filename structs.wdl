@@ -1,6 +1,5 @@
 version 1.0
 
-import "tasks/bwa.wdl" as bwa
 import "tasks/common.wdl" as common
 
 struct Readgroup {

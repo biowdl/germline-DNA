@@ -55,7 +55,6 @@ workflow Readgroup {
     if (! useBwaKit) {
         call bwa.Mem as bwaMem {
             input:
-                bwaIndex = bwaIndex,
                 read1 = qc.qcRead1,
                 read2 = qc.qcRead2,
                 outputPath = readgroupDir + "/" + basename(reads.R1) + ".bam",
@@ -68,7 +67,6 @@ workflow Readgroup {
     if (useBwaKit) {
         call bwa.Kit as bwakit {
             input:
-                bwaIndex = bwaIndex,
                 read1 = qc.qcRead1,
                 read2 = qc.qcRead2,
                 outputPrefix = readgroupDir + "/" + basename(reads.R1),
@@ -78,14 +76,9 @@ workflow Readgroup {
         }
     }
 
-    IndexedBamFile bwaBamFile = if useBwaKit
-        then object {
-            file: bwakit.outputBam,
-            index: bwakit.outputBamIndex
-        }
-        else object {
-            file: bwaMem.outputBam,
-            index: bwaMem.outputBamIndex
+    IndexedBamFile bwaBamFile = object {
+            file: select_first([bwakit.outputBam, bwaMem.outputBam]),
+            index: select_first([bwakit.outputBamIndex, bwaMem.outputBamIndex])
         }
 
     output {
