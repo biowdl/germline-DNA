@@ -49,7 +49,6 @@ workflow Somatic {
                 reference = reference,
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
-                regions = regions,
                 dockerImages = dockerImages,
                 performGermlineVariantcalling = performGermlineVariantcalling
         }

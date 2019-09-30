@@ -15,7 +15,6 @@ workflow Sample {
         BwaIndex bwaIndex
         IndexedVcfFile dbSNP
         Map[String, String] dockerImages
-        File? regions
         Boolean performGermlineVariantcalling
     }
 
