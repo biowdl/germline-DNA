@@ -180,7 +180,6 @@ The following is an example of what an inputs JSON might look like:
 ```
 
 And the associated samplesheet might look like this:
-And the associated samplesheet might look like this:
 
 sample | library | read |control| R1 | R1_md5 | R2 | R2_md5
 -------|---------|------|-------|----|--------|----|-------
