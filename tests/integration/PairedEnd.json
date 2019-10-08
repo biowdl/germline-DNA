@@ -1,5 +1,5 @@
 {
-  "pipeline.sampleConfigFile": "tests/samplesheets/PairedEnd.yml",
+  "pipeline.sampleConfigFile": "tests/samplesheets/PairedEnd.csv",
   "pipeline.dockerImagesFile": "dockerImages.yml",
   "pipeline.reference": {
     "fasta": "tests/data/reference/reference.fasta",
