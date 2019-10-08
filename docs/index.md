@@ -114,8 +114,8 @@ patient1-case    |lib1     |rg2        |                |data/case1-l1-rg1-r1.fa
 patient1-case    |lib1     |rg3        |                |data/case1-l1-rg1-r1.fastq|||
 patient1-control |lib1     |rg1        |                |data/control1-l1-rg1-r1.fastq|||
 
-NOTE: The control only needs one field per sample to be filled. Althoug more is possible
-if you like to be explicit.
+NOTE: The control only needs one field per sample to be filled. Although
+filling more columns is possible if you like to be explicit.
  
 After creating the table in a spreadsheet program it can be saved in 
 csv format.
