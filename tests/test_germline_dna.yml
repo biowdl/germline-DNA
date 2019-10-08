@@ -1,6 +1,7 @@
 - name: SingleEnd
   tags:
     - integration
+    - no_docker_conf
   # Run this pipeline with a relative output dir.
   command: >-
     cromwell run -o tests/cromwell_options.json
@@ -18,6 +19,7 @@
 - name: SingleEnd_noVariantCalling
   tags:
     - integration
+    - no_docker_conf
   # Run this pipeline with a relative output dir.
   command: >-
     cromwell run -o tests/cromwell_options.json
@@ -37,6 +39,7 @@
 - name: PairedEnd
   tags:
     - integration
+    - docker_conf
   # Run this pipeline with a fixed output dir.
   command: >-
     bash -c '
@@ -66,6 +69,7 @@
 - name: PairedEnd_bwakit
   tags:
     - integration
+    - docker_conf
   # Run this pipeline with a fixed output dir.
   command: >-
     bash -c '
