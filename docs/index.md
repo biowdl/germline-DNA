@@ -93,17 +93,30 @@ R1| The fastq file containing the forward reads
 R1_md5 | Optional: md5sum for the R1 file.
 R2| Optional: The fastq file containing the reverse reads
 R2_md5| Optional: md5sum for the R2 file
+control| Optional: The sample ID for the control sample (in case of case-control somatic variant calling).
 
 The easiest way to create a samplesheet is to use a spreadsheet program
 such as LibreOffice Calc or Microsoft Excel, and create a table:
 
-sample | library | read | R1 | R1_md5 | R2 | R2_md5
+sample | library | readgroup | R1 | R1_md5 | R2 | R2_md5
 -------|---------|------|----|--------|----|-------
 sample1|lib1|rg1|data/s1-l1-rg1-r1.fastq|||
 sample2|lib1|rg1|data/s1-l1-rg1-r2.fastq|||
 
 NOTE: R1_md5, R2 and R2_md5 are optional do not have to be filled. And additional fields may be added (eg. for documentation purposes), these will be ignored by the pipeline.
 
+Or with control information:
+
+sample           | library | readgroup | control        | R1 | R1_md5 | R2 | R2_md5
+-----------------|---------|-----------|----------------|----|--------|----|-------
+patient1-case    |lib1     |rg1        |patient1-control|data/case1-l1-rg1-r1.fastq|||
+patient1-case    |lib1     |rg2        |                |data/case1-l1-rg1-r1.fastq|||
+patient1-case    |lib1     |rg3        |                |data/case1-l1-rg1-r1.fastq|||
+patient1-control |lib1     |rg1        |                |data/control1-l1-rg1-r1.fastq|||
+
+NOTE: The control only needs one field per sample to be filled. Althoug more is possible
+if you like to be explicit.
+ 
 After creating the table in a spreadsheet program it can be saved in 
 csv format.
  
