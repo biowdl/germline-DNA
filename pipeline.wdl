@@ -158,6 +158,6 @@ task GetSamplePositionInArray {
     runtime {
         docker: dockerImage
         # 4 gigs of memory to be able to build the docker image in singularity
-        memory: 4
+        memory: "4G"
     }
 }

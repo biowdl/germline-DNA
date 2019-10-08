@@ -11,6 +11,9 @@ that users understand how the changes affect the new version.
 
 version 1.1.0-dev
 ---------------------------
++ Update tasks so they pass the correct memory requirements to the 
+  execution engine. Memory requirements are set on a per-task (not
+  per-core) basis.
 + added option to use bwakit as aligner
 + region input is no longer passed to gatk-preprocess
 + added option to skip germline variant calling 
