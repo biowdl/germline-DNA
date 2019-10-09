@@ -9,6 +9,7 @@
 # Tools are sorted alphabetically for ease of use.
 
 biopet-scatterregions: "quay.io/biocontainers/biopet-scatterregions:0.2--0"
+biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.0--py_0"
 # A mulled container is needed to have both picard and bwa in one container.
 # quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842
 # This container contains: picard (2.18.7), bwa (0.7.17-r1188)
@@ -24,7 +25,6 @@ samtools: "quay.io/biocontainers/samtools:1.8--h46bd0b3_5"
 tabix: "quay.io/biocontainers/tabix:0.2.6--ha92aebf_0"
 manta: "quay.io/biocontainers/manta:1.4.0--py27_1"
 python: "python:3.7-slim"
-"python+pyyaml": "biowdl/pyyaml:3.13-py37-slim"
 strelka: "quay.io/biocontainers/strelka:2.9.7--0"
 vardict-java: "quay.io/biocontainers/vardict-java:1.5.8--1"
 somaticseq: "lethalfang/somaticseq:3.1.0"

@@ -23,7 +23,11 @@ install:
   - conda install --file requirements-test.txt
 
 script:
-  - travis_wait 30 pytest --tag $TEST tests/
+  - travis_wait 30 pytest --keep-workflow-wd-on-fail --tag $TEST tests/
+
+after_failure:
+  # Get the last 1000 lines of the cromwell log to catch the error.
+  - bash -c 'tail -n 1000 /tmp/pytest_workflow_*/*/log.out'
 
 matrix:
   include:
@@ -53,3 +57,5 @@ matrix:
         - >
           git diff --exit-code ||
           (echo ERROR: Git changes detected. Submodules should either be tagged or on the latest version of develop. && exit 1)
+      after_failure:
+        - echo "Linting failed"
