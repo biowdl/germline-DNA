@@ -57,4 +57,5 @@ matrix:
         - >
           git diff --exit-code ||
           (echo ERROR: Git changes detected. Submodules should either be tagged or on the latest version of develop. && exit 1)
-      after_failure: []
+      after_failure:
+        - echo "Linting failed"
