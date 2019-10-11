@@ -1,6 +1,7 @@
-- name: Somatic_SingleEnd
+- name: SingleEnd
   tags:
     - integration
+    - no_docker_conf
     - somatic
   # Run this pipeline with a relative output dir.
   command: >-
@@ -24,6 +25,7 @@
   tags:
     - integration
     - somatic
+    - docker_conf
   # Run this pipeline with a fixed output dir.
   command: >-
     bash -c '
@@ -52,6 +54,7 @@
   tags:
     - integration
     - somatic
+    - docker_conf
   # Run this pipeline with a fixed output dir.
   command: >-
     bash -c '

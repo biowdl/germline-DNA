@@ -9,9 +9,16 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
-version 1.1.0-dev
+version 2.0.0-dev
 ---------------------------
 + separated somatic and germline variant calling into their own workflows
+
+version 1.1.0
+---------------------------
++ Allow using csv table format samplesheet as input format.
++ Update tasks so they pass the correct memory requirements to the 
+  execution engine. Memory requirements are set on a per-task (not
+  per-core) basis.
 + added option to use bwakit as aligner
 + region input is no longer passed to gatk-preprocess
 + added option to skip germline variant calling 

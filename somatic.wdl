@@ -7,7 +7,7 @@ import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biopet/sampleconfig.wdl" as sampleconfig
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
-
+import "tasks/biowdl.wdl" as biowdl
 
 workflow Somatic {
     input {
@@ -33,9 +33,10 @@ workflow Somatic {
     }
     Map[String, String] dockerImages = read_json(ConvertDockerImagesFile.json)
 
-    call common.YamlToJson as ConvertSampleConfig {
+    call biowdl.InputConverter as ConvertSampleConfig {
         input:
-            yaml = sampleConfigFile
+            samplesheet = sampleConfigFile,
+            old = true
     }
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
     Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
