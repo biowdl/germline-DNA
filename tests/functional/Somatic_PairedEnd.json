@@ -21,5 +21,6 @@
     "index": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/annotation/dbsnp/dbsnp-149.vcf.gz.tbi"
   },
   "Somatic.sample.Sample.library.Library.readgroup.Readgroup.bwaMem.threads": 8,
-  "Somatic.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.cores": 4
+  "Somatic.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.cores": 4,
+  "Somatic.somaticVariantcalling.runVardict": false
 }
