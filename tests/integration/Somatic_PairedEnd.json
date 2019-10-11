@@ -1,5 +1,5 @@
 {
-  "Somatic.sampleConfigFile": "tests/samplesheets/PairedEnd.yml",
+  "Somatic.sampleConfigFile": "tests/samplesheets/PairedEnd.csv",
   "Somatic.dockerImagesFile": "dockerImages.yml",
   "Somatic.reference": {
     "fasta": "tests/data/reference/reference.fasta",

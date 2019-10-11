@@ -1,6 +1,7 @@
 - name: Germline_SingleEnd
   tags:
     - integration
+    - no_docker_conf
     - germline
   # Run this pipeline with a relative output dir.
   command: >-
@@ -20,6 +21,7 @@
   tags:
     - integration
     - germline
+    - docker_conf
   # Run this pipeline with a fixed output dir.
   command: >-
     bash -c '
@@ -44,6 +46,7 @@
   tags:
     - integration
     - germline
+    - docker_conf
   # Run this pipeline with a fixed output dir.
   command: >-
     bash -c '

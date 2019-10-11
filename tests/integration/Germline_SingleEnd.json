@@ -1,5 +1,5 @@
 {
-  "Germline.sampleConfigFile": "tests/samplesheets/SingleEnd.csv",
+  "Germline.sampleConfigFile": "tests/samplesheets/SingleEnd.yml",
   "Germline.dockerImagesFile": "dockerImages.yml",
   "Germline.reference": {
     "fasta": "tests/data/reference/reference.fasta",

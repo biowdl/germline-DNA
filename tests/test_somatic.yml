@@ -1,4 +1,4 @@
-- name: SingleEnd
+- name: Somatic_SingleEnd
   tags:
     - integration
     - no_docker_conf
