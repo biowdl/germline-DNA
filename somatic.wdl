@@ -38,43 +38,43 @@ workflow Somatic {
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
 
     # Running sample subworkflow
-    scatter (sample in sampleConfig.samples) {
-        call sampleWorkflow.Sample as sampleWf {
+    scatter (samp in sampleConfig.samples) {
+        call sampleWorkflow.Sample as sample {
             input:
-                sampleDir = outputDir + "/samples/" + sample.id,
-                sample = sample,
+                sampleDir = outputDir + "/samples/" + samp.id,
+                sample = samp,
                 reference = reference,
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
                 dockerImages = dockerImages
         }
 
-        String sampleIds = sample.id
-        IndexedBamFile bamFiles = sampleWf.bqsrBamFile
+        String sampleIds = samp.id
+        IndexedBamFile bamFiles = sample.bqsrBamFile
     }
 
-    scatter (sample in sampleConfig.samples) {
-        if (defined(sample.control)) {
+    scatter (samp in sampleConfig.samples) {
+        if (defined(samp.control)) {
             call GetSamplePositionInArray as controlPostition  {
                 input:
                     sampleIds = sampleIds,
-                    sample = select_first([sample.control])
+                    sample = select_first([samp.control])
             }
 
             call GetSamplePositionInArray as casePosition  {
                 input:
                     sampleIds = sampleIds,
-                    sample = sample.id,
+                    sample = samp.id,
                     dockerImage = dockerImages["python"]
             }
 
             call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
                 input:
-                    outputDir = outputDir + "/samples/" + sample.id + "/somatic-variantcalling/",
+                    outputDir = outputDir + "/samples/" + samp.id + "/somatic-variantcalling/",
                     referenceFasta = reference.fasta,
                     referenceFastaFai = reference.fai,
                     referenceFastaDict = reference.dict,
-                    tumorSample = sample.id,
+                    tumorSample = samp.id,
                     tumorBam = bamFiles[casePosition.position].file,
                     tumorBamIndex = bamFiles[casePosition.position].index,
                     controlSample = sampleIds[controlPostition.position],
@@ -99,8 +99,8 @@ workflow Somatic {
 
     output {
         Array[IndexedBamFile] sampleBams = bamFiles
-        Array[IndexedBamFile] markdupBams = sampleWf.markdupBamFile
-        Array[File] bamMetricsFiles = flatten(sampleWf.metricsFiles)
+        Array[IndexedBamFile] markdupBams = sample.markdupBamFile
+        Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
         Array[File?] somaticSeqSnvVcf = somaticVariantcalling.somaticSeqSnvVcf
         Array[File?] somaticSeqSnvVcfIndex = somaticVariantcalling.somaticSeqSnvVcfIndex
         Array[File?] somaticSeqIndelVcf = somaticVariantcalling.somaticSeqIndelVcf

@@ -41,11 +41,11 @@ workflow Germline {
 
 
     # Running sample subworkflow
-    scatter (sample in sampleConfig.samples) {
-        call sampleWorkflow.Sample as sampleWf {
+    scatter (samp in sampleConfig.samples) {
+        call sampleWorkflow.Sample as sample {
             input:
-                sampleDir = outputDir + "/samples/" + sample.id,
-                sample = sample,
+                sampleDir = outputDir + "/samples/" + samp.id,
+                sample = samp,
                 reference = reference,
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
@@ -57,16 +57,16 @@ workflow Germline {
                 referenceFasta = reference.fasta,
                 referenceFastaFai = reference.fai,
                 referenceFastaDict = reference.dict,
-                bamFiles = [sampleWf.bqsrBamFile],
-                outputDir = outputDir + "/samples/" + sample.id,
-                gvcfName = sample.id + ".g.vcf.gz",
+                bamFiles = [sample.bqsrBamFile],
+                outputDir = outputDir + "/samples/" + samp.id,
+                gvcfName = samp.id + ".g.vcf.gz",
                 dbsnpVCF = dbSNP.file,
                 dbsnpVCFIndex = dbSNP.index,
                 regions = regions,
                 dockerImages = dockerImages
         }
 
-        IndexedBamFile bamFiles = sampleWf.bqsrBamFile
+        IndexedBamFile bamFiles = sample.bqsrBamFile
         IndexedVcfFile outputGvcf = object {
             file: createGvcf.outputGVcf,
             index: createGvcf.outputGVcfIndex
@@ -101,7 +101,7 @@ workflow Germline {
     output {
         IndexedVcfFile? multiSampleVcf = genotyping.vcfFile
         Array[IndexedBamFile] sampleBams = bamFiles
-        Array[IndexedBamFile] markdupBams = sampleWf.markdupBamFile
-        Array[File] bamMetricsFiles = flatten(sampleWf.metricsFiles)
+        Array[IndexedBamFile] markdupBams = sample.markdupBamFile
+        Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
     }
 }
