@@ -11,14 +11,12 @@ import "tasks/multiqc.wdl" as multiqc
 workflow Somatic {
     input {
         File sampleConfigFile
-        Array[Sample] samples = []
         String outputDir = "."
         Reference reference
         BwaIndex bwaIndex
         File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
-        Boolean performGermlineVariantcalling = true
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
     }
@@ -35,57 +33,54 @@ workflow Somatic {
     call biowdl.InputConverter as ConvertSampleConfig {
         input:
             samplesheet = sampleConfigFile,
-            old = true
+            dockerImage = dockerImages["biowdl-input-converter"]
     }
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
-    Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
 
     # Running sample subworkflow
-    scatter (sm in allSamples) {
-        call sampleWorkflow.Sample as sample {
+    scatter (sample in sampleConfig.samples) {
+        call sampleWorkflow.Sample as sampleWf {
             input:
-                sampleDir = outputDir + "/samples/" + sm.id,
-                sample = sm,
+                sampleDir = outputDir + "/samples/" + sample.id,
+                sample = sample,
                 reference = reference,
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
-                dockerImages = dockerImages,
-                performGermlineVariantcalling = performGermlineVariantcalling
+                dockerImages = dockerImages
         }
 
-        String sampleIds = sm.id
-        IndexedBamFile bamFiles = sample.bam
+        String sampleIds = sample.id
+        IndexedBamFile bamFiles = sampleWf.bqsrBamFile
     }
 
-    scatter (sm in allSamples) {
-        if (defined(sm.control)) {
+    scatter (sample in sampleConfig.samples) {
+        if (defined(sample.control)) {
             call GetSamplePositionInArray as controlPostition  {
                 input:
                     sampleIds = sampleIds,
-                    sample = select_first([sm.control])
+                    sample = select_first([sample.control])
             }
 
             call GetSamplePositionInArray as casePosition  {
                 input:
                     sampleIds = sampleIds,
-                    sample = sm.id,
+                    sample = sample.id,
                     dockerImage = dockerImages["python"]
             }
 
             call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
                 input:
-                    outputDir = outputDir + "/samples/" + sm.id + "/somatic-variantcalling/",
+                    outputDir = outputDir + "/samples/" + sample.id + "/somatic-variantcalling/",
                     referenceFasta = reference.fasta,
                     referenceFastaFai = reference.fai,
                     referenceFastaDict = reference.dict,
-                    tumorSample = sm.id,
+                    tumorSample = sample.id,
                     tumorBam = bamFiles[casePosition.position].file,
                     tumorBamIndex = bamFiles[casePosition.position].index,
                     controlSample = sampleIds[controlPostition.position],
                     controlBam = bamFiles[controlPostition.position].file,
                     controlBamIndex = bamFiles[controlPostition.position].index,
                     regions = regions,
-
                     dockerImages = dockerImages
             }
         }
@@ -103,10 +98,9 @@ workflow Somatic {
     }
 
     output {
-        Array[IndexedBamFile] libraryMarkdupBamFiles = flatten(sample.libraryMarkdupBamFiles)
-        Array[IndexedBamFile] libraryBqsrBamFiles = flatten(sample.libraryBqsrBamFiles)
         Array[IndexedBamFile] sampleBams = bamFiles
-        Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
+        Array[IndexedBamFile] markdupBams = sampleWf.markdupBamFile
+        Array[File] bamMetricsFiles = flatten(sampleWf.metricsFiles)
         Array[File?] somaticSeqSnvVcf = somaticVariantcalling.somaticSeqSnvVcf
         Array[File?] somaticSeqSnvVcfIndex = somaticVariantcalling.somaticSeqSnvVcfIndex
         Array[File?] somaticSeqIndelVcf = somaticVariantcalling.somaticSeqIndelVcf

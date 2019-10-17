@@ -13,14 +13,12 @@ import "tasks/multiqc.wdl" as multiqc
 workflow Germline {
     input {
         File sampleConfigFile
-        Array[Sample] samples = []
         String outputDir = "."
         Reference reference
         BwaIndex bwaIndex
         File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
-        Boolean performGermlineVariantcalling = true
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
     }
@@ -37,23 +35,21 @@ workflow Germline {
     call biowdl.InputConverter as ConvertSampleConfig {
         input:
             samplesheet = sampleConfigFile,
-            old = true
+            dockerImage = dockerImages["biowdl-input-converter"]
     }
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
-    Array[Sample] allSamples = flatten([samples, sampleConfig.samples])
 
 
     # Running sample subworkflow
-    scatter (sm in allSamples) {
-        call sampleWorkflow.Sample as sample {
+    scatter (sample in sampleConfig.samples) {
+        call sampleWorkflow.Sample as sampleWf {
             input:
-                sampleDir = outputDir + "/samples/" + sm.id,
-                sample = sm,
+                sampleDir = outputDir + "/samples/" + sample.id,
+                sample = sample,
                 reference = reference,
                 bwaIndex = bwaIndex,
                 dbSNP = dbSNP,
-                dockerImages = dockerImages,
-                performGermlineVariantcalling = performGermlineVariantcalling
+                dockerImages = dockerImages
         }
 
         call gvcf.Gvcf as createGvcf {
@@ -61,18 +57,20 @@ workflow Germline {
                 referenceFasta = reference.fasta,
                 referenceFastaFai = reference.fai,
                 referenceFastaDict = reference.dict,
-                bamFiles = sample.libraryBqsrBamFiles,
-                outputDir = outputDir + "/samples/" + sm.id,
-                gvcfName = sm.id + ".g.vcf.gz",
+                bamFiles = [sampleWf.bqsrBamFile],
+                outputDir = outputDir + "/samples/" + sample.id,
+                gvcfName = sample.id + ".g.vcf.gz",
                 dbsnpVCF = dbSNP.file,
                 dbsnpVCFIndex = dbSNP.index,
                 regions = regions,
                 dockerImages = dockerImages
         }
 
-        IndexedBamFile bamFiles = sample.bam
-        IndexedVcfFile outputGvcf = object {file: createGvcf.outputGVcf,
-            index: createGvcf.outputGVcfIndex }
+        IndexedBamFile bamFiles = sampleWf.bqsrBamFile
+        IndexedVcfFile outputGvcf = object {
+            file: createGvcf.outputGVcf,
+            index: createGvcf.outputGVcfIndex
+        }
     }
 
     call jointgenotyping.JointGenotyping as genotyping {
@@ -101,11 +99,9 @@ workflow Germline {
     }
 
     output {
-        Array[IndexedBamFile] libraryMarkdupBamFiles = flatten(sample.libraryMarkdupBamFiles)
-        Array[IndexedBamFile] libraryBqsrBamFiles = flatten(sample.libraryBqsrBamFiles)
         IndexedVcfFile? multiSampleVcf = genotyping.vcfFile
         Array[IndexedBamFile] sampleBams = bamFiles
-        Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
-
+        Array[IndexedBamFile] markdupBams = sampleWf.markdupBamFile
+        Array[File] bamMetricsFiles = flatten(sampleWf.metricsFiles)
     }
 }
