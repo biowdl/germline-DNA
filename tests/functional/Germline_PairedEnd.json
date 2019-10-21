@@ -21,5 +21,6 @@
     "index": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/annotation/dbsnp/dbsnp-149.vcf.gz.tbi"
   },
   "Germline.sample.Sample.bwaMem.threads": 8,
+  "Germline.sample.Sample.bwaMem.memory": "32G",
   "Germline.sample.Sample.qc.QC.Cutadapt.cores": 4
 }

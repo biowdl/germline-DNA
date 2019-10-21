@@ -57,21 +57,21 @@ Replace `<pipeline>` with either `Germline` or `Somatic`.
 Some additional inputs which may be of interest are:
 ```json
 {
-  "<pipeline>.sample.Sample.library.Library.readgroup.platform":
+  "<pipeline>.sample.platform":
     "The sequencing platform used. Default: illumina",
-  "<pipeline>.sample.Sample.library.Library.readgroup.Readgroup.bwaMem.threads":
+  "<pipeline>.sample.Sample.bwaMem.threads":
     "Number of threads used for alignment. Default: 2",
-  "<pipeline>.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.cores":
+  "<pipeline>.sample.Sample.qc.QC.Cutadapt.cores":
     "Number of threads used for cutadapt. Default: 1",
   "<pipeline>.regions":
     "Bed file with regions used for variantcalling",
-  "<pipeline>.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterForward":
+  "<pipeline>.sample.Sample.qc.adapterForward":
     "The adapters to be cut from the forward reads. Default: Illumina Universal Adapter",
-  "<pipeline>.sample.Sample.library.Library.readgroup.Readgroup.qc.adapterReverse":
+  "<pipeline>.sample.Sample.qc.adapterReverse":
     "The adapters to be cut from the reverse reads (if paired-end reads are used). Default: Illumina Universal Adapter.",
-  "<pipeline>.sample.Sample.library.Library.readgroup.useBwaKit":
+  "<pipeline>.sample.useBwaKit":
     "Whether bwakit should be used instead of plain BWA mem, this will required an '.alt' file to be present in the index.",
-  "Germline.sample.Sample.library.Library.readgroup.Readgroup.bwakit.threads":
+  "Germline.sample.Sample.bwakit.threads":
     "Number of threads used for alignment when using bwakit. Default: 1"
 }
 ```
@@ -187,8 +187,8 @@ can be used for Germline as long as the starting `Somatic.` is replaced with
     "fai": "/home/user/genomes/human/GRCh38.fasta.fai",
     "dict": "/home/user/genomes/human/GRCh38.dict"
   },
-  "Somatic.sample.Sample.library.Library.readgroup.bwaMem.threads": 8,
-  "Somatic.sample.Sample.library.Library.readgroup.Readgroup.qc.QC.Cutadapt.cores": 4,
+  "Somatic.sample.Sample.bwaMem.threads": 8,
+  "Somatic.sample.Sample.qc.QC.Cutadapt.cores": 4,
   "Somatic.dockerImages.yml": "dockerImages.yml"
 }
 ```
@@ -227,22 +227,20 @@ found in the default for the `dockerImages` input.
 This pipeline will produce a number of directories and files:
 - **samples**: Contains a folder per sample.
   - **&lt;sample>**: Contains a variety of files, including the BAM files
-    for this sample. It also contains a directory per library.
-    - **somatic-variantcalling**: Contains somatic variantcalling results.
+    for this library (`*.markdup.bam`) and a BAM file with additional 
+    preprocessing performed used for variant calling (`*.bsqr.bam`).
+    It also contains a directory per library.  
+    - **somatic-variantcalling**: Contains somatic variant calling results.
       Only present if `somatic.wdl` is used.  
-    - **&lt;library>**: Contains the BAM files for this library
-      (`*.markdup.bam`) and a BAM file with additional preprocessing performed
-      used for variantcalling (`*.markdup.bsqr.bam`).  
-      This directory also contains a directory per readgroup.
-      - **&lt;readgroup>**: Contains QC metrics and preprocessed FastQ files,
-        in case preprocessing was necessary.
-- **multisample.vcf.gz**: A multisample VCF file with the variantcalling
+    - **&lt;library>**: This directory contains a directory per readgroup.
+      - **&lt;readgroup>**: Contains QC metrics and preprocessed FastQ files.
+- **multisample.vcf.gz**: A multisample VCF file with the variant calling
   results. Only present if `germline.wdl` is used.
-- **multiqc**: Contains the multiqc report.
+- **multiqc**: Contains the multiQC report.
 
 ## Scattering
 This pipeline performs scattering to speed up analysis on grid computing
-clusters. For steps such as variant qcalling the reference genome is split
+clusters. For steps such as variant calling the reference genome is split
 into regions of roughly equal size (see the `scatterSize` inputs).
 Each of these regions will be analyzed in separate jobs, allowing them
 to be processed in parallel.
