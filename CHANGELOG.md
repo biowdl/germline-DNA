@@ -11,6 +11,11 @@ that users understand how the changes affect the new version.
 
 version 2.0.0-dev
 ---------------------------
++ Simplify the pipelines so they use less subworkflows. This reduces
+  the complexity for cromwell and reduces inefficiencies that are caused
+  by waiting for the subworkflows to finish.  
+  It also makes configuring memory or cpu requirements for tasks in the
+  workflow a lot easier, as these are not as deeply nested anymore.
 + separated somatic and germline variant calling into their own workflows
 
 version 1.1.0
