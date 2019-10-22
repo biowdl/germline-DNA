@@ -1,0 +1,26 @@
+{
+  "Germline.sampleConfigFile": "tests/samplesheets/FunctionalPairedEnd.yml",
+  "Germline.dockerImagesFile": "dockerImages.yml",
+  "Germline.reference": {
+    "fasta": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/reference.fa",
+    "fai": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/reference.fa.fai",
+    "dict": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/reference.dict"
+  },
+  "Germline.bwaIndex": {
+    "fastaFile": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa",
+    "indexFiles": [
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.amb",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.ann",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.bwt",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.pac",
+      "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/bwa/reference.fa.sa"
+    ]
+  },
+   "Germline.dbSNP": {
+    "file": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/annotation/dbsnp/dbsnp-149.vcf.gz",
+    "index": "/exports/sasc-testing/fixtures/references/H.sapiens/GRCh38_no_alt_analysis_set/annotation/dbsnp/dbsnp-149.vcf.gz.tbi"
+  },
+  "Germline.sample.Sample.bwaMem.threads": 8,
+  "Germline.sample.Sample.bwaMem.memory": "32G",
+  "Germline.sample.Sample.qc.QC.Cutadapt.cores": 4
+}

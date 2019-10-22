@@ -1,0 +1,82 @@
+- name: Germline_SingleEnd
+  tags:
+    - integration
+    - no_docker_conf
+    - germline
+  # Run this pipeline with a relative output dir.
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/Germline_SingleEnd.json germline.wdl
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/samples/wgs1-single-end/wgs1-single-end.bqsr.bam"
+    - path: "test-output/samples/wgs1-single-end/wgs1-single-end.bqsr.bai"
+    - path: "test-output/samples/wgs2-single-end/wgs2-single-end.bqsr.bam"
+    - path: "test-output/samples/wgs2-single-end/wgs2-single-end.bqsr.bai"
+    - path: "test-output/samples/wgs1-single-end/metrics/wgs1-single-end.markdup.flagstats"
+    - path: "test-output/samples/wgs2-single-end/metrics/wgs2-single-end.markdup.flagstats"
+
+- name: Germline_PairedEnd
+  tags:
+    - integration
+    - germline
+    - docker_conf
+  # Run this pipeline with a fixed output dir.
+  command: >-
+    bash -c '
+    TEST_JSON=tests/integration/Germline_PairedEnd.json ;
+    sed -i "2i\"Germline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
+    cromwell run -i $TEST_JSON germline.wdl'
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bai"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs1-paired-end/metrics/wgs1-paired-end.markdup.flagstats"
+    - path: "test-output/samples/wgs2-paired-end/metrics/wgs2-paired-end.markdup.flagstats"
+
+- name: Germline_PairedEnd_bwakit
+  tags:
+    - integration
+    - germline
+    - docker_conf
+  # Run this pipeline with a fixed output dir.
+  command: >-
+    bash -c '
+    TEST_JSON=tests/integration/Germline_PairedEnd_bwakit.json ;
+    sed -i "2i\"Germline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
+    cromwell run -i $TEST_JSON germline.wdl'
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bai"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs1-paired-end/metrics/wgs1-paired-end.markdup.flagstats"
+    - path: "test-output/samples/wgs2-paired-end/metrics/wgs2-paired-end.markdup.flagstats"
+
+- name: Germline_FunctionalPairedEnd
+  tags:
+    - functional
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/functional/Germline_PairedEnd.json germline.wdl
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/samples/NA12878/NA12878.markdup.bam"
+    - path: "test-output/samples/NA12878/NA12878.markdup.bai"
+    - path: "test-output/samples/NA12878/metrics/NA12878.markdup.flagstats"
+

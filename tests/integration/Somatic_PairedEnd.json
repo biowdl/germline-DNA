@@ -1,12 +1,12 @@
 {
-  "pipeline.sampleConfigFile": "tests/samplesheets/SingleEnd.yml",
-  "pipeline.dockerImagesFile": "dockerImages.yml",
-  "pipeline.reference": {
+  "Somatic.sampleConfigFile": "tests/samplesheets/PairedEnd.csv",
+  "Somatic.dockerImagesFile": "dockerImages.yml",
+  "Somatic.reference": {
     "fasta": "tests/data/reference/reference.fasta",
     "fai": "tests/data/reference/reference.fasta.fai",
     "dict": "tests/data/reference/reference.dict"
   },
-  "pipeline.bwaIndex": {
+  "Somatic.bwaIndex": {
     "fastaFile": "tests/data/reference/bwa/reference.fasta",
     "indexFiles": [
       "tests/data/reference/bwa/reference.fasta.amb",
@@ -16,9 +16,8 @@
       "tests/data/reference/bwa/reference.fasta.sa"
     ]
   },
-  "pipeline.dbSNP": {
+  "Somatic.dbSNP": {
     "file": "tests/data/wgs2.vcf.gz",
     "index": "tests/data/wgs2.vcf.gz.tbi"
-  },
-  "pipeline.performGermlineVariantcalling": false
+  }
 }
