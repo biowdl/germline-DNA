@@ -1,9 +1,8 @@
 version 1.0
 
-import "bam-to-gvcf/gvcf.wdl" as gvcf
-import "jointgenotyping/jointgenotyping.wdl" as jointgenotyping
 import "sample.wdl" as sampleWorkflow
 import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
+import "gatk-variantcalling/gatk-variantcalling.wdl" as gatkVariantWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biowdl.wdl" as biowdl
@@ -51,47 +50,28 @@ workflow Germline {
                 dbSNP = dbSNP,
                 dockerImages = dockerImages
         }
-
-        call gvcf.Gvcf as createGvcf {
-            input:
-                referenceFasta = reference.fasta,
-                referenceFastaFai = reference.fai,
-                referenceFastaDict = reference.dict,
-                bamFiles = [sample.bqsrBamFile],
-                outputDir = outputDir + "/samples/" + samp.id,
-                gvcfName = samp.id + ".g.vcf.gz",
-                dbsnpVCF = dbSNP.file,
-                dbsnpVCFIndex = dbSNP.index,
-                regions = regions,
-                dockerImages = dockerImages
-        }
-
         IndexedBamFile bamFiles = sample.bqsrBamFile
-        IndexedVcfFile outputGvcf = object {
-            file: createGvcf.outputGVcf,
-            index: createGvcf.outputGVcfIndex
-        }
     }
 
-    call jointgenotyping.JointGenotyping as genotyping {
+    call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
         input:
-            reference = reference,
+            bamFiles = bamFiles,
+            referenceFasta = reference.fasta,
+            referenceFastaFai = reference.fai,
+            referenceFastaDict = reference.dict,
+            dbsnpVCF = dbSNP.file,
+            dbsnpVCFIndex = dbSNP.index,
             outputDir = genotypingDir,
-            gvcfFiles = outputGvcf,
             vcfBasename = "multisample",
-            dbsnpVCF = dbSNP,
             dockerImages = dockerImages,
             regions = regions
     }
-
-    # In order to pass just the index to multiQC we need to unpack it first.
-    File genotypingIndex = genotyping.vcfFile.index
 
     if (runMultiQC) {
         call multiqc.MultiQC as multiqcTask {
             input:
                 # Multiqc will only run if these files are created.
-                dependencies = [genotypingIndex],
+                dependencies = [variantcalling.outputVcfIndex],
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
                 dockerImage = dockerImages["multiqc"]
@@ -99,7 +79,8 @@ workflow Germline {
     }
 
     output {
-        IndexedVcfFile? multiSampleVcf = genotyping.vcfFile
+        File multiSampleVcf = variantcalling.outputVcf
+        File multisampleVcfIndex = variantcalling.outputVcfIndex
         Array[IndexedBamFile] sampleBams = bamFiles
         Array[IndexedBamFile] markdupBams = sample.markdupBamFile
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
