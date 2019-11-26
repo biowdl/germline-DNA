@@ -12,8 +12,8 @@ that users understand how the changes affect the new version.
 version 2.0.0-dev
 ---------------------------
 + The bam-to-gvcf and jointgenotyping subworkflows were combined in a single
-  gatk-variantcalling pipeline. This allowed for some inefficiencies to be 
-  eliminated when communicating between these pipelines.
+  gatk-variantcalling pipeline. This allowed for eliminating some 
+  inefficiencies that were caused by communication between these pipelines.
 + Simplify the pipelines so they use less subworkflows. This reduces
   the complexity for cromwell and reduces inefficiencies that are caused
   by waiting for the subworkflows to finish.  
