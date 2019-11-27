@@ -19,6 +19,12 @@ before_install:
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
 
+stages:
+  - lint
+  - test
+
+stage: test
+
 install:
   - conda install --file requirements-test.txt
 
@@ -47,6 +53,7 @@ matrix:
         - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
     # Below is for testing if all files are valid and if all submodules are up to date.
     - env: TEST=Womtool validate and submodule up to date
+      stage: lint
       install:
         - conda install cromwell
       script:
