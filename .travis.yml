@@ -56,3 +56,5 @@ matrix:
       install:
         - conda install cromwell
       script: bash scripts/biowdl_lint.sh
+      after_failure:
+        - echo "Linting failed"
