@@ -9,7 +9,7 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
-version 2.0.0-dev
+version 2.0.0
 ---------------------------
 + The bam-to-gvcf and jointgenotyping subworkflows were combined in a single
   gatk-variantcalling pipeline. This allowed for eliminating some 
