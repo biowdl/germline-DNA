@@ -5,3 +5,4 @@
 # this file can be installed with "conda install --file requirements-test.txt"
 cromwell
 pytest-workflow
+miniwdl
