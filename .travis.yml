@@ -54,7 +54,7 @@ matrix:
     - env: TEST="Womtool validate and submodule up to date"
       stage: lint
       install:
-        - conda install cromwell
+        - conda install cromwell miniwdl
       script: bash scripts/biowdl_lint.sh
       after_failure:
         - echo "Linting failed"
