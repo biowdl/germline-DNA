@@ -31,6 +31,9 @@ described below, but additional inputs are available.
 A template containing all possible inputs can be generated using
 Womtool as described in the
 [WOMtool documentation](http://cromwell.readthedocs.io/en/stable/WOMtool/).
+For overviews of all available inputs, see the following pages:
+- [germline](./germline-inputs.html)
+- [somatic](./comatic-inputs.html)
 
 Replace `<pipeline>` with either `Germline` or `Somatic`.
 ```json
