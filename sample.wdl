@@ -107,4 +107,15 @@ workflow Sample {
         IndexedBamFile bqsrBamFile = select_first([bqsr.outputBamFile])
         Array[File] metricsFiles = flatten(allMetrics)
     }
+
+    parameter_meta {
+        sample: {description: "The sample information: sample id, readgroups, etc.", category: "required"}
+        sampleDir: {description: "The directory the output should be written to.", category: "required"}
+        reference: {description: "The reference files: a fasta, its index and the associated sequence dictionary.", category: "required"}
+        bwaIndex: {description: "The BWA index files.", category: "required"}
+        dbSNP: {description: "A dbSNP VCF file and its index.", category: "required"}
+        dockerImages: {description: "The docker images used.", category: "required"}
+        platform: {description: "The platform used for sequencing.", category: "advanced"}
+        useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
+    }
 }
