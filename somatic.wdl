@@ -122,6 +122,19 @@ workflow Somatic {
         Array[File?] ensembleIndelsClassifier = somaticVariantcalling.ensembleIndelsClassifier
         Array[File?] ensembleSNVClassifier = somaticVariantcalling.ensembleSNVClassifier
     }
+
+    parameter_meta {
+        sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.",
+                           category: "required"}
+        outputDir: {description: "The directory the output should be written to.", category: "common"}
+        reference: {description: "The reference files: a fasta, its index and the associated sequence dictionary.", category: "required"}
+        bwaIndex: {description: "The BWA index files.", category: "required"}
+        dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
+                           category: "advanced"}
+        dbSNP: {description: "A dbSNP VCF file and its index.", category: "required"}
+        regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
+        runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
+    }
 }
 
 task GetSamplePositionInArray {
@@ -149,5 +162,12 @@ task GetSamplePositionInArray {
         docker: dockerImage
         # 4 gigs of memory to be able to build the docker image in singularity
         memory: "4G"
+    }
+
+    parameter_meta {
+        sampleIds: {description: "A list of sample ids.", category: "required"}
+        sample: {description: "The sample for which the position is wanted.", category: "required"}
+        dockerImage: {description: "The docker image used for this task. Changing this may result in errors which the developers may choose not to address.",
+                      category: "advanced"}
     }
 }
