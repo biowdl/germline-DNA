@@ -1,0 +1,23 @@
+{
+  "Germline.sampleConfigFile": "tests/samplesheets/PairedEndGenderAware.csv",
+  "Germline.dockerImagesFile": "dockerImages.yml",
+  "Germline.reference": {
+    "fasta": "tests/data/gender-aware/reference.fasta",
+    "fai": "tests/data/gender-aware/reference.fasta.fai",
+    "dict": "tests/data/gender-aware/reference.dict"
+  },
+  "Germline.bwaIndex": {
+    "fastaFile": "tests/data/gender-aware/bwa/reference.fa",
+    "indexFiles": [
+      "tests/data/gender-aware/bwa/reference.fa.amb",
+      "tests/data/gender-aware/bwa/reference.fa.ann",
+      "tests/data/gender-aware/bwa/reference.fa.bwt",
+      "tests/data/gender-aware/bwa/reference.fa.pac",
+      "tests/data/gender-aware/bwa/reference.fa.sa"
+    ]
+  },
+  "Germline.dbSNP": {
+    "file": "tests/data/gender-aware/expected.vcf.gz",
+    "index": "tests/data/gender-aware/expected.vcf.gz.tbi"
+  }
+}
