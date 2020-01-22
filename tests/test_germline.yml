@@ -67,6 +67,14 @@
     - path: "test-output/samples/wgs1-paired-end/metrics/wgs1-paired-end.markdup.flagstats"
     - path: "test-output/samples/wgs2-paired-end/metrics/wgs2-paired-end.markdup.flagstats"
 
+- name: Germline_GenderAware
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/functional/Germline_GenderAware.json germline.wdl
+  files:
+    - path: "test-output/multisample_variants/multisample.vcf.gz"
+    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+
 - name: Germline_FunctionalPairedEnd
   tags:
     - functional
