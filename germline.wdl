@@ -3,7 +3,6 @@ version 1.0
 import "sample.wdl" as sampleWorkflow
 import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
 import "gatk-variantcalling/gatk-variantcalling.wdl" as gatkVariantWorkflow
-import "gatk-variantcalling/gender-aware-variantcalling.wdl" as gatkGAVariantWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biowdl.wdl" as biowdl
@@ -58,8 +57,7 @@ workflow Germline {
         Pair[IndexedBamFile, String] bamfilesAndGenders = (bamFiles, select_first([samp.gender, "unknown"]))
     }
 
-    if (genderAware) {
-        call gatkGAVariantWorkflow.GenderAwareVariantCalling as gaVariantCalling {
+    call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
             input:
                 bamFilesAndGenders = bamfilesAndGenders,
                 referenceFasta = reference.fasta,
@@ -67,33 +65,16 @@ workflow Germline {
                 referenceFastaDict = reference.dict,
                 dbsnpVCF = dbSNP.file,
                 dbsnpVCFIndex = dbSNP.index,
-                XNonParRegions = select_first([XNonParRegions]),
-                YNonParRegions = select_first([YNonParRegions]),
+                XNonParRegions = XNonParRegions,
+                YNonParRegions = YNonParRegions,
+                regions = regions,
                 outputDir = genotypingDir,
                 vcfBasename = "multisample",
                 dockerImages = dockerImages,
-        }
     }
 
-    # TODO: Replace when else is allowed.
-    if (!genderAware) {
-        call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
-            input:
-                bamFiles = bamFiles,
-                referenceFasta = reference.fasta,
-                referenceFastaFai = reference.fai,
-                referenceFastaDict = reference.dict,
-                dbsnpVCF = dbSNP.file,
-                dbsnpVCFIndex = dbSNP.index,
-                outputDir = genotypingDir,
-                vcfBasename = "multisample",
-                dockerImages = dockerImages,
-                regions = regions
-        }
-    }
-    File outputVcf = select_first([gaVariantCalling.outputVcf, variantcalling.outputVcf])
-    File outputVcfIndex = select_first([gaVariantCalling.outputVcfIndex, variantcalling.outputVcfIndex])
-
+    File outputVcf = variantcalling.outputVcf
+    File outputVcfIndex = variantcalling.outputVcfIndex
 
     if (runMultiQC) {
         call multiqc.MultiQC as multiqcTask {
