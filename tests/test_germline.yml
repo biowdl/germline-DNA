@@ -70,6 +70,7 @@
 - name: Germline_GenderAware
   tags:
     - integration
+    - no_docker_conf
   command: >-
     cromwell run -o tests/cromwell_options.json
     -i tests/integration/Germline_GenderAware.json germline.wdl
