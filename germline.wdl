@@ -67,6 +67,8 @@ workflow Germline {
                 referenceFastaDict = reference.dict,
                 dbsnpVCF = dbSNP.file,
                 dbsnpVCFIndex = dbSNP.index,
+                XNonParRegions = select_first([XNonParRegions]),
+                YNonParRegions = select_first([YNonParRegions]),
                 outputDir = genotypingDir,
                 vcfBasename = "multisample",
                 dockerImages = dockerImages,
