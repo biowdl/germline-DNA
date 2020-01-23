@@ -54,7 +54,7 @@ workflow Germline {
                 dockerImages = dockerImages
         }
         IndexedBamFile bamFiles = sample.bqsrBamFile
-        Pair[IndexedBamFile, String] bamfilesAndGenders = (bamFiles, select_first([samp.gender, "unknown"]))
+        Pair[IndexedBamFile, String?] bamfilesAndGenders = (bamFiles, samp.gender)
     }
 
     call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
