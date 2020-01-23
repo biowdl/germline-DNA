@@ -51,6 +51,7 @@ matrix:
     - env:
         - TEST=Somatic_PairedEnd_bwakit
         - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
+    - env: TEST=Germline_GenderAware
     - env: TEST="Womtool validate and submodule up to date"
       stage: lint
       install:
