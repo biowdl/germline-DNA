@@ -58,19 +58,19 @@ workflow Germline {
     }
 
     call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
-            input:
-                bamFilesAndGenders = bamfilesAndGenders,
-                referenceFasta = reference.fasta,
-                referenceFastaFai = reference.fai,
-                referenceFastaDict = reference.dict,
-                dbsnpVCF = dbSNP.file,
-                dbsnpVCFIndex = dbSNP.index,
-                XNonParRegions = XNonParRegions,
-                YNonParRegions = YNonParRegions,
-                regions = regions,
-                outputDir = genotypingDir,
-                vcfBasename = "multisample",
-                dockerImages = dockerImages,
+        input:
+            bamFilesAndGenders = bamfilesAndGenders,
+            referenceFasta = reference.fasta,
+            referenceFastaFai = reference.fai,
+            referenceFastaDict = reference.dict,
+            dbsnpVCF = dbSNP.file,
+            dbsnpVCFIndex = dbSNP.index,
+            XNonParRegions = XNonParRegions,
+            YNonParRegions = YNonParRegions,
+            regions = regions,
+            outputDir = genotypingDir,
+            vcfBasename = "multisample",
+            dockerImages = dockerImages,
     }
 
     File outputVcf = variantcalling.outputVcf
