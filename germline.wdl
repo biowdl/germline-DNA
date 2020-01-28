@@ -73,14 +73,11 @@ workflow Germline {
             dockerImages = dockerImages,
     }
 
-    File outputVcf = variantcalling.outputVcf
-    File outputVcfIndex = variantcalling.outputVcfIndex
-
     if (runMultiQC) {
         call multiqc.MultiQC as multiqcTask {
             input:
                 # Multiqc will only run if these files are created.
-                dependencies = [outputVcfIndex],
+                dependencies = [variantcalling.outputVcfIndex],
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
                 dockerImage = dockerImages["multiqc"]
@@ -88,8 +85,8 @@ workflow Germline {
     }
 
     output {
-        File multiSampleVcf = outputVcf
-        File multisampleVcfIndex = outputVcfIndex
+        File multiSampleVcf = variantcalling.outputVcf
+        File multisampleVcfIndex = variantcalling.outputVcfIndex
         Array[IndexedBamFile] sampleBams = bamFiles
         Array[IndexedBamFile] markdupBams = sample.markdupBamFile
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
