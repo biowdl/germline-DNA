@@ -129,7 +129,7 @@ gender| Optional: The gender of the sample. Can be `F`, `f`, `female`, `M`, `m`,
 The easiest way to create a samplesheet is to use a spreadsheet program
 such as LibreOffice Calc or Microsoft Excel, and create a table:
 
-sample | library | readgroup | R1 | R1_md5 | R2 | R2_md5|
+sample | library | readgroup | R1 | R1_md5 | R2 | R2_md5
 -------|---------|------|----|--------|----|-------
 sample1|lib1|rg1|data/s1-l1-rg1-r1.fastq|||
 sample2|lib1|rg1|data/s1-l1-rg1-r2.fastq|||
