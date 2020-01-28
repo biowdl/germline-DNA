@@ -7,3 +7,4 @@ cromwell=47
 pytest-workflow
 miniwdl
 wdl-aid
+rtg-tools
