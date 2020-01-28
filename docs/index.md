@@ -57,7 +57,7 @@ Replace `<pipeline>` with either `Germline` or `Somatic`.
 }
 ```
 
-Specific options for the germline pipeline are:
+Specific inputs for the germline pipeline are:
 
 ```json
 {
