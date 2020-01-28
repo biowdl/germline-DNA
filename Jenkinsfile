@@ -44,7 +44,7 @@ pipeline {
             }
         }
 
-         stage('Pull singularity images') {
+        stage('Pull singularity images') {
             steps {
                 sh "#!/bin/bash\n" +
                    "set -e -o pipefail\n" +
