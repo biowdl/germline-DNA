@@ -12,6 +12,7 @@ struct Readgroup {
 struct Sample {
     String id
     String? control
+    String? gender
     Array[Readgroup] readgroups
 }
 

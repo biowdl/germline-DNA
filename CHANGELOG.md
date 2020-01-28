@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 version 2.1.0-dev
 -----------------
++ Added option for gender-aware variantcalling of X and Y non-PAR regions are
+  provided.
 + Added wdl-aid to linting.
 + Added miniwdl to linting.
 

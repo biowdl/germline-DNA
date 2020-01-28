@@ -1,0 +1,53 @@
+##fileformat=VCFv4.1
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##contig=<ID=22,length=10000>
+##contig=<ID=X,length=10000>
+##contig=<ID=Y,length=10000>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	female	male
+22	500	.	T	A	.	.	.	GT	0|0	1|0
+22	1000	.	A	C	.	.	.	GT	0|1	1|1
+22	1500	.	C	T	.	.	.	GT	1|0	0|1
+22	2000	.	C	A	.	.	.	GT	1|1	0|0
+22	2500	.	C	G	.	.	.	GT	0|0	1|0
+22	3000	.	G	T	.	.	.	GT	0|1	0|1
+22	3500	.	C	A	.	.	.	GT	1|0	1|0
+22	4000	.	G	C	.	.	.	GT	1|1	1|1
+22	4500	.	A	T	.	.	.	GT	0|0	0|1
+22	5000	.	C	T	.	.	.	GT	0|1	0|0
+22	5500	.	C	G	.	.	.	GT	1|0	1|1
+22	6000	.	G	C	.	.	.	GT	1|1	0|0
+22	6500	.	G	A	.	.	.	GT	0|0	1|1
+22	7000	.	T	C	.	.	.	GT	0|1	0|0
+22	7500	.	A	G	.	.	.	GT	1|0	0|0
+22	8000	.	C	T	.	.	.	GT	1|1	1|0
+22	8500	.	A	G	.	.	.	GT	0|0	0|1
+22	9000	.	A	C	.	.	.	GT	0|1	1|1
+22	9500	.	G	T	.	.	.	GT	1|0	1|1
+X	500	.	T	A	.	.	.	GT	0|0	1|0
+X	1000	.	G	C	.	.	.	GT	0|1	1|1
+X	1500	.	A	T	.	.	.	GT	1|0	0|1
+X	2000	.	C	A	.	.	.	GT	1|1	0|0
+X	2500	.	G	A	.	.	.	GT	0|0	1|0
+X	3000	.	T	A	.	.	.	GT	0|1	0|1
+X	3500	.	C	A	.	.	.	GT	1|0	1|0
+X	4000	.	C	G	.	.	.	GT	1|1	1|1
+X	4500	.	T	A	.	.	.	GT	0|0	0|1
+X	5000	.	A	T	.	.	.	GT	0|1	0
+X	5500	.	G	C	.	.	.	GT	1|0	1
+X	6000	.	T	C	.	.	.	GT	1|1	0
+X	6500	.	A	T	.	.	.	GT	0|0	1
+X	7000	.	G	C	.	.	.	GT	0|1	0
+X	7500	.	A	G	.	.	.	GT	1|0	0
+X	8000	.	A	T	.	.	.	GT	1|1	1
+X	8500	.	T	G	.	.	.	GT	0|0	0
+X	9000	.	A	C	.	.	.	GT	0|1	1
+X	9500	.	T	G	.	.	.	GT	1|0	1
+Y	5500	.	C	G	.	.	.	GT	.	1
+Y	6000	.	T	C	.	.	.	GT	.	0
+Y	6500	.	A	G	.	.	.	GT	.	1
+Y	7000	.	C	T	.	.	.	GT	.	0
+Y	7500	.	G	A	.	.	.	GT	.	0
+Y	8000	.	A	T	.	.	.	GT	.	0
+Y	8500	.	A	G	.	.	.	GT	.	1
+Y	9000	.	A	C	.	.	.	GT	.	1
+Y	9500	.	G	T	.	.	.	GT	.	1

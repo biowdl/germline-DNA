@@ -1,0 +1,3 @@
+"sample","library","readgroup","R1","R2","gender"
+"male","lib1","rg1","tests/data/gender-aware/male_R1.fastq.gz","tests/data/gender-aware/male_R2.fastq.gz","male"
+"female","lib1","rg1","tests/data/gender-aware/female_R1.fastq.gz","tests/data/gender-aware/female_R2.fastq.gz","female"

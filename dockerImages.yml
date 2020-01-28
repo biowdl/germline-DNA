@@ -8,6 +8,7 @@
 
 # Tools are sorted alphabetically for ease of use.
 
+bedtools: "quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3"
 biopet-scatterregions: "quay.io/biocontainers/biopet-scatterregions:0.2--0"
 biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_0"
 # A mulled container is needed to have both picard and bwa in one container.
