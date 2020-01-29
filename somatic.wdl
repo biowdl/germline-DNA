@@ -16,14 +16,15 @@ workflow Somatic {
         String outputDir = "."
         Reference reference
         BwaIndex bwaIndex
-        File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
         Boolean performCnvCalling = false
-        File? PON
+        File? CnvPanelOfNormals
         File? preprocessedIntervals
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
+
+        File dockerImagesFile
     }
 
     String genotypingDir = outputDir + "/multisample_variants/"
@@ -62,7 +63,7 @@ workflow Somatic {
         }
     }
 
-    if (performCnvCalling && (! defined(PON) || ! defined(preprocessedIntervals))) {
+    if (performCnvCalling && (! defined(CnvPanelOfNormals) || ! defined(preprocessedIntervals))) {
         call cnvPon.PanelOfNormals as panelOfNormals {
             input:
                 inputBams = select_all(controlBams),
@@ -76,7 +77,7 @@ workflow Somatic {
         }
     }
 
-    File effectivePON = select_first([PON, panelOfNormals.PON])
+    File effectiveCnvPanelOfNormals = select_first([CnvPanelOfNormals, panelOfNormals.PON])
     File effectivePreprocessedIntervals = select_first([preprocessedIntervals,
         panelOfNormals.preprocessedIntervals])
 
@@ -120,7 +121,7 @@ workflow Somatic {
                         controlSampleName = sampleIds[controlPostition.position],
                         controlBam = bamFiles[controlPostition.position].file,
                         controlBamIndex = bamFiles[controlPostition.position].index,
-                        PON = effectivePON,
+                        PON = effectiveCnvPanelOfNormals,
                         preprocessedIntervals = effectivePreprocessedIntervals,
                         commonVariantSites = dbSNP.file,
                         commonVariantSitesIndex = dbSNP.index,
@@ -210,11 +211,17 @@ workflow Somatic {
         outputDir: {description: "The directory the output should be written to.", category: "common"}
         reference: {description: "The reference files: a fasta, its index and the associated sequence dictionary.", category: "required"}
         bwaIndex: {description: "The BWA index files.", category: "required"}
-        dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
-                           category: "advanced"}
         dbSNP: {description: "A dbSNP VCF file and its index.", category: "required"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
+        performCnvCalling: {description: "Whether or not CNV calling should be performed.", category: "common"}
+        CnvPanelOfNormals: {description: "The panel of normals file to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly using the samples lacking a control sample in the samplesheet.",
+                            category: "common"}
+        preprocessedIntervals: {description: "The preprocessed intervals to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly.",
+                            category: "common"}
         runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
+
+        dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
+                           category: "advanced"}
     }
 }
 
