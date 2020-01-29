@@ -77,10 +77,6 @@ workflow Somatic {
         }
     }
 
-    File effectiveCnvPanelOfNormals = select_first([CnvPanelOfNormals, panelOfNormals.PON])
-    File effectivePreprocessedIntervals = select_first([preprocessedIntervals,
-        panelOfNormals.preprocessedIntervals])
-
     scatter (samp in sampleConfig.samples) {
         if (defined(samp.control)) {
             call GetSamplePositionInArray as controlPostition  {
@@ -121,8 +117,9 @@ workflow Somatic {
                         controlSampleName = sampleIds[controlPostition.position],
                         controlBam = bamFiles[controlPostition.position].file,
                         controlBamIndex = bamFiles[controlPostition.position].index,
-                        PON = effectiveCnvPanelOfNormals,
-                        preprocessedIntervals = effectivePreprocessedIntervals,
+                        PON = select_first([CnvPanelOfNormals, panelOfNormals.PON]),
+                        preprocessedIntervals = select_first([preprocessedIntervals,
+                            panelOfNormals.preprocessedIntervals]),
                         commonVariantSites = dbSNP.file,
                         commonVariantSitesIndex = dbSNP.index,
                         outputDir = outputDir + "/samples/" + samp.id + "/CNVcalling/",
