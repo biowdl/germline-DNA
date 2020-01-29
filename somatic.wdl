@@ -19,7 +19,7 @@ workflow Somatic {
         IndexedVcfFile dbSNP
         File? regions
         Boolean performCnvCalling = false
-        File? CnvPanelOfNormals
+        File? cnvPanelOfNormals
         File? preprocessedIntervals
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
@@ -63,8 +63,8 @@ workflow Somatic {
         }
     }
 
-    if (performCnvCalling && (! defined(CnvPanelOfNormals) || ! defined(preprocessedIntervals))) {
-        call cnvPon.PanelOfNormals as cnvPanelOfNormals {
+    if (performCnvCalling && (! defined(cnvPanelOfNormals) || ! defined(preprocessedIntervals))) {
+        call cnvPon.PanelOfNormals as generateCnvPanelOfNormals {
             input:
                 inputBams = select_all(controlBams),
                 inputBamIndexes = select_all(controlBamIndexes),
@@ -117,9 +117,9 @@ workflow Somatic {
                         controlSampleName = sampleIds[controlPostition.position],
                         controlBam = bamFiles[controlPostition.position].file,
                         controlBamIndex = bamFiles[controlPostition.position].index,
-                        PON = select_first([CnvPanelOfNormals, cnvPanelOfNormals.PON]),
+                        PON = select_first([cnvPanelOfNormals, generateCnvPanelOfNormals.PON]),
                         preprocessedIntervals = select_first([preprocessedIntervals,
-                            cnvPanelOfNormals.preprocessedIntervals]),
+                            generateCnvPanelOfNormals.preprocessedIntervals]),
                         commonVariantSites = dbSNP.file,
                         commonVariantSitesIndex = dbSNP.index,
                         outputDir = outputDir + "/samples/" + samp.id + "/CNVcalling/",
@@ -169,8 +169,8 @@ workflow Somatic {
         Array[File?] ensembleSNVClassifier = somaticVariantcalling.ensembleSNVClassifier
 
         # CNV
-        File? generatedpreProcessedIntervals = panelOfNormals.preprocessedIntervals
-        File? generatedPON = panelOfNormals.PON
+        File? generatedpreProcessedIntervals = generateCnvPanelOfNormals.preprocessedIntervals
+        File? generatedPON = generateCnvPanelOfNormals.PON
 
         Array[File?] caseAllelicCounts = CNVs.caseAllelicCounts
         Array[File?] caseReadCounts = CNVs.caseReadCounts
