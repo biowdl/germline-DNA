@@ -64,7 +64,7 @@ workflow Somatic {
     }
 
     if (performCnvCalling && (! defined(CnvPanelOfNormals) || ! defined(preprocessedIntervals))) {
-        call cnvPon.PanelOfNormals as panelOfNormals {
+        call cnvPon.PanelOfNormals as cnvPanelOfNormals {
             input:
                 inputBams = select_all(controlBams),
                 inputBamIndexes = select_all(controlBamIndexes),
@@ -117,9 +117,9 @@ workflow Somatic {
                         controlSampleName = sampleIds[controlPostition.position],
                         controlBam = bamFiles[controlPostition.position].file,
                         controlBamIndex = bamFiles[controlPostition.position].index,
-                        PON = select_first([CnvPanelOfNormals, panelOfNormals.PON]),
+                        PON = select_first([CnvPanelOfNormals, cnvPanelOfNormals.PON]),
                         preprocessedIntervals = select_first([preprocessedIntervals,
-                            panelOfNormals.preprocessedIntervals]),
+                            cnvPanelOfNormals.preprocessedIntervals]),
                         commonVariantSites = dbSNP.file,
                         commonVariantSitesIndex = dbSNP.index,
                         outputDir = outputDir + "/samples/" + samp.id + "/CNVcalling/",

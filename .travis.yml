@@ -46,6 +46,9 @@ matrix:
         - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
     - env: TEST=Somatic_SingleEnd
     - env:
+      - TEST=Somatic_SingleEnd_CNV
+      - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell_without_user.conf"
+    - env:
       - TEST=Somatic_PairedEnd
       - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
     - env:
