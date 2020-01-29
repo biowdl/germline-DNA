@@ -57,6 +57,22 @@ Replace `<pipeline>` with either `Germline` or `Somatic`.
 }
 ```
 
+Specific inputs for the germline pipeline are:
+
+```json
+{
+  "Germline.XNonParRegions": "A BED file that lists all the non-PAR regions on the X chromosome.",
+  "Germline.YNonParRegions": "A BED file that lists all the non-PAR regions on the Y chromosome."
+}
+```
+These region files are required in order to have gender-aware variantcalling, 
+were the non-PAR region of the X and Y chromosome is called with ploidy 1 for 
+males and the Y chromosome is not called for females. 
+
+For samples with unknown gender the non-PAR regions of X will be called with
+ploidy 2 and the non-PAR regions of Y will be called with ploidy 1 to ensure 
+no variants are missed, regardless of the gender. 
+
 Some additional inputs which may be of interest are:
 ```json
 {
@@ -108,6 +124,7 @@ R1_md5 | Optional: md5sum for the R1 file.
 R2| Optional: The fastq file containing the reverse reads
 R2_md5| Optional: md5sum for the R2 file
 control| Optional: The sample ID for the control sample (in case of case-control somatic variant calling).
+gender| Optional: The gender of the sample. Can be `F`, `f`, `female`, `M`, `m`, `male`. If another value is chosen or gender is left empty, the pipeline will handle this sample as an unknown gender.
 
 The easiest way to create a samplesheet is to use a spreadsheet program
 such as LibreOffice Calc or Microsoft Excel, and create a table:

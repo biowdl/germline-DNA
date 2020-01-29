@@ -18,9 +18,12 @@ workflow Germline {
         File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
+        File? XNonParRegions
+        File? YNonParRegions
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
     }
+    Boolean genderAware = defined(XNonParRegions) && defined(YNonParRegions)
 
     String genotypingDir = outputDir + "/multisample_variants/"
 
@@ -51,20 +54,23 @@ workflow Germline {
                 dockerImages = dockerImages
         }
         IndexedBamFile bamFiles = sample.bqsrBamFile
+        Pair[IndexedBamFile, String?] bamfilesAndGenders = (bamFiles, samp.gender)
     }
 
     call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
         input:
-            bamFiles = bamFiles,
+            bamFilesAndGenders = bamfilesAndGenders,
             referenceFasta = reference.fasta,
             referenceFastaFai = reference.fai,
             referenceFastaDict = reference.dict,
             dbsnpVCF = dbSNP.file,
             dbsnpVCFIndex = dbSNP.index,
+            XNonParRegions = XNonParRegions,
+            YNonParRegions = YNonParRegions,
+            regions = regions,
             outputDir = genotypingDir,
             vcfBasename = "multisample",
             dockerImages = dockerImages,
-            regions = regions
     }
 
     if (runMultiQC) {
