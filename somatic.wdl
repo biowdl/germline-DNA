@@ -1,5 +1,7 @@
 version 1.0
 
+import "gatk-CNVcalling/pairedCnvCalling.wdl" as pairedCnvCalling
+import "gatk-CNVcalling/CNV-PON.wdl" as cnvPon
 import "sample.wdl" as sampleWorkflow
 import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
 import "structs.wdl" as structs
@@ -17,6 +19,9 @@ workflow Somatic {
         File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
+        Boolean performCnvCalling = false
+        File? PON
+        File? preprocessedIntervals
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
     }
@@ -51,7 +56,28 @@ workflow Somatic {
 
         String sampleIds = samp.id
         IndexedBamFile bamFiles = sample.bqsrBamFile
+        if (!defined(samp.control)) {
+            File controlBams = sample.bqsrBamFile.file
+            File controlBamIndexes = sample.bqsrBamFile.index
+        }
     }
+
+    if (performCnvCalling && (! defined(PON) || ! defined(preprocessedIntervals))) {
+        call cnvPon.PanelOfNormals as panelOfNormals {
+            input:
+                inputBams = select_all(controlBams),
+                inputBamIndexes = select_all(controlBamIndexes),
+                referenceFasta = reference.fasta,
+                referenceFastaFai = reference.fai,
+                referenceFastaDict = reference.dict,
+                regions = regions,
+                outputDir = outputDir + "/PON/"
+        }
+    }
+
+    File effectivePON = select_first([PON, panelOfNormals.PON])
+    File effectivePreprocessedIntervals = select_first([preprocessedIntervals,
+        panelOfNormals.preprocessedIntervals])
 
     scatter (samp in sampleConfig.samples) {
         if (defined(samp.control)) {
@@ -82,6 +108,26 @@ workflow Somatic {
                     controlBamIndex = bamFiles[controlPostition.position].index,
                     regions = regions,
                     dockerImages = dockerImages
+            }
+
+            if (performCnvCalling) {
+                call pairedCnvCalling.PairedCnvCalling as CNVs {
+                    input:
+                        caseSampleName = samp.id,
+                        caseBam = bamFiles[casePosition.position].file,
+                        caseBamIndex = bamFiles[casePosition.position].index,
+                        controlSampleName = sampleIds[controlPostition.position],
+                        controlBam = bamFiles[controlPostition.position].file,
+                        controlBamIndex = bamFiles[controlPostition.position].index,
+                        PON = effectivePON,
+                        preprocessedIntervals = effectivePreprocessedIntervals,
+                        commonVariantSites = dbSNP.file,
+                        commonVariantSitesIndex = dbSNP.index,
+                        outputDir = outputDir + "/samples/" + samp.id + "/CNVcalling/",
+                        referenceFasta = reference.fasta,
+                        referenceFastaFai = reference.fai,
+                        referenceFastaDict = reference.dict
+                }
             }
         }
     }
@@ -121,6 +167,39 @@ workflow Somatic {
         Array[File?] combinedVcfIndex = somaticVariantcalling.combinedVcfIndex
         Array[File?] ensembleIndelsClassifier = somaticVariantcalling.ensembleIndelsClassifier
         Array[File?] ensembleSNVClassifier = somaticVariantcalling.ensembleSNVClassifier
+
+        # CNV
+        File? generatedpreProcessedIntervals = panelOfNormals.preprocessedIntervals
+        File? generatedPON = panelOfNormals.PON
+
+        Array[File?] caseAllelicCounts = CNVs.caseAllelicCounts
+        Array[File?] caseReadCounts = CNVs.caseReadCounts
+        Array[File?] caseStandardizedCopyRatios = CNVs.caseStandardizedCopyRatios
+        Array[File?] caseDenoisedCopyRatios = CNVs.caseDenoisedCopyRatios
+        Array[File?] caseHetrozygousAllelicCounts = CNVs.caseHetrozygousAllelicCounts
+        Array[File?] caseNormalHetrozygousAllelicCounts = CNVs.caseNormalHetrozygousAllelicCounts
+        Array[File?] caseCopyRatioSegments = CNVs.caseCopyRatioSegments
+        Array[File?] caseCopyRatioCBS = CNVs.caseCopyRatioCBS
+        Array[File?] caseAlleleFractionCBS = CNVs.caseAlleleFractionCBS
+        Array[File?] caseCalledSegments = CNVs.caseCalledSegments
+        Array[File?] caseCalledSegmentsIgv = CNVs.caseCalledSegmentsIgv
+        Array[File?] caseDenoisedCopyRatiosPlot = CNVs.caseDenoisedCopyRatiosPlot
+        Array[File?] caseDenoisedCopyRatiosLimitedPlot = CNVs.caseDenoisedCopyRatiosLimitedPlot
+        Array[File?] caseModeledSegmentsPlot = CNVs.caseModeledSegmentsPlot
+
+        Array[File?] controlAllelicCounts = CNVs.controlAllelicCounts
+        Array[File?] controlReadCounts = CNVs.controlReadCounts
+        Array[File?] controlStandardizedCopyRatios = CNVs.controlStandardizedCopyRatios
+        Array[File?] controlDenoisedCopyRatios = CNVs.controlDenoisedCopyRatios
+        Array[File?] controlHetrozygousAllelicCounts = CNVs.controlHetrozygousAllelicCounts
+        Array[File?] controlCopyRatioSegments = CNVs.controlCopyRatioSegments
+        Array[File?] controlCopyRatioCBS = CNVs.controlCopyRatioCBS
+        Array[File?] controlAlleleFractionCBS = CNVs.controlAlleleFractionCBS
+        Array[File?] controlCalledSegments = CNVs.controlCalledSegments
+        Array[File?] controlCalledSegmentsIgv = CNVs.controlCalledSegmentsIgv
+        Array[File?] controlDenoisedCopyRatiosPlot = CNVs.controlDenoisedCopyRatiosPlot
+        Array[File?] controlDenoisedCopyRatiosLimitedPlot = CNVs.controlDenoisedCopyRatiosLimitedPlot
+        Array[File?] controlModeledSegmentsPlot = CNVs.controlModeledSegmentsPlot
     }
 
     parameter_meta {

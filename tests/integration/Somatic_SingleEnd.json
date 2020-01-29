@@ -20,5 +20,10 @@
     "file": "tests/data/wgs2.vcf.gz",
     "index": "tests/data/wgs2.vcf.gz.tbi"
   },
-  "Somatic.somaticVariantcalling.SomaticVariantcalling.strelka.runManta": false
+  "Somatic.somaticVariantcalling.SomaticVariantcalling.strelka.runManta": false,
+  "Somatic.performCnvCalling": true,
+  "Somatic.CNVs.PairedCnvCalling.caseSample.Sample.plotDenoisedCopyRatios.minimumContigLength": 1000,
+  "Somatic.CNVs.PairedCnvCalling.controlSample.Sample.plotDenoisedCopyRatios.minimumContigLength": 1000,
+  "Somatic.CNVs.PairedCnvCalling.caseSample.Sample.plotModeledSegments.minimumContigLength": 1000,
+  "Somatic.CNVs.PairedCnvCalling.controlSample.Sample.plotModeledSegments.minimumContigLength": 1000
 }
