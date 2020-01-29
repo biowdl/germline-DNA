@@ -71,7 +71,8 @@ workflow Somatic {
                 referenceFastaFai = reference.fai,
                 referenceFastaDict = reference.dict,
                 regions = regions,
-                outputDir = outputDir + "/PON/"
+                outputDir = outputDir + "/PON/",
+                dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
         }
     }
 
@@ -126,7 +127,8 @@ workflow Somatic {
                         outputDir = outputDir + "/samples/" + samp.id + "/CNVcalling/",
                         referenceFasta = reference.fasta,
                         referenceFastaFai = reference.fai,
-                        referenceFastaDict = reference.dict
+                        referenceFastaDict = reference.dict,
+                        dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
                 }
             }
         }
