@@ -23,3 +23,6 @@
 [submodule "gatk-variantcalling"]
 	path = gatk-variantcalling
 	url = https://github.com/biowdl/gatk-variantcalling.git
+[submodule "gatk-CNVcalling"]
+	path = gatk-CNVcalling
+	url = https://github.com/biowdl/gatk-CNVcalling.git

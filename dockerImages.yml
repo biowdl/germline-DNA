@@ -20,6 +20,7 @@ cutadapt: "quay.io/biocontainers/cutadapt:2.4--py37h14c3975_0"
 fastqc: "quay.io/biocontainers/fastqc:0.11.7--4"
 debian: "debian@sha256:f05c05a218b7a4a5fe979045b1c8e2a9ec3524e5611ebfdd0ef5b8040f9008fa"  # Used for general tasks
 gatk4: "quay.io/biocontainers/gatk4:4.1.2.0--1"
+gatk-broad: "broadinstitute/gatk:4.1.4.0"
 multiqc: "quay.io/biocontainers/multiqc:1.7--py_1"
 picard: "quay.io/biocontainers/picard:2.20.5--0"
 samtools: "quay.io/biocontainers/samtools:1.8--h46bd0b3_5"

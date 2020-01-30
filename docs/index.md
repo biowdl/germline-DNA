@@ -12,6 +12,7 @@ MultiQC), adapter clipping (using cutadapt), mapping (using BWA mem or
 bwakit) and variant calling (based on the
 [GATK Best Practice](https://software.broadinstitute.org/gatk/best-practices/)
 for germline calling, and using a variety of callers for somatic calling).
+Optionally, the somatic workflow can also perform CNV calling.
 
 These pipelines are part of [BioWDL](https://biowdl.github.io/)
 developed by the SASC team at [Leiden University Medical Center](https://www.lumc.nl/).
@@ -33,7 +34,7 @@ Womtool as described in the
 [WOMtool documentation](http://cromwell.readthedocs.io/en/stable/WOMtool/).
 For overviews of all available inputs, see the following pages:
 - [germline](./germline-inputs.html)
-- [somatic](./comatic-inputs.html)
+- [somatic](./somatic-inputs.html)
 
 Replace `<pipeline>` with either `Germline` or `Somatic`.
 ```json
@@ -72,6 +73,19 @@ males and the Y chromosome is not called for females.
 For samples with unknown gender the non-PAR regions of X will be called with
 ploidy 2 and the non-PAR regions of Y will be called with ploidy 1 to ensure 
 no variants are missed, regardless of the gender. 
+
+Specific inputs for the somatic pipeline are:
+```json
+{
+  "Somatic.preprocessedIntervals": "The preprocessed intervals to be used for CNV calling.",
+  "Somatic.performCnvCalling": "Whether or not CNV calling should be performed.",
+  "Somatic.CnvPanelOfNormals": "A Panel of normals to be used for CNV calling."
+}
+```
+
+The panel of normals and preprocessed intervals will be generated on the fly  if not provided
+in the inputs. All samples for which no `control` is given in the samplesheet will be used
+to generate the panel of normals.
 
 Some additional inputs which may be of interest are:
 ```json
@@ -250,6 +264,9 @@ This pipeline will produce a number of directories and files:
     for this library (`*.markdup.bam`) and a BAM file with additional 
     preprocessing performed used for variant calling (`*.bsqr.bam`).
     It also contains a directory per library.  
+    - **CNVcalling**: Contains the CNV calling results for this sample
+      and its control sample. Only present if `somatic.wdl` is used with
+      CNV calling enabled.  
     - **somatic-variantcalling**: Contains somatic variant calling results.
       Only present if `somatic.wdl` is used.  
     - **&lt;library>**: This directory contains a directory per readgroup.
@@ -257,6 +274,9 @@ This pipeline will produce a number of directories and files:
 - **multisample.vcf.gz**: A multisample VCF file with the variant calling
   results. Only present if `germline.wdl` is used.
 - **multiqc**: Contains the multiQC report.
+- **PON**: A generated panel of normals and the preprocessed intervals.
+  Only present if `somatic.wdl` is used with CNV calling enabled and no
+  PON or preprocessed intervals were provided in the inputs
 
 ## Scattering
 This pipeline performs scattering to speed up analysis on grid computing

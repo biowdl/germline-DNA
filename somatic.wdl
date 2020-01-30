@@ -1,5 +1,7 @@
 version 1.0
 
+import "gatk-CNVcalling/pairedCnvCalling.wdl" as pairedCnvCalling
+import "gatk-CNVcalling/CNV-PON.wdl" as cnvPon
 import "sample.wdl" as sampleWorkflow
 import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
 import "structs.wdl" as structs
@@ -14,11 +16,15 @@ workflow Somatic {
         String outputDir = "."
         Reference reference
         BwaIndex bwaIndex
-        File dockerImagesFile
         IndexedVcfFile dbSNP
         File? regions
+        Boolean performCnvCalling = false
+        File? cnvPanelOfNormals
+        File? preprocessedIntervals
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
+
+        File dockerImagesFile
     }
 
     String genotypingDir = outputDir + "/multisample_variants/"
@@ -51,6 +57,24 @@ workflow Somatic {
 
         String sampleIds = samp.id
         IndexedBamFile bamFiles = sample.bqsrBamFile
+        if (!defined(samp.control)) {
+            File controlBams = sample.bqsrBamFile.file
+            File controlBamIndexes = sample.bqsrBamFile.index
+        }
+    }
+
+    if (performCnvCalling && (! defined(cnvPanelOfNormals) || ! defined(preprocessedIntervals))) {
+        call cnvPon.PanelOfNormals as generateCnvPanelOfNormals {
+            input:
+                inputBams = select_all(controlBams),
+                inputBamIndexes = select_all(controlBamIndexes),
+                referenceFasta = reference.fasta,
+                referenceFastaFai = reference.fai,
+                referenceFastaDict = reference.dict,
+                regions = regions,
+                outputDir = outputDir + "/PON/",
+                dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
+        }
     }
 
     scatter (samp in sampleConfig.samples) {
@@ -82,6 +106,28 @@ workflow Somatic {
                     controlBamIndex = bamFiles[controlPostition.position].index,
                     regions = regions,
                     dockerImages = dockerImages
+            }
+
+            if (performCnvCalling) {
+                call pairedCnvCalling.PairedCnvCalling as CNVs {
+                    input:
+                        caseSampleName = samp.id,
+                        caseBam = bamFiles[casePosition.position].file,
+                        caseBamIndex = bamFiles[casePosition.position].index,
+                        controlSampleName = sampleIds[controlPostition.position],
+                        controlBam = bamFiles[controlPostition.position].file,
+                        controlBamIndex = bamFiles[controlPostition.position].index,
+                        PON = select_first([cnvPanelOfNormals, generateCnvPanelOfNormals.PON]),
+                        preprocessedIntervals = select_first([preprocessedIntervals,
+                            generateCnvPanelOfNormals.preprocessedIntervals]),
+                        commonVariantSites = dbSNP.file,
+                        commonVariantSitesIndex = dbSNP.index,
+                        outputDir = outputDir + "/samples/" + samp.id + "/CNVcalling/",
+                        referenceFasta = reference.fasta,
+                        referenceFastaFai = reference.fai,
+                        referenceFastaDict = reference.dict,
+                        dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
+                }
             }
         }
     }
@@ -121,6 +167,39 @@ workflow Somatic {
         Array[File?] combinedVcfIndex = somaticVariantcalling.combinedVcfIndex
         Array[File?] ensembleIndelsClassifier = somaticVariantcalling.ensembleIndelsClassifier
         Array[File?] ensembleSNVClassifier = somaticVariantcalling.ensembleSNVClassifier
+
+        # CNV
+        File? generatedpreProcessedIntervals = generateCnvPanelOfNormals.preprocessedIntervals
+        File? generatedPON = generateCnvPanelOfNormals.PON
+
+        Array[File?] caseAllelicCounts = CNVs.caseAllelicCounts
+        Array[File?] caseReadCounts = CNVs.caseReadCounts
+        Array[File?] caseStandardizedCopyRatios = CNVs.caseStandardizedCopyRatios
+        Array[File?] caseDenoisedCopyRatios = CNVs.caseDenoisedCopyRatios
+        Array[File?] caseHetrozygousAllelicCounts = CNVs.caseHetrozygousAllelicCounts
+        Array[File?] caseNormalHetrozygousAllelicCounts = CNVs.caseNormalHetrozygousAllelicCounts
+        Array[File?] caseCopyRatioSegments = CNVs.caseCopyRatioSegments
+        Array[File?] caseCopyRatioCBS = CNVs.caseCopyRatioCBS
+        Array[File?] caseAlleleFractionCBS = CNVs.caseAlleleFractionCBS
+        Array[File?] caseCalledSegments = CNVs.caseCalledSegments
+        Array[File?] caseCalledSegmentsIgv = CNVs.caseCalledSegmentsIgv
+        Array[File?] caseDenoisedCopyRatiosPlot = CNVs.caseDenoisedCopyRatiosPlot
+        Array[File?] caseDenoisedCopyRatiosLimitedPlot = CNVs.caseDenoisedCopyRatiosLimitedPlot
+        Array[File?] caseModeledSegmentsPlot = CNVs.caseModeledSegmentsPlot
+
+        Array[File?] controlAllelicCounts = CNVs.controlAllelicCounts
+        Array[File?] controlReadCounts = CNVs.controlReadCounts
+        Array[File?] controlStandardizedCopyRatios = CNVs.controlStandardizedCopyRatios
+        Array[File?] controlDenoisedCopyRatios = CNVs.controlDenoisedCopyRatios
+        Array[File?] controlHetrozygousAllelicCounts = CNVs.controlHetrozygousAllelicCounts
+        Array[File?] controlCopyRatioSegments = CNVs.controlCopyRatioSegments
+        Array[File?] controlCopyRatioCBS = CNVs.controlCopyRatioCBS
+        Array[File?] controlAlleleFractionCBS = CNVs.controlAlleleFractionCBS
+        Array[File?] controlCalledSegments = CNVs.controlCalledSegments
+        Array[File?] controlCalledSegmentsIgv = CNVs.controlCalledSegmentsIgv
+        Array[File?] controlDenoisedCopyRatiosPlot = CNVs.controlDenoisedCopyRatiosPlot
+        Array[File?] controlDenoisedCopyRatiosLimitedPlot = CNVs.controlDenoisedCopyRatiosLimitedPlot
+        Array[File?] controlModeledSegmentsPlot = CNVs.controlModeledSegmentsPlot
     }
 
     parameter_meta {
@@ -129,11 +208,17 @@ workflow Somatic {
         outputDir: {description: "The directory the output should be written to.", category: "common"}
         reference: {description: "The reference files: a fasta, its index and the associated sequence dictionary.", category: "required"}
         bwaIndex: {description: "The BWA index files.", category: "required"}
-        dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
-                           category: "advanced"}
         dbSNP: {description: "A dbSNP VCF file and its index.", category: "required"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
+        performCnvCalling: {description: "Whether or not CNV calling should be performed.", category: "common"}
+        CnvPanelOfNormals: {description: "The panel of normals file to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly using the samples lacking a control sample in the samplesheet.",
+                            category: "common"}
+        preprocessedIntervals: {description: "The preprocessed intervals to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly.",
+                            category: "common"}
         runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
+
+        dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
+                           category: "advanced"}
     }
 }
 

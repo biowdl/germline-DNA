@@ -45,6 +45,10 @@ matrix:
         - TEST=Germline_PairedEnd_bwakit
         - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
     - env: TEST=Somatic_SingleEnd
+    - env: # One of the tools used for CNV calling won't run if docker is given the --user option
+      - TEST=Somatic_SingleEnd_CNV
+      - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell_without_user.conf"
+      script: travis_wait 30 pytest --kwd --tag $TEST tests/
     - env:
       - TEST=Somatic_PairedEnd
       - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"

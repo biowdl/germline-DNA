@@ -1,0 +1,31 @@
+{
+  "Somatic.sampleConfigFile": "tests/samplesheets/SingleEnd.yml",
+  "Somatic.dockerImagesFile": "dockerImages.yml",
+  "Somatic.reference": {
+    "fasta": "tests/data/reference/reference.fasta",
+    "fai": "tests/data/reference/reference.fasta.fai",
+    "dict": "tests/data/reference/reference.dict"
+  },
+  "Somatic.bwaIndex": {
+    "fastaFile": "tests/data/reference/bwa/reference.fasta",
+    "indexFiles": [
+      "tests/data/reference/bwa/reference.fasta.amb",
+      "tests/data/reference/bwa/reference.fasta.ann",
+      "tests/data/reference/bwa/reference.fasta.bwt",
+      "tests/data/reference/bwa/reference.fasta.pac",
+      "tests/data/reference/bwa/reference.fasta.sa"
+    ]
+  },
+  "Somatic.dbSNP": {
+    "file": "tests/data/wgs2.vcf.gz",
+    "index": "tests/data/wgs2.vcf.gz.tbi"
+  },
+  "Somatic.somaticVariantcalling.SomaticVariantcalling.strelka.runManta": false,
+  "Somatic.somaticVariantcalling.runVardict": false,
+  "Somatic.somaticVariantcalling.runMutect2": false,
+  "Somatic.performCnvCalling": true,
+  "Somatic.CNVs.PairedCnvCalling.caseSample.Sample.plotDenoisedCopyRatios.minimumContigLength": 1000,
+  "Somatic.CNVs.PairedCnvCalling.controlSample.Sample.plotDenoisedCopyRatios.minimumContigLength": 1000,
+  "Somatic.CNVs.PairedCnvCalling.caseSample.Sample.plotModeledSegments.minimumContigLength": 1000,
+  "Somatic.CNVs.PairedCnvCalling.controlSample.Sample.plotModeledSegments.minimumContigLength": 1000
+}
