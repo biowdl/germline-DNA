@@ -1,11 +1,9 @@
 {
   "Somatic.sampleConfigFile": "tests/samplesheets/SingleEnd.yml",
   "Somatic.dockerImagesFile": "dockerImages.yml",
-  "Somatic.reference": {
-    "fasta": "tests/data/reference/reference.fasta",
-    "fai": "tests/data/reference/reference.fasta.fai",
-    "dict": "tests/data/reference/reference.dict"
-  },
+  "Somatic.referenceFasta": "tests/data/reference/reference.fasta",
+  "Somatic.referenceFastaFai": "tests/data/reference/reference.fasta.fai",
+  "Somatic.referenceFastaDict": "tests/data/reference/reference.dict",
   "Somatic.bwaIndex": {
     "fastaFile": "tests/data/reference/bwa/reference.fasta",
     "indexFiles": [
@@ -16,9 +14,7 @@
       "tests/data/reference/bwa/reference.fasta.sa"
     ]
   },
-  "Somatic.dbSNP": {
-    "file": "tests/data/wgs2.vcf.gz",
-    "index": "tests/data/wgs2.vcf.gz.tbi"
-  },
+  "Somatic.dbsnpVCF": "tests/data/wgs2.vcf.gz",
+  "Somatic.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
   "Somatic.somaticVariantcalling.SomaticVariantcalling.strelka.runManta": false
 }
