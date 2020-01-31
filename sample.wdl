@@ -16,9 +16,12 @@ workflow Sample {
     input {
         Sample sample
         String sampleDir
-        Reference reference
+        File referenceFasta
+        File referenceFastaFai
+        File referenceFastaDict
         BwaIndex bwaIndex
-        IndexedVcfFile dbSNP
+        File dbsnpVCF
+        File dbsnpVCFIndex
         Map[String, String] dockerImages
         String platform = "illumina"
         Boolean useBwaKit = false
@@ -74,27 +77,28 @@ workflow Sample {
             dockerImage = dockerImages["picard"]
     }
 
-    IndexedBamFile markdupBam = object {
-            file: markdup.outputBam,
-            index: markdup.outputBamIndex,
-    }
-
     call preprocess.GatkPreprocess as bqsr {
         input:
-            bamFile = markdupBam,
+            bam = markdup.outputBam,
+            bamIndex = markdup.outputBamIndex,
             outputDir = sampleDir,
             bamName =  sample.id + ".bqsr",
-            outputRecalibratedBam = true,
-            reference = reference,
-            dbsnpVCF = dbSNP,
+            referenceFasta = referenceFasta,
+            referenceFastaFai = referenceFastaFai,
+            referenceFastaDict = referenceFastaDict,
+            dbsnpVCF = dbsnpVCF,
+            dbsnpVCFIndex = dbsnpVCFIndex,
             dockerImages = dockerImages
     }
 
     call bammetrics.BamMetrics as metrics {
         input:
-            bam = markdupBam ,
+            bam = markdup.outputBam,
+            bamIndex = markdup.outputBamIndex,
             outputDir = sampleDir + "/metrics",
-            reference = reference,
+            referenceFasta = referenceFasta,
+            referenceFastaFai = referenceFastaFai,
+            referenceFastaDict = referenceFastaDict,
             dockerImages = dockerImages
     }
 
@@ -103,8 +107,10 @@ workflow Sample {
         metrics.targetedPcrMetrics, [markdup.metricsFile], flatten(qc.reports)]
 
     output {
-        IndexedBamFile markdupBamFile = markdupBam
-        IndexedBamFile bqsrBamFile = select_first([bqsr.outputBamFile])
+        File markdupBam = markdup.outputBam
+        File markdupBamIndex = markdup.outputBamIndex
+        File recalibratedBam = bqsr.recalibratedBam
+        File recalibratedBamIndex = bqsr.recalibratedBamIndex
         Array[File] metricsFiles = flatten(allMetrics)
     }
 

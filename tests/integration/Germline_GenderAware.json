@@ -1,11 +1,9 @@
 {
   "Germline.sampleConfigFile": "tests/samplesheets/PairedEndGenderAware.csv",
   "Germline.dockerImagesFile": "dockerImages.yml",
-  "Germline.reference": {
-    "fasta": "tests/data/gender-aware/reference.fasta",
-    "fai": "tests/data/gender-aware/reference.fasta.fai",
-    "dict": "tests/data/gender-aware/reference.dict"
-  },
+  "Germline.referenceFasta": "tests/data/gender-aware/reference.fasta",
+  "Germline.referenceFastaFai": "tests/data/gender-aware/reference.fasta.fai",
+  "Germline.referenceFastaDict": "tests/data/gender-aware/reference.dict",
   "Germline.bwaIndex": {
     "fastaFile": "tests/data/gender-aware/bwa/reference.fa",
     "indexFiles": [
@@ -16,10 +14,8 @@
       "tests/data/gender-aware/bwa/reference.fa.sa"
     ]
   },
-  "Germline.dbSNP": {
-    "file": "tests/data/gender-aware/expected.vcf.gz",
-    "index": "tests/data/gender-aware/expected.vcf.gz.tbi"
-  },
+  "Germline.dbsnpVCF": "tests/data/gender-aware/expected.vcf.gz",
+  "Germline.dbsnpVCFIndex": "tests/data/gender-aware/expected.vcf.gz.tbi",
   "Germline.XNonParRegions": "tests/data/gender-aware/x_non_par.bed",
   "Germline.YNonParRegions": "tests/data/gender-aware/y_non_par.bed"
 }

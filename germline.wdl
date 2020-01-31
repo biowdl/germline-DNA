@@ -13,10 +13,13 @@ workflow Germline {
     input {
         File sampleConfigFile
         String outputDir = "."
-        Reference reference
+        File referenceFasta
+        File referenceFastaFai
+        File referenceFastaDict
         BwaIndex bwaIndex
         File dockerImagesFile
-        IndexedVcfFile dbSNP
+        File dbsnpVCF
+        File dbsnpVCFIndex
         File? regions
         File? XNonParRegions
         File? YNonParRegions
@@ -48,23 +51,27 @@ workflow Germline {
             input:
                 sampleDir = outputDir + "/samples/" + samp.id,
                 sample = samp,
-                reference = reference,
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                referenceFastaDict = referenceFastaDict,
                 bwaIndex = bwaIndex,
-                dbSNP = dbSNP,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFIndex = dbsnpVCFIndex,
                 dockerImages = dockerImages
         }
-        IndexedBamFile bamFiles = sample.bqsrBamFile
-        Pair[IndexedBamFile, String?] bamfilesAndGenders = (bamFiles, samp.gender)
+        BamAndGender bamfilesAndGenders = {"file": sample.recalibratedBam,
+        "index": sample.recalibratedBamIndex,
+        "gender": samp.gender}
     }
 
     call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
         input:
             bamFilesAndGenders = bamfilesAndGenders,
-            referenceFasta = reference.fasta,
-            referenceFastaFai = reference.fai,
-            referenceFastaDict = reference.dict,
-            dbsnpVCF = dbSNP.file,
-            dbsnpVCFIndex = dbSNP.index,
+            referenceFasta = referenceFasta,
+            referenceFastaFai = referenceFastaFai,
+            referenceFastaDict = referenceFastaDict,
+            dbsnpVCF = dbsnpVCF,
+            dbsnpVCFIndex = dbsnpVCFIndex,
             XNonParRegions = XNonParRegions,
             YNonParRegions = YNonParRegions,
             regions = regions,
@@ -87,8 +94,10 @@ workflow Germline {
     output {
         File multiSampleVcf = variantcalling.outputVcf
         File multisampleVcfIndex = variantcalling.outputVcfIndex
-        Array[IndexedBamFile] sampleBams = bamFiles
-        Array[IndexedBamFile] markdupBams = sample.markdupBamFile
+        Array[File] recalibratedBams = sample.recalibratedBam
+        Array[File] recalibratedBamIndexes = sample.recalibratedBamIndex
+        Array[File] markdupBams = sample.markdupBam
+        Array[File] markudpBamIndexex = sample.markdupBamIndex
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
     }
 
