@@ -16,20 +16,35 @@ Germline.
     <i>struct(fastaFile : File, indexFiles : Array[File]) </i><br />
     The BWA index files.
 </dd>
-<dt id="Germline.dbSNP"><a href="#Germline.dbSNP">Germline.dbSNP</a></dt>
+<dt id="Germline.dbsnpVCF"><a href="#Germline.dbsnpVCF">Germline.dbsnpVCF</a></dt>
 <dd>
-    <i>struct(file : File, index : File, md5sum : String?) </i><br />
-    A dbSNP VCF file and its index.
+    <i>File </i><br />
+    dbsnp VCF file used for checking known sites
+</dd>
+<dt id="Germline.dbsnpVCFIndex"><a href="#Germline.dbsnpVCFIndex">Germline.dbsnpVCFIndex</a></dt>
+<dd>
+    <i>File </i><br />
+    Index (.tbi) file for the dbsnp VCF
 </dd>
 <dt id="Germline.dockerImagesFile"><a href="#Germline.dockerImagesFile">Germline.dockerImagesFile</a></dt>
 <dd>
     <i>File </i><br />
     A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.
 </dd>
-<dt id="Germline.reference"><a href="#Germline.reference">Germline.reference</a></dt>
+<dt id="Germline.referenceFasta"><a href="#Germline.referenceFasta">Germline.referenceFasta</a></dt>
 <dd>
-    <i>struct(dict : File, fai : File, fasta : File) </i><br />
-    The reference files: a fasta, its index and the associated sequence dictionary.
+    <i>File </i><br />
+    The reference fasta file
+</dd>
+<dt id="Germline.referenceFastaDict"><a href="#Germline.referenceFastaDict">Germline.referenceFastaDict</a></dt>
+<dd>
+    <i>File </i><br />
+    Sequence dictionary (.dict) file of the reference
+</dd>
+<dt id="Germline.referenceFastaFai"><a href="#Germline.referenceFastaFai">Germline.referenceFastaFai</a></dt>
+<dd>
+    <i>File </i><br />
+    Fasta index (.fai) file of the reference
 </dd>
 <dt id="Germline.sampleConfigFile"><a href="#Germline.sampleConfigFile">Germline.sampleConfigFile</a></dt>
 <dd>
@@ -104,6 +119,41 @@ Germline.
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>sub(basename(read1),"(\.fq)?(\.fastq)?(\.gz)?","")</code><br />
     The name of the readgroup.
+</dd>
+<dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.excludeIntervalList"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.excludeIntervalList">Germline.variantcalling.callAutosomal.haplotypeCaller.excludeIntervalList</a></dt>
+<dd>
+    <i>Array[File]+? </i><br />
+    Bed files or interval lists describing the regions to NOT operate on.
+</dd>
+<dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.ploidy"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.ploidy">Germline.variantcalling.callAutosomal.haplotypeCaller.ploidy</a></dt>
+<dd>
+    <i>Int? </i><br />
+    The ploidy with which the variants should be called.
+</dd>
+<dt id="Germline.variantcalling.callX.excludeIntervalList"><a href="#Germline.variantcalling.callX.excludeIntervalList">Germline.variantcalling.callX.excludeIntervalList</a></dt>
+<dd>
+    <i>Array[File]+? </i><br />
+    Bed files or interval lists describing the regions to NOT operate on.
+</dd>
+<dt id="Germline.variantcalling.callY.excludeIntervalList"><a href="#Germline.variantcalling.callY.excludeIntervalList">Germline.variantcalling.callY.excludeIntervalList</a></dt>
+<dd>
+    <i>Array[File]+? </i><br />
+    Bed files or interval lists describing the regions to NOT operate on.
+</dd>
+<dt id="Germline.variantcalling.jointgenotyping"><a href="#Germline.variantcalling.jointgenotyping">Germline.variantcalling.jointgenotyping</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not
+</dd>
+<dt id="Germline.XNonParRegions"><a href="#Germline.XNonParRegions">Germline.XNonParRegions</a></dt>
+<dd>
+    <i>File? </i><br />
+    Bed file with the non-PAR regions of X
+</dd>
+<dt id="Germline.YNonParRegions"><a href="#Germline.YNonParRegions">Germline.YNonParRegions</a></dt>
+<dd>
+    <i>File? </i><br />
+    Bed file with the non-PAR regions of Y
 </dd>
 </dl>
 
@@ -314,7 +364,7 @@ Germline.
 <dt id="Germline.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFs"><a href="#Germline.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFs">Germline.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFs</a></dt>
 <dd>
     <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
-    VCf files with known indels.
+    VCF files with known indels.
 </dd>
 <dt id="Germline.sample.bqsr.baseRecalibrator.memory"><a href="#Germline.sample.bqsr.baseRecalibrator.memory">Germline.sample.bqsr.baseRecalibrator.memory</a></dt>
 <dd>
@@ -398,7 +448,7 @@ Germline.
 </dd>
 <dt id="Germline.sample.bwaMem.memory"><a href="#Germline.sample.bwaMem.memory">Germline.sample.bwaMem.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"16G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sample.bwaMem.picardXmx"><a href="#Germline.sample.bwaMem.picardXmx">Germline.sample.bwaMem.picardXmx</a></dt>
@@ -429,7 +479,7 @@ Germline.
 <dt id="Germline.sample.metrics.ampliconIntervalsLists.javaXmx"><a href="#Germline.sample.metrics.ampliconIntervalsLists.javaXmx">Germline.sample.metrics.ampliconIntervalsLists.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. (Should be lower than `memory` to accommodate JVM overhead.
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Germline.sample.metrics.ampliconIntervalsLists.memory"><a href="#Germline.sample.metrics.ampliconIntervalsLists.memory">Germline.sample.metrics.ampliconIntervalsLists.memory</a></dt>
 <dd>
@@ -469,7 +519,7 @@ Germline.
 <dt id="Germline.sample.metrics.picardMetrics.javaXmx"><a href="#Germline.sample.metrics.picardMetrics.javaXmx">Germline.sample.metrics.picardMetrics.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
-    The maximum memory available to the program. (Should be lower than `memory` to accommodate JVM overhead.
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Germline.sample.metrics.picardMetrics.meanQualityByCycle"><a href="#Germline.sample.metrics.picardMetrics.meanQualityByCycle">Germline.sample.metrics.picardMetrics.meanQualityByCycle</a></dt>
 <dd>
@@ -489,7 +539,7 @@ Germline.
 <dt id="Germline.sample.metrics.rnaSeqMetrics.javaXmx"><a href="#Germline.sample.metrics.rnaSeqMetrics.javaXmx">Germline.sample.metrics.rnaSeqMetrics.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
-    The maximum memory available to the program. (Should be lower than `memory` to accommodate JVM overhead.
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Germline.sample.metrics.rnaSeqMetrics.memory"><a href="#Germline.sample.metrics.rnaSeqMetrics.memory">Germline.sample.metrics.rnaSeqMetrics.memory</a></dt>
 <dd>
@@ -499,7 +549,7 @@ Germline.
 <dt id="Germline.sample.metrics.targetIntervalsLists.javaXmx"><a href="#Germline.sample.metrics.targetIntervalsLists.javaXmx">Germline.sample.metrics.targetIntervalsLists.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. (Should be lower than `memory` to accommodate JVM overhead.
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Germline.sample.metrics.targetIntervalsLists.memory"><a href="#Germline.sample.metrics.targetIntervalsLists.memory">Germline.sample.metrics.targetIntervalsLists.memory</a></dt>
 <dd>
@@ -509,7 +559,7 @@ Germline.
 <dt id="Germline.sample.metrics.targetMetrics.javaXmx"><a href="#Germline.sample.metrics.targetMetrics.javaXmx">Germline.sample.metrics.targetMetrics.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. (Should be lower than `memory` to accommodate JVM overhead.
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Germline.sample.metrics.targetMetrics.memory"><a href="#Germline.sample.metrics.targetMetrics.memory">Germline.sample.metrics.targetMetrics.memory</a></dt>
 <dd>
@@ -1021,6 +1071,51 @@ Germline.
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Whether or not BWA kit should be used. If false BWA mem will be used.
 </dd>
+<dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.contamination"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.contamination">Germline.variantcalling.callAutosomal.haplotypeCaller.contamination</a></dt>
+<dd>
+    <i>Float? </i><br />
+    Equivalent to HaplotypeCaller's `-contamination` option.
+</dd>
+<dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.javaXmx"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.javaXmx">Germline.variantcalling.callAutosomal.haplotypeCaller.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.memory"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.memory">Germline.variantcalling.callAutosomal.haplotypeCaller.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Germline.variantcalling.callX.contamination"><a href="#Germline.variantcalling.callX.contamination">Germline.variantcalling.callX.contamination</a></dt>
+<dd>
+    <i>Float? </i><br />
+    Equivalent to HaplotypeCaller's `-contamination` option.
+</dd>
+<dt id="Germline.variantcalling.callX.javaXmx"><a href="#Germline.variantcalling.callX.javaXmx">Germline.variantcalling.callX.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Germline.variantcalling.callX.memory"><a href="#Germline.variantcalling.callX.memory">Germline.variantcalling.callX.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Germline.variantcalling.callY.contamination"><a href="#Germline.variantcalling.callY.contamination">Germline.variantcalling.callY.contamination</a></dt>
+<dd>
+    <i>Float? </i><br />
+    Equivalent to HaplotypeCaller's `-contamination` option.
+</dd>
+<dt id="Germline.variantcalling.callY.javaXmx"><a href="#Germline.variantcalling.callY.javaXmx">Germline.variantcalling.callY.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Germline.variantcalling.callY.memory"><a href="#Germline.variantcalling.callY.memory">Germline.variantcalling.callY.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
+    The amount of memory this job will use.
+</dd>
 <dt id="Germline.variantcalling.gatherGvcfs.intervals"><a href="#Germline.variantcalling.gatherGvcfs.intervals">Germline.variantcalling.gatherGvcfs.intervals</a></dt>
 <dd>
     <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
@@ -1046,6 +1141,11 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
     The amount of memory this job will use.
 </dd>
+<dt id="Germline.variantcalling.genotypeGvcfs.annotationGroups"><a href="#Germline.variantcalling.genotypeGvcfs.annotationGroups">Germline.variantcalling.genotypeGvcfs.annotationGroups</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>["StandardAnnotation"]</code><br />
+    Which annotation groups will be used for the annotation
+</dd>
 <dt id="Germline.variantcalling.genotypeGvcfs.javaXmx"><a href="#Germline.variantcalling.genotypeGvcfs.javaXmx">Germline.variantcalling.genotypeGvcfs.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"6G"</code><br />
@@ -1056,47 +1156,67 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"18G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Germline.variantcalling.Gvcf.haplotypeCallerGvcf.contamination"><a href="#Germline.variantcalling.Gvcf.haplotypeCallerGvcf.contamination">Germline.variantcalling.Gvcf.haplotypeCallerGvcf.contamination</a></dt>
+<dt id="Germline.variantcalling.mergeBeds.outputBed"><a href="#Germline.variantcalling.mergeBeds.outputBed">Germline.variantcalling.mergeBeds.outputBed</a></dt>
 <dd>
-    <i>Float </i><i>&mdash; Default:</i> <code>0.0</code><br />
-    Equivalent to HaplotypeCaller's `-contamination` option.
+    <i>String </i><i>&mdash; Default:</i> <code>"merged.bed"</code><br />
+    The path to write the output to
 </dd>
-<dt id="Germline.variantcalling.Gvcf.haplotypeCallerGvcf.javaXmx"><a href="#Germline.variantcalling.Gvcf.haplotypeCallerGvcf.javaXmx">Germline.variantcalling.Gvcf.haplotypeCallerGvcf.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Germline.variantcalling.Gvcf.haplotypeCallerGvcf.memory"><a href="#Germline.variantcalling.Gvcf.haplotypeCallerGvcf.memory">Germline.variantcalling.Gvcf.haplotypeCallerGvcf.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Germline.variantcalling.orderedScatters.dockerImage"><a href="#Germline.variantcalling.orderedScatters.dockerImage">Germline.variantcalling.orderedScatters.dockerImage</a></dt>
+<dt id="Germline.variantcalling.orderedAllScatters.dockerImage"><a href="#Germline.variantcalling.orderedAllScatters.dockerImage">Germline.variantcalling.orderedAllScatters.dockerImage</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"python:3.7-slim"</code><br />
     The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
 </dd>
-<dt id="Germline.variantcalling.scatterList.bamFile"><a href="#Germline.variantcalling.scatterList.bamFile">Germline.variantcalling.scatterList.bamFile</a></dt>
+<dt id="Germline.variantcalling.orderedAutosomalScatters.dockerImage"><a href="#Germline.variantcalling.orderedAutosomalScatters.dockerImage">Germline.variantcalling.orderedAutosomalScatters.dockerImage</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"python:3.7-slim"</code><br />
+    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+</dd>
+<dt id="Germline.variantcalling.scatterAllRegions.bamFile"><a href="#Germline.variantcalling.scatterAllRegions.bamFile">Germline.variantcalling.scatterAllRegions.bamFile</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to biopet scatterregions' `--bamfile` option.
 </dd>
-<dt id="Germline.variantcalling.scatterList.bamIndex"><a href="#Germline.variantcalling.scatterList.bamIndex">Germline.variantcalling.scatterList.bamIndex</a></dt>
+<dt id="Germline.variantcalling.scatterAllRegions.bamIndex"><a href="#Germline.variantcalling.scatterAllRegions.bamIndex">Germline.variantcalling.scatterAllRegions.bamIndex</a></dt>
 <dd>
     <i>File? </i><br />
     The index for the bamfile given through bamFile.
 </dd>
-<dt id="Germline.variantcalling.scatterList.javaXmx"><a href="#Germline.variantcalling.scatterList.javaXmx">Germline.variantcalling.scatterList.javaXmx</a></dt>
+<dt id="Germline.variantcalling.scatterAllRegions.javaXmx"><a href="#Germline.variantcalling.scatterAllRegions.javaXmx">Germline.variantcalling.scatterAllRegions.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
-<dt id="Germline.variantcalling.scatterList.memory"><a href="#Germline.variantcalling.scatterList.memory">Germline.variantcalling.scatterList.memory</a></dt>
+<dt id="Germline.variantcalling.scatterAllRegions.memory"><a href="#Germline.variantcalling.scatterAllRegions.memory">Germline.variantcalling.scatterAllRegions.memory</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Germline.variantcalling.scatterList.notSplitContigs"><a href="#Germline.variantcalling.scatterList.notSplitContigs">Germline.variantcalling.scatterList.notSplitContigs</a></dt>
+<dt id="Germline.variantcalling.scatterAllRegions.notSplitContigs"><a href="#Germline.variantcalling.scatterAllRegions.notSplitContigs">Germline.variantcalling.scatterAllRegions.notSplitContigs</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Equivalent to biopet scatterregions' `--notSplitContigs` flag.
+</dd>
+<dt id="Germline.variantcalling.scatterAutosomalRegions.bamFile"><a href="#Germline.variantcalling.scatterAutosomalRegions.bamFile">Germline.variantcalling.scatterAutosomalRegions.bamFile</a></dt>
+<dd>
+    <i>File? </i><br />
+    Equivalent to biopet scatterregions' `--bamfile` option.
+</dd>
+<dt id="Germline.variantcalling.scatterAutosomalRegions.bamIndex"><a href="#Germline.variantcalling.scatterAutosomalRegions.bamIndex">Germline.variantcalling.scatterAutosomalRegions.bamIndex</a></dt>
+<dd>
+    <i>File? </i><br />
+    The index for the bamfile given through bamFile.
+</dd>
+<dt id="Germline.variantcalling.scatterAutosomalRegions.javaXmx"><a href="#Germline.variantcalling.scatterAutosomalRegions.javaXmx">Germline.variantcalling.scatterAutosomalRegions.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Germline.variantcalling.scatterAutosomalRegions.memory"><a href="#Germline.variantcalling.scatterAutosomalRegions.memory">Germline.variantcalling.scatterAutosomalRegions.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Germline.variantcalling.scatterAutosomalRegions.notSplitContigs"><a href="#Germline.variantcalling.scatterAutosomalRegions.notSplitContigs">Germline.variantcalling.scatterAutosomalRegions.notSplitContigs</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to biopet scatterregions' `--notSplitContigs` flag.
