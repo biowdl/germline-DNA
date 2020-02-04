@@ -9,8 +9,9 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
-version 2.1.0-dev
+version 3.0.0-dev
 -----------------
++ Restructured inputs to not use unnecessary structs. 
 + Added option for somatic CNV calling.
 + Added option for gender-aware variantcalling of X and Y non-PAR regions are
   provided.

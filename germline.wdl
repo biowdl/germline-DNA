@@ -105,12 +105,18 @@ workflow Germline {
         sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.",
                            category: "required"}
         outputDir: {description: "The directory the output should be written to.", category: "common"}
-        reference: {description: "The reference files: a fasta, its index and the associated sequence dictionary.", category: "required"}
+        referenceFasta: { description: "The reference fasta file", category: "required" }
+        referenceFastaFai: { description: "Fasta index (.fai) file of the reference", category: "required" }
+        referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
+        dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
+        dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
         bwaIndex: {description: "The BWA index files.", category: "required"}
         dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
                            category: "advanced"}
-        dbSNP: {description: "A dbSNP VCF file and its index.", category: "required"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
+        XNonParRegions: {description: "Bed file with the non-PAR regions of X", category: "common"}
+        YNonParRegions: {description: "Bed file with the non-PAR regions of Y", category: "common"}
+
     }
 }
