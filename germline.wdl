@@ -59,9 +59,9 @@ workflow Germline {
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 dockerImages = dockerImages
         }
-        BamAndGender bamfilesAndGenders = {"file": sample.recalibratedBam,
-        "index": sample.recalibratedBamIndex,
-        "gender": samp.gender}
+        BamAndGender bamfilesAndGenders = object {file: sample.recalibratedBam,
+                                                  index: sample.recalibratedBamIndex,
+                                                  gender: samp.gender}
     }
 
     call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
