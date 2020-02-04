@@ -14,9 +14,12 @@ workflow Somatic {
     input {
         File sampleConfigFile
         String outputDir = "."
-        Reference reference
+        File referenceFasta
+        File referenceFastaFai
+        File referenceFastaDict
         BwaIndex bwaIndex
-        IndexedVcfFile dbSNP
+        File dbsnpVCF
+        File dbsnpVCFIndex
         File? regions
         Boolean performCnvCalling = false
         File? cnvPanelOfNormals
@@ -49,17 +52,19 @@ workflow Somatic {
             input:
                 sampleDir = outputDir + "/samples/" + samp.id,
                 sample = samp,
-                reference = reference,
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                referenceFastaDict = referenceFastaDict,
                 bwaIndex = bwaIndex,
-                dbSNP = dbSNP,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFIndex = dbsnpVCFIndex,
                 dockerImages = dockerImages
         }
 
         String sampleIds = samp.id
-        IndexedBamFile bamFiles = sample.bqsrBamFile
         if (!defined(samp.control)) {
-            File controlBams = sample.bqsrBamFile.file
-            File controlBamIndexes = sample.bqsrBamFile.index
+            File controlBams = sample.recalibratedBam
+            File controlBamIndexes = sample.recalibratedBamIndex
         }
     }
 
@@ -68,9 +73,9 @@ workflow Somatic {
             input:
                 inputBams = select_all(controlBams),
                 inputBamIndexes = select_all(controlBamIndexes),
-                referenceFasta = reference.fasta,
-                referenceFastaFai = reference.fai,
-                referenceFastaDict = reference.dict,
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                referenceFastaDict = referenceFastaDict,
                 regions = regions,
                 outputDir = outputDir + "/PON/",
                 dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
@@ -95,15 +100,15 @@ workflow Somatic {
             call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
                 input:
                     outputDir = outputDir + "/samples/" + samp.id + "/somatic-variantcalling/",
-                    referenceFasta = reference.fasta,
-                    referenceFastaFai = reference.fai,
-                    referenceFastaDict = reference.dict,
+                    referenceFasta = referenceFasta,
+                    referenceFastaFai = referenceFastaFai,
+                    referenceFastaDict = referenceFastaDict,
                     tumorSample = samp.id,
-                    tumorBam = bamFiles[casePosition.position].file,
-                    tumorBamIndex = bamFiles[casePosition.position].index,
+                    tumorBam = sample.recalibratedBam[casePosition.position],
+                    tumorBamIndex = sample.recalibratedBamIndex[casePosition.position],
                     controlSample = sampleIds[controlPostition.position],
-                    controlBam = bamFiles[controlPostition.position].file,
-                    controlBamIndex = bamFiles[controlPostition.position].index,
+                    controlBam = sample.recalibratedBam[controlPostition.position],
+                    controlBamIndex = sample.recalibratedBamIndex[controlPostition.position],
                     regions = regions,
                     dockerImages = dockerImages
             }
@@ -112,20 +117,20 @@ workflow Somatic {
                 call pairedCnvCalling.PairedCnvCalling as CNVs {
                     input:
                         caseSampleName = samp.id,
-                        caseBam = bamFiles[casePosition.position].file,
-                        caseBamIndex = bamFiles[casePosition.position].index,
+                        caseBam = sample.recalibratedBam[casePosition.position],
+                        caseBamIndex = sample.recalibratedBamIndex[casePosition.position],
                         controlSampleName = sampleIds[controlPostition.position],
-                        controlBam = bamFiles[controlPostition.position].file,
-                        controlBamIndex = bamFiles[controlPostition.position].index,
+                        controlBam = sample.recalibratedBam[controlPostition.position],
+                        controlBamIndex = sample.recalibratedBamIndex[controlPostition.position],
                         PON = select_first([cnvPanelOfNormals, generateCnvPanelOfNormals.PON]),
                         preprocessedIntervals = select_first([preprocessedIntervals,
-                            generateCnvPanelOfNormals.preprocessedIntervals]),
-                        commonVariantSites = dbSNP.file,
-                        commonVariantSitesIndex = dbSNP.index,
+                        generateCnvPanelOfNormals.preprocessedIntervals]),
+                        commonVariantSites = dbsnpVCF,
+                        commonVariantSitesIndex = dbsnpVCFIndex,
                         outputDir = outputDir + "/samples/" + samp.id + "/CNVcalling/",
-                        referenceFasta = reference.fasta,
-                        referenceFastaFai = reference.fai,
-                        referenceFastaDict = reference.dict,
+                        referenceFasta = referenceFasta,
+                        referenceFastaFai = referenceFastaFai,
+                        referenceFastaDict = referenceFastaDict,
                         dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
                 }
             }
@@ -144,8 +149,10 @@ workflow Somatic {
     }
 
     output {
-        Array[IndexedBamFile] sampleBams = bamFiles
-        Array[IndexedBamFile] markdupBams = sample.markdupBamFile
+        Array[File] recalibratedBams = sample.recalibratedBam
+        Array[File] recalibratedBamIndexes = sample.recalibratedBamIndex
+        Array[File] markdupBams = sample.markdupBam
+        Array[File] markdupBamIndex = sample.markdupBamIndex
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
         Array[File?] somaticSeqSnvVcf = somaticVariantcalling.somaticSeqSnvVcf
         Array[File?] somaticSeqSnvVcfIndex = somaticVariantcalling.somaticSeqSnvVcfIndex

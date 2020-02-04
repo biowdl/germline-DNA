@@ -43,17 +43,13 @@ Replace `<pipeline>` with either `Germline` or `Somatic`.
     "fastaFile": "A path to the fasta file from the bwa index",
     "indexFiles": "A list containing the other bwa index files"
   },
-  "<pipeline>.dbSNP": {
-    "file": "A path to a dbSNP VCF file",
-    "index": "The path to the index (.tbi) file associated with the dbSNP VCF"
-  },
+  "<pipeline>.dbsnpVCF": "A path to a dbSNP VCF file",
+  "<pipeline>.dbsnpVCFIndex": "The path to the index (.tbi) file associated with the dbSNP VCF",
   "<pipeline>.sampleConfigFile": "A sample configuration file (see below)",
   "<pipeline>.outputDir": "The path to the output directory",
-  "<pipeline>.reference": {
-    "fasta": "A path to a reference fasta",
-    "fai": "The path to the index associated with the reference fasta",
-    "dict": "The path to the dict file associated with the reference fasta"
-  },
+  "<pipeline>.referenceFasta": "A path to a reference fasta",
+  "<pipeline>.referenceFastaFai": "The path to the index associated with the reference fasta",
+  "<pipeline>.referenceFastaDict": "The path to the dict file associated with the reference fasta",
   "<pipeline>.dockerImagesFile": "A file listing the used docker images."
 }
 ```
@@ -210,17 +206,13 @@ can be used for Germline as long as the starting `Somatic.` is replaced with
       "/home/user/genomes/human/bwa/GRCh38.fasta.pac"
     ]
   },
-  "Somatic.dbSNP": {
-    "file": "/home/user/genomes/human/dbsnp/dbsnp-151.vcf.gz",
-    "index": "/home/user/genomes/human/dbsnp/dbsnp-151.vcf.gz.tbi"
-  },
+  "Somatic.dbsnpVCF": "/home/user/genomes/human/dbsnp/dbsnp-151.vcf.gz",
+  "Somatic.dbsnpVCFIndex": "/home/user/genomes/human/dbsnp/dbsnp-151.vcf.gz.tbi",
   "Somatic.sampleConfigFiles": "/home/user/analysis/samples.yml",
   "Somatic.outputDir": "/home/user/analysis/results",
-  "Somatic.reference": {
-    "fasta": "/home/user/genomes/human/GRCh38.fasta",
-    "fai": "/home/user/genomes/human/GRCh38.fasta.fai",
-    "dict": "/home/user/genomes/human/GRCh38.dict"
-  },
+  "Somatic.referenceFasta": "/home/user/genomes/human/GRCh38.fasta",
+  "Somatic.referenceFastaFai": "/home/user/genomes/human/GRCh38.fasta.fai",
+  "Somatic.referenceFastaDict": "/home/user/genomes/human/GRCh38.dict",
   "Somatic.sample.Sample.bwaMem.threads": 8,
   "Somatic.sample.Sample.qc.QC.Cutadapt.cores": 4,
   "Somatic.dockerImages.yml": "dockerImages.yml"
