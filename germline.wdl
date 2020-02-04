@@ -108,9 +108,9 @@ workflow Germline {
         referenceFasta: { description: "The reference fasta file", category: "required" }
         referenceFastaFai: { description: "Fasta index (.fai) file of the reference", category: "required" }
         referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
-        dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "common"}
-        dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "common"}
-         bwaIndex: {description: "The BWA index files.", category: "required"}
+        dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
+        dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
+        bwaIndex: {description: "The BWA index files.", category: "required"}
         dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
                            category: "advanced"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
