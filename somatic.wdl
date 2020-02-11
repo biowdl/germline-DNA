@@ -213,12 +213,15 @@ workflow Somatic {
         sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.",
                            category: "required"}
         outputDir: {description: "The directory the output should be written to.", category: "common"}
-        reference: {description: "The reference files: a fasta, its index and the associated sequence dictionary.", category: "required"}
+        referenceFasta: { description: "The reference fasta file", category: "required" }
+        referenceFastaFai: { description: "Fasta index (.fai) file of the reference", category: "required" }
+        referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
+        dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
+        dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
         bwaIndex: {description: "The BWA index files.", category: "required"}
-        dbSNP: {description: "A dbSNP VCF file and its index.", category: "required"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         performCnvCalling: {description: "Whether or not CNV calling should be performed.", category: "common"}
-        CnvPanelOfNormals: {description: "The panel of normals file to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly using the samples lacking a control sample in the samplesheet.",
+        cnvPanelOfNormals: {description: "The panel of normals file to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly using the samples lacking a control sample in the samplesheet.",
                             category: "common"}
         preprocessedIntervals: {description: "The preprocessed intervals to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly.",
                             category: "common"}

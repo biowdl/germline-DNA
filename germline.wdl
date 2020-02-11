@@ -1,10 +1,8 @@
 version 1.0
 
 import "sample.wdl" as sampleWorkflow
-import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
 import "gatk-variantcalling/gatk-variantcalling.wdl" as gatkVariantWorkflow
 import "structs.wdl" as structs
-import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
@@ -26,7 +24,6 @@ workflow Germline {
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
     }
-    Boolean genderAware = defined(XNonParRegions) && defined(YNonParRegions)
 
     String genotypingDir = outputDir + "/multisample_variants/"
 
