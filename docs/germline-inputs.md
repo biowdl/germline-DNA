@@ -125,6 +125,11 @@ Germline.
     <i>Array[File]+? </i><br />
     Bed files or interval lists describing the regions to NOT operate on.
 </dd>
+<dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.pedigree"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.pedigree">Germline.variantcalling.callAutosomal.haplotypeCaller.pedigree</a></dt>
+<dd>
+    <i>File? </i><br />
+    Pedigree file for determining the population "founders"
+</dd>
 <dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.ploidy"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.ploidy">Germline.variantcalling.callAutosomal.haplotypeCaller.ploidy</a></dt>
 <dd>
     <i>Int? </i><br />
@@ -135,15 +140,35 @@ Germline.
     <i>Array[File]+? </i><br />
     Bed files or interval lists describing the regions to NOT operate on.
 </dd>
+<dt id="Germline.variantcalling.callX.pedigree"><a href="#Germline.variantcalling.callX.pedigree">Germline.variantcalling.callX.pedigree</a></dt>
+<dd>
+    <i>File? </i><br />
+    Pedigree file for determining the population "founders"
+</dd>
 <dt id="Germline.variantcalling.callY.excludeIntervalList"><a href="#Germline.variantcalling.callY.excludeIntervalList">Germline.variantcalling.callY.excludeIntervalList</a></dt>
 <dd>
     <i>Array[File]+? </i><br />
     Bed files or interval lists describing the regions to NOT operate on.
 </dd>
+<dt id="Germline.variantcalling.callY.pedigree"><a href="#Germline.variantcalling.callY.pedigree">Germline.variantcalling.callY.pedigree</a></dt>
+<dd>
+    <i>File? </i><br />
+    Pedigree file for determining the population "founders"
+</dd>
+<dt id="Germline.variantcalling.genotypeGvcfs.pedigree"><a href="#Germline.variantcalling.genotypeGvcfs.pedigree">Germline.variantcalling.genotypeGvcfs.pedigree</a></dt>
+<dd>
+    <i>File? </i><br />
+    Pedigree file for determining the population "founders"
+</dd>
 <dt id="Germline.variantcalling.jointgenotyping"><a href="#Germline.variantcalling.jointgenotyping">Germline.variantcalling.jointgenotyping</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
     Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not
+</dd>
+<dt id="Germline.variantcalling.singleSampleGvcf"><a href="#Germline.variantcalling.singleSampleGvcf">Germline.variantcalling.singleSampleGvcf</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether to output single-sample gvcfs
 </dd>
 <dt id="Germline.XNonParRegions"><a href="#Germline.XNonParRegions">Germline.XNonParRegions</a></dt>
 <dd>
@@ -390,11 +415,6 @@ Germline.
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
     The amount of memory this job will use.
-</dd>
-<dt id="Germline.sample.bqsr.orderedScatters.dockerImage"><a href="#Germline.sample.bqsr.orderedScatters.dockerImage">Germline.sample.bqsr.orderedScatters.dockerImage</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"python:3.7-slim"</code><br />
-    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
 </dd>
 <dt id="Germline.sample.bqsr.scatterList.bamFile"><a href="#Germline.sample.bqsr.scatterList.bamFile">Germline.sample.bqsr.scatterList.bamFile</a></dt>
 <dd>
@@ -1161,15 +1181,20 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"merged.bed"</code><br />
     The path to write the output to
 </dd>
-<dt id="Germline.variantcalling.orderedAllScatters.dockerImage"><a href="#Germline.variantcalling.orderedAllScatters.dockerImage">Germline.variantcalling.orderedAllScatters.dockerImage</a></dt>
+<dt id="Germline.variantcalling.mergeSingleSample.intervals"><a href="#Germline.variantcalling.mergeSingleSample.intervals">Germline.variantcalling.mergeSingleSample.intervals</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"python:3.7-slim"</code><br />
-    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+    <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    Bed files or interval lists describing the regions to operate on.
 </dd>
-<dt id="Germline.variantcalling.orderedAutosomalScatters.dockerImage"><a href="#Germline.variantcalling.orderedAutosomalScatters.dockerImage">Germline.variantcalling.orderedAutosomalScatters.dockerImage</a></dt>
+<dt id="Germline.variantcalling.mergeSingleSample.javaXmx"><a href="#Germline.variantcalling.mergeSingleSample.javaXmx">Germline.variantcalling.mergeSingleSample.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"python:3.7-slim"</code><br />
-    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Germline.variantcalling.mergeSingleSample.memory"><a href="#Germline.variantcalling.mergeSingleSample.memory">Germline.variantcalling.mergeSingleSample.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    The amount of memory this job will use.
 </dd>
 <dt id="Germline.variantcalling.scatterAllRegions.bamFile"><a href="#Germline.variantcalling.scatterAllRegions.bamFile">Germline.variantcalling.scatterAllRegions.bamFile</a></dt>
 <dd>
