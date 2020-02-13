@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 version 3.0.0-dev
 -----------------
++ Add proper copyright headers to WDL files. So the free software license
+  is clear to end users who wish to adapt and modify.
 + Restructured inputs to not use unnecessary structs. 
 + Added option for somatic CNV calling.
 + Added option for gender-aware variantcalling of X and Y non-PAR regions are
