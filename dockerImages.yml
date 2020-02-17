@@ -30,3 +30,8 @@ python: "python:3.7-slim"
 strelka: "quay.io/biocontainers/strelka:2.9.7--0"
 vardict-java: "quay.io/biocontainers/vardict-java:1.5.8--1"
 somaticseq: "lethalfang/somaticseq:3.1.0"
+bcftools: "quay.io/biocontainers/bcftools:1.9--ha228f0b_3"
+clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
+delly: "quay.io/biocontainers/delly:0.8.1--h4037b6b_1"
+survivor: "quay.io/biocontainers/survivor:1.0.6--h6bb024c_0"
+
