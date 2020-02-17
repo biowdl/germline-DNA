@@ -26,6 +26,7 @@ import "tasks/samtools.wdl" as samtools
 import "BamMetrics/bammetrics.wdl" as bammetrics
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "structs.wdl" as structs
+import "structural-variantcalling/structural-variantcalling.wdl" as structuralVariantCalling
 import "tasks/picard.wdl" as picard
 import "tasks/bwa.wdl" as bwa
 import "QC/QC.wdl" as qc
@@ -124,6 +125,19 @@ workflow Sample {
     Array[Array[File]] allMetrics = [[metrics.flagstats],
         metrics.picardMetricsFiles, metrics.rnaMetrics,
         metrics.targetedPcrMetrics, [markdup.metricsFile], flatten(qc.reports)]
+
+    call structuralVariantCalling.SVcalling as svCalling{
+        input:
+            bamFile = bqsr.recalibratedBam,
+            bamIndex = bqsr.recalibratedBamIndex,
+            referenceFasta = referenceFasta,
+            referenceFastaFai = referenceFastaFai,
+            referenceFastaDict = referenceFastaDict,
+            bwaIndex = bwaIndex,
+            sample = sample.id,
+            outputDir = sampleDir,
+            dockerImages = dockerImages
+    }
 
     output {
         File markdupBam = markdup.outputBam
