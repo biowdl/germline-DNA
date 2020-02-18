@@ -145,6 +145,13 @@ workflow Sample {
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
         Array[File] metricsFiles = flatten(allMetrics)
+        File cleverVcf = svCalling.cleverPredictions
+        File matecleverVcf = svCalling.cleverVcf
+        File mantaVcf = svCalling.mantaVcf
+        File dellyBcf = svCalling.dellyBcf
+        File dellyVcf = svCalling.dellyVcf
+        File survivorVcf = svCalling.survivorVcf
+        Array[File] renamedVcfs = svCalling.renamedVcfs
     }
 
     parameter_meta {
