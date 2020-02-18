@@ -155,6 +155,7 @@ workflow Germline {
                            category: "advanced"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
+        runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X", category: "common"}
         YNonParRegions: {description: "Bed file with the non-PAR regions of Y", category: "common"}
 
