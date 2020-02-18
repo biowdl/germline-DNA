@@ -126,7 +126,7 @@ workflow Sample {
         metrics.picardMetricsFiles, metrics.rnaMetrics,
         metrics.targetedPcrMetrics, [markdup.metricsFile], flatten(qc.reports)]
 
-    call structuralVariantCalling.SVcalling as svCalling{
+    call structuralVariantCalling.SVcalling as svCalling {
         input:
             bamFile = bqsr.recalibratedBam,
             bamIndex = bqsr.recalibratedBamIndex,
