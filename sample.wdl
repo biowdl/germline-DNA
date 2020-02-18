@@ -26,7 +26,6 @@ import "tasks/samtools.wdl" as samtools
 import "BamMetrics/bammetrics.wdl" as bammetrics
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "structs.wdl" as structs
-import "structural-variantcalling/structural-variantcalling.wdl" as structuralVariantCalling
 import "tasks/picard.wdl" as picard
 import "tasks/bwa.wdl" as bwa
 import "QC/QC.wdl" as qc
@@ -126,32 +125,12 @@ workflow Sample {
         metrics.picardMetricsFiles, metrics.rnaMetrics,
         metrics.targetedPcrMetrics, [markdup.metricsFile], flatten(qc.reports)]
 
-    call structuralVariantCalling.SVcalling as svCalling {
-        input:
-            bamFile = bqsr.recalibratedBam,
-            bamIndex = bqsr.recalibratedBamIndex,
-            referenceFasta = referenceFasta,
-            referenceFastaFai = referenceFastaFai,
-            referenceFastaDict = referenceFastaDict,
-            bwaIndex = bwaIndex,
-            sample = sample.id,
-            outputDir = sampleDir,
-            dockerImages = dockerImages
-    }
-
     output {
         File markdupBam = markdup.outputBam
         File markdupBamIndex = markdup.outputBamIndex
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
         Array[File] metricsFiles = flatten(allMetrics)
-        File cleverVcf = svCalling.cleverPredictions
-        File matecleverVcf = svCalling.cleverVcf
-        File mantaVcf = svCalling.mantaVcf
-        File dellyBcf = svCalling.dellyBcf
-        File dellyVcf = svCalling.dellyVcf
-        File survivorVcf = svCalling.survivorVcf
-        Array[File] renamedVcfs = svCalling.renamedVcfs
     }
 
     parameter_meta {
