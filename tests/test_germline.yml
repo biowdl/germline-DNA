@@ -82,7 +82,34 @@
     - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
     - path: "test-output/samples/wgs1-paired-end/metrics/wgs1-paired-end.markdup.flagstats"
     - path: "test-output/samples/wgs2-paired-end/metrics/wgs2-paired-end.markdup.flagstats"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/delly/wgs1-paired-end.delly.vcf"
 
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/delly/wgs2-paired-end.delly.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
+      should_exist: false
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
+      should_exist: false
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/mateclever/deletions.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/mateclever/deletions.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.clever.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.clever.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.delly.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.delly.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.manta.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.manta.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
+      should_exist: false
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
+      should_exist: false
 
 - name: Germline_PairedEnd_bwakit
   tags:
