@@ -27,6 +27,8 @@ import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
+import "tasks/vt.wdl" as vt
+import "tasks/samtools.wdl" as samtools
 
 workflow Germline {
     input {
@@ -42,6 +44,7 @@ workflow Germline {
         File? regions
         File? XNonParRegions
         File? YNonParRegions
+        Boolean normalizedVcf = false
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
         Boolean runSVcalling = false
@@ -114,11 +117,29 @@ workflow Germline {
             dockerImages = dockerImages,
     }
 
+    if (normalizedVcf) {
+        String vcfBasename = "multisample"
+        call vt.Normalize as normalize {
+            input:
+                inputVCF = select_first([variantcalling.outputVcf]),
+                inputVCFIndex = select_first([variantcalling.outputVcfIndex]),
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                outputPath = outputDir + "/" + vcfBasename + ".normalized_decomposed.vcf.gz",
+        }
+
+        call samtools.Tabix as tabix {
+            input:
+                inputFile = normalize.outputVcf,
+                outputFilePath = outputDir + "/" + vcfBasename + ".normalized_decomposed.indexed.vcf.gz"
+        }
+    }
+
     if (runMultiQC) {
         call multiqc.MultiQC as multiqcTask {
             input:
                 # Multiqc will only run if these files are created.
-                dependencies = [variantcalling.outputVcfIndex],
+                dependencies = select_all([variantcalling.outputVcfIndex]),
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
                 dockerImage = dockerImages["multiqc"]
@@ -126,8 +147,10 @@ workflow Germline {
     }
 
     output {
-        File multiSampleVcf = variantcalling.outputVcf
-        File multisampleVcfIndex = variantcalling.outputVcfIndex
+        File multiSampleVcf = select_first([variantcalling.outputVcf])
+        File multisampleVcfIndex = select_first([variantcalling.outputVcfIndex])
+        File? normalizedMultisampleVcf = tabix.indexedFile
+        File? normalizedMultisampleVcfIndex = tabix.index
         Array[File] recalibratedBams = sample.recalibratedBam
         Array[File] recalibratedBamIndexes = sample.recalibratedBamIndex
         Array[File] markdupBams = sample.markdupBam
