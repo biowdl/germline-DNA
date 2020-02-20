@@ -17,5 +17,6 @@
   "Germline.dbsnpVCF": "tests/data/gender-aware/expected.vcf.gz",
   "Germline.dbsnpVCFIndex": "tests/data/gender-aware/expected.vcf.gz.tbi",
   "Germline.XNonParRegions": "tests/data/gender-aware/x_non_par.bed",
-  "Germline.YNonParRegions": "tests/data/gender-aware/y_non_par.bed"
+  "Germline.YNonParRegions": "tests/data/gender-aware/y_non_par.bed",
+  "Germline.runSVcalling": true
 }
