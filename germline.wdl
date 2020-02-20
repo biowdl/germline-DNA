@@ -44,7 +44,7 @@ workflow Germline {
         File? YNonParRegions
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
-        Boolean runSVcalling = true
+        Boolean runSVcalling = false
     }
 
     String genotypingDir = outputDir + "/multisample_variants/"
