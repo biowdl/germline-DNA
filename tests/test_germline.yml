@@ -107,7 +107,7 @@
     - path: "test-output/samples/wgs1-paired-end/metrics/wgs1-paired-end.markdup.flagstats"
     - path: "test-output/samples/wgs2-paired-end/metrics/wgs2-paired-end.markdup.flagstats"
     - path: "test-output/samples/wgs1-paired-end/structural-variants/delly/wgs1-paired-end.delly.vcf"
-
+      should_exist: false
     - path: "test-output/samples/wgs2-paired-end/structural-variants/delly/wgs2-paired-end.delly.vcf"
       should_exist: false
     - path: "test-output/samples/wgs1-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
