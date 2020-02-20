@@ -132,8 +132,8 @@ workflow Germline {
     output {
         File multiSampleVcf = select_first([variantcalling.outputVcf])
         File multisampleVcfIndex = select_first([variantcalling.outputVcfIndex])
-        File? normalizedVcf = tabix.indexedFile
-        File? normalizedVcfIndex = tabix.index
+        File? normalizedMultisampleVcf = tabix.indexedFile
+        File? normalizedMultisampleVcfIndex = tabix.index
         Array[File] recalibratedBams = sample.recalibratedBam
         Array[File] recalibratedBamIndexes = sample.recalibratedBamIndex
         Array[File] markdupBams = sample.markdupBam
