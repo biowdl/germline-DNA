@@ -26,6 +26,8 @@ import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
+import "tasks/vt.wdl" as vt
+import "tasks/samtools.wdl" as samtools
 
 workflow Germline {
     input {
@@ -120,7 +122,7 @@ workflow Germline {
         call multiqc.MultiQC as multiqcTask {
             input:
                 # Multiqc will only run if these files are created.
-                dependencies = [variantcalling.outputVcfIndex],
+                dependencies = select_all([variantcalling.outputVcfIndex]),
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
                 dockerImage = dockerImages["multiqc"]
