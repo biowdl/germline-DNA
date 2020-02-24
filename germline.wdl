@@ -21,6 +21,7 @@ version 1.0
 # SOFTWARE.
 
 import "sample.wdl" as sampleWorkflow
+import "structural-variantcalling/structural-variantcalling.wdl" as structuralVariantCalling
 import "gatk-variantcalling/gatk-variantcalling.wdl" as gatkVariantWorkflow
 import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
@@ -46,6 +47,7 @@ workflow Germline {
         Boolean normalizedVcf = false
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
+        Boolean runSVcalling = false
     }
 
     String genotypingDir = outputDir + "/multisample_variants/"
@@ -78,6 +80,21 @@ workflow Germline {
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 dockerImages = dockerImages
+        }
+
+        if (runSVcalling) {
+            call structuralVariantCalling.SVcalling as svCalling {
+                input:
+                    bamFile = sample.markdupBam,
+                    bamIndex = sample.markdupBamIndex,
+                    referenceFasta = referenceFasta,
+                    referenceFastaFai = referenceFastaFai,
+                    referenceFastaDict = referenceFastaDict,
+                    bwaIndex = bwaIndex,
+                    sample = samp.id,
+                    outputDir = outputDir + "/samples/" + samp.id,
+                    dockerImages = dockerImages
+            }
         }
         BamAndGender bamfilesAndGenders = object {file: sample.recalibratedBam,
                                                   index: sample.recalibratedBamIndex,
@@ -139,6 +156,12 @@ workflow Germline {
         Array[File] markdupBams = sample.markdupBam
         Array[File] markudpBamIndexex = sample.markdupBamIndex
         Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
+        Array[File?] cleverVCFs = svCalling.cleverVcf
+        Array[File?] matecleverVCFs = svCalling.cleverVcf
+        Array[File?] mantaVCFs = svCalling.mantaVcf
+        Array[File?] dellyVCFs = svCalling.dellyVcf
+        Array[File?] survivorVCFs = svCalling.survivorVcf
+        Array[Array[File]?] renamedVCFs = svCalling.renamedVcfs
     }
 
     parameter_meta {
@@ -154,6 +177,7 @@ workflow Germline {
         dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
                            category: "advanced"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
+        runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
         runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
         normalizedVcf: {description: "Normalize the multisample.", category: "common"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}
