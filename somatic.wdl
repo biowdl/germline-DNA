@@ -44,6 +44,8 @@ workflow Somatic {
         Boolean performCnvCalling = false
         File? cnvPanelOfNormals
         File? preprocessedIntervals
+        Int scatterSizeMillions = 1000
+        Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
 
@@ -78,7 +80,8 @@ workflow Somatic {
                 bwaIndex = bwaIndex,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
-                dockerImages = dockerImages
+                dockerImages = dockerImages,
+                scatterSize = scatterSize
         }
 
         String sampleIds = samp.id
@@ -284,5 +287,9 @@ task GetSamplePositionInArray {
         sample: {description: "The sample for which the position is wanted.", category: "required"}
         dockerImage: {description: "The docker image used for this task. Changing this may result in errors which the developers may choose not to address.",
                       category: "advanced"}
+        scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
+              category: "advanced"}
+        scatterSizeMillions:{ description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily",
+                              category: "advanced"}
     }
 }
