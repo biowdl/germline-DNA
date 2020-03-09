@@ -1,4 +1,5 @@
 {
+"Germline.outputDir":"/home/rhpvorderman/PycharmProjects/germline-DNA/test-output",
   "Germline.sampleConfigFile": "tests/samplesheets/PairedEnd.csv",
   "Germline.dockerImagesFile": "dockerImages.yml",
   "Germline.referenceFasta": "tests/data/reference/reference.fasta",
@@ -14,6 +15,7 @@
       "tests/data/reference/bwa/reference.fasta.sa"
     ]
   },
+  "scatterSize": 10000,
   "Germline.dbsnpVCF": "tests/data/wgs2.vcf.gz",
   "Germline.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi"
 }

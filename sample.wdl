@@ -44,6 +44,7 @@ workflow Sample {
         Map[String, String] dockerImages
         String platform = "illumina"
         Boolean useBwaKit = false
+        Int scatterSize = 1000000000
     }
 
     scatter (readgroup in sample.readgroups) {
@@ -107,7 +108,8 @@ workflow Sample {
             referenceFastaDict = referenceFastaDict,
             dbsnpVCF = dbsnpVCF,
             dbsnpVCFIndex = dbsnpVCFIndex,
-            dockerImages = dockerImages
+            dockerImages = dockerImages,
+            scatterSize = scatterSize
     }
 
     call bammetrics.BamMetrics as metrics {

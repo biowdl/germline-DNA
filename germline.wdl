@@ -44,6 +44,8 @@ workflow Germline {
         File? XNonParRegions
         File? YNonParRegions
         Boolean normalizedVcf = false
+        Int scatterSizeMillions = 1000
+        Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
     }
@@ -77,7 +79,8 @@ workflow Germline {
                 bwaIndex = bwaIndex,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
-                dockerImages = dockerImages
+                dockerImages = dockerImages,
+                scatterSize = scatterSize
         }
         BamAndGender bamfilesAndGenders = object {file: sample.recalibratedBam,
                                                   index: sample.recalibratedBamIndex,
@@ -98,6 +101,7 @@ workflow Germline {
             outputDir = genotypingDir,
             vcfBasename = "multisample",
             dockerImages = dockerImages,
+            scatterSize = scatterSize
     }
 
     if (normalizedVcf) {
@@ -158,6 +162,10 @@ workflow Germline {
         normalizedVcf: {description: "Normalize the multisample.", category: "common"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}
         YNonParRegions: {description: "Bed file with the non-PAR regions of Y.", category: "common"}
+        scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
+              category: "advanced"}
+        scatterSizeMillions:{ description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily",
+                              category: "advanced"}
 
     }
 }
