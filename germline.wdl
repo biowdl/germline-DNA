@@ -44,7 +44,8 @@ workflow Germline {
         File? regions
         File? XNonParRegions
         File? YNonParRegions
-        Boolean normalizedVcf = false
+        Int scatterSizeMillions = 1000
+        Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
         Boolean runMultiQC = if (outputDir == ".") then false else true
         Boolean runSVcalling = false
@@ -79,7 +80,8 @@ workflow Germline {
                 bwaIndex = bwaIndex,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
-                dockerImages = dockerImages
+                dockerImages = dockerImages,
+                scatterSize = scatterSize
         }
 
         if (runSVcalling) {
@@ -115,24 +117,7 @@ workflow Germline {
             outputDir = genotypingDir,
             vcfBasename = "multisample",
             dockerImages = dockerImages,
-    }
-
-    if (normalizedVcf) {
-        String vcfBasename = "multisample"
-        call vt.Normalize as normalize {
-            input:
-                inputVCF = select_first([variantcalling.outputVcf]),
-                inputVCFIndex = select_first([variantcalling.outputVcfIndex]),
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                outputPath = outputDir + "/" + vcfBasename + ".normalized_decomposed.vcf.gz",
-        }
-
-        call samtools.Tabix as tabix {
-            input:
-                inputFile = normalize.outputVcf,
-                outputFilePath = outputDir + "/" + vcfBasename + ".normalized_decomposed.indexed.vcf.gz"
-        }
+            scatterSize = scatterSize
     }
 
     if (runMultiQC) {
@@ -149,8 +134,6 @@ workflow Germline {
     output {
         File multiSampleVcf = select_first([variantcalling.outputVcf])
         File multisampleVcfIndex = select_first([variantcalling.outputVcfIndex])
-        File? normalizedMultisampleVcf = tabix.indexedFile
-        File? normalizedMultisampleVcfIndex = tabix.index
         Array[File] recalibratedBams = sample.recalibratedBam
         Array[File] recalibratedBamIndexes = sample.recalibratedBamIndex
         Array[File] markdupBams = sample.markdupBam
@@ -179,9 +162,12 @@ workflow Germline {
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
         runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
-        normalizedVcf: {description: "Normalize the multisample.", category: "common"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}
         YNonParRegions: {description: "Bed file with the non-PAR regions of Y.", category: "common"}
+        scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
+              category: "advanced"}
+        scatterSizeMillions:{ description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.",
+                              category: "advanced"}
 
     }
 }

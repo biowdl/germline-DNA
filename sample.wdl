@@ -44,6 +44,7 @@ workflow Sample {
         Map[String, String] dockerImages
         String platform = "illumina"
         Boolean useBwaKit = false
+        Int scatterSize = 1000000000
     }
 
     scatter (readgroup in sample.readgroups) {
@@ -107,7 +108,8 @@ workflow Sample {
             referenceFastaDict = referenceFastaDict,
             dbsnpVCF = dbsnpVCF,
             dbsnpVCFIndex = dbsnpVCFIndex,
-            dockerImages = dockerImages
+            dockerImages = dockerImages,
+            scatterSize = scatterSize
     }
 
     call bammetrics.BamMetrics as metrics {
@@ -145,5 +147,7 @@ workflow Sample {
         dockerImages: {description: "The docker images used.", category: "required"}
         platform: {description: "The platform used for sequencing.", category: "advanced"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
+        scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
+              category: "advanced"}
     }
 }

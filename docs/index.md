@@ -88,6 +88,7 @@ Some additional inputs which may be of interest are:
 {
   "<pipeline>.sample.platform":
     "The sequencing platform used. Default: illumina",
+  "<pipeline>.scatterSize": "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
   "<pipeline>.sample.Sample.bwaMem.threads":
     "Number of threads used for alignment. Default: 2",
   "<pipeline>.sample.Sample.qc.QC.Cutadapt.cores":

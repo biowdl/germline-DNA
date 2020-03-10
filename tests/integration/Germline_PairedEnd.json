@@ -14,6 +14,7 @@
       "tests/data/reference/bwa/reference.fasta.sa"
     ]
   },
+  "Germline.scatterSize": 10000,
   "Germline.dbsnpVCF": "tests/data/wgs2.vcf.gz",
   "Germline.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
   "Germline.runSVcalling": true
