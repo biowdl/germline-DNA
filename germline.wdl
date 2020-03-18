@@ -44,6 +44,9 @@ workflow Germline {
         File? regions
         File? XNonParRegions
         File? YNonParRegions
+        String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter
+        String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter
+        Boolean useBwaKit = false
         Int scatterSizeMillions = 1000
         Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
@@ -80,6 +83,9 @@ workflow Germline {
                 bwaIndex = bwaIndex,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
+                adapterForward = adapterForward,
+                adapterReverse = adapterReverse,
+                useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
                 scatterSize = scatterSize
         }
@@ -164,6 +170,9 @@ workflow Germline {
         runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}
         YNonParRegions: {description: "Bed file with the non-PAR regions of Y.", category: "common"}
+        useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
+        adapterForward: {description: "The adapter to be removed from the reads first or single end reads.", category: "common"}
+        adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
         scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
               category: "advanced"}
         scatterSizeMillions:{ description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.",

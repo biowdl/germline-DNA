@@ -45,6 +45,8 @@ workflow Sample {
         String platform = "illumina"
         Boolean useBwaKit = false
         Int scatterSize = 1000000000
+        String? adapterForward
+        String? adapterReverse
     }
 
     scatter (readgroup in sample.readgroups) {
@@ -56,6 +58,8 @@ workflow Sample {
                 outputDir = readgroupDir,
                 read1 = readgroup.R1,
                 read2 = readgroup.R2,
+                adapterForward = adapterForward,
+                adapterReverse = adapterReverse,
                 dockerImages = dockerImages
         }
 
