@@ -44,6 +44,15 @@ workflow Somatic {
         Boolean performCnvCalling = false
         File? cnvPanelOfNormals
         File? preprocessedIntervals
+        String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter
+        String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter
+        Boolean useBwaKit = false
+
+        Boolean runStrelka = true
+        Boolean runVardict = true
+        Boolean runMutect2 = true
+        Boolean runManta = true
+        Boolean runCombineVariants = false
         Int scatterSizeMillions = 1000
         Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
@@ -80,6 +89,9 @@ workflow Somatic {
                 bwaIndex = bwaIndex,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
+                adapterForward = adapterForward,
+                adapterReverse = adapterReverse,
+                useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
                 scatterSize = scatterSize
         }
@@ -133,7 +145,12 @@ workflow Somatic {
                     controlBam = sample.recalibratedBam[controlPostition.position],
                     controlBamIndex = sample.recalibratedBamIndex[controlPostition.position],
                     regions = regions,
-                    dockerImages = dockerImages
+                    dockerImages = dockerImages,
+                    runStrelka = runStrelka,
+                    runVardict = runVardict,
+                    runMutect2 = runMutect2,
+                    runManta = runManta,
+                    runCombineVariants = runCombineVariants
             }
 
             if (performCnvCalling) {
@@ -241,6 +258,9 @@ workflow Somatic {
         referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
         dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
         dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
+        useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
+        adapterForward: {description: "The adapter to be removed from the reads first or single end reads.", category: "common"}
+        adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
         bwaIndex: {description: "The BWA index files.", category: "required"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         performCnvCalling: {description: "Whether or not CNV calling should be performed.", category: "common"}
