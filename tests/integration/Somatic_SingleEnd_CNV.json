@@ -20,8 +20,5 @@
   "Somatic.runVardict": false,
   "Somatic.runMutect2": false,
   "Somatic.performCnvCalling": true,
-  "Somatic.CNVs.PairedCnvCalling.caseSample.Sample.plotDenoisedCopyRatios.minimumContigLength": 1000,
-  "Somatic.CNVs.PairedCnvCalling.controlSample.Sample.plotDenoisedCopyRatios.minimumContigLength": 1000,
-  "Somatic.CNVs.PairedCnvCalling.caseSample.Sample.plotModeledSegments.minimumContigLength": 1000,
-  "Somatic.CNVs.PairedCnvCalling.controlSample.Sample.plotModeledSegments.minimumContigLength": 1000
+  "Somatic.cnvMinimumContigLength": 1000
 }
