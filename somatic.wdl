@@ -279,6 +279,11 @@ workflow Somatic {
               category: "advanced"}
         scatterSizeMillions:{ description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.",
                               category: "advanced"}
+        runStrelka: {description: "Whether or not to run Strelka.", category: "common"}
+        runManta: {description: "Whether or not manta should be run as part of the Strelka pipeline.", category: "common"}
+        runVardict: {description: "Whether or not to run VarDict.", category: "common"}
+        runMutect2: {description: "Whether or not to run Mutect2.", category: "common"}
+        runCombineVariants: {description: "Whether or not to combine the variant calling results into one VCF file.", category: "advanced"}
     }
 }
 
