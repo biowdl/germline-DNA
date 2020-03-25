@@ -44,6 +44,7 @@ workflow Somatic {
         Boolean performCnvCalling = false
         File? cnvPanelOfNormals
         File? preprocessedIntervals
+        String platform = "illumina"
         String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter
         String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter
         Boolean useBwaKit = false
@@ -94,7 +95,8 @@ workflow Somatic {
                 adapterReverse = adapterReverse,
                 useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
-                scatterSize = scatterSize
+                scatterSize = scatterSize,
+                platform = platform
         }
 
         String sampleIds = samp.id
@@ -261,6 +263,7 @@ workflow Somatic {
         dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
         dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
+        platform: {description: "The platform used for sequencing.", category: "advanced"}
         adapterForward: {description: "The adapter to be removed from the reads first or single end reads.", category: "common"}
         adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
         bwaIndex: {description: "The BWA index files.", category: "required"}

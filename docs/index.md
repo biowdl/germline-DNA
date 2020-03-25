@@ -79,6 +79,10 @@ Specific inputs for the somatic pipeline are:
 }
 ```
 
+There are also the booleans `runStrelka`, `runVardict`, `runMutect2` and 
+`runManta` which can turn somatic variant callers on or off (default: all
+are on). 
+
 The panel of normals and preprocessed intervals will be generated on the fly  if not provided
 in the inputs. All samples for which no `control` is given in the samplesheet will be used
 to generate the panel of normals.
@@ -86,23 +90,17 @@ to generate the panel of normals.
 Some additional inputs which may be of interest are:
 ```json
 {
-  "<pipeline>.sample.platform":
+  "<pipeline>.platform":
     "The sequencing platform used. Default: illumina",
   "<pipeline>.scatterSize": "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
-  "<pipeline>.sample.Sample.bwaMem.threads":
-    "Number of threads used for alignment. Default: 2",
-  "<pipeline>.sample.Sample.qc.QC.Cutadapt.cores":
-    "Number of threads used for cutadapt. Default: 1",
   "<pipeline>.regions":
     "Bed file with regions used for variantcalling",
-  "<pipeline>.sample.Sample.qc.adapterForward":
+  "<pipeline>.adapterForward":
     "The adapters to be cut from the forward reads. Default: Illumina Universal Adapter",
-  "<pipeline>.sample.Sample.qc.adapterReverse":
+  "<pipeline>.adapterReverse":
     "The adapters to be cut from the reverse reads (if paired-end reads are used). Default: Illumina Universal Adapter.",
-  "<pipeline>.sample.useBwaKit":
-    "Whether bwakit should be used instead of plain BWA mem, this will required an '.alt' file to be present in the index.",
-  "Germline.sample.Sample.bwakit.threads":
-    "Number of threads used for alignment when using bwakit. Default: 1"
+  "<pipeline>.useBwaKit":
+    "Whether bwakit should be used instead of plain BWA mem, this will required an '.alt' file to be present in the index."
 }
 ```
 
@@ -214,8 +212,6 @@ can be used for Germline as long as the starting `Somatic.` is replaced with
   "Somatic.referenceFasta": "/home/user/genomes/human/GRCh38.fasta",
   "Somatic.referenceFastaFai": "/home/user/genomes/human/GRCh38.fasta.fai",
   "Somatic.referenceFastaDict": "/home/user/genomes/human/GRCh38.dict",
-  "Somatic.sample.Sample.bwaMem.threads": 8,
-  "Somatic.sample.Sample.qc.QC.Cutadapt.cores": 4,
   "Somatic.dockerImages.yml": "dockerImages.yml"
 }
 ```
