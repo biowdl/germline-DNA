@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 version 3.0.0-dev
 -----------------
++ Make sure all important options are in the input section. No more nested
+  inputs should be required for running this workflow.
 + Add scatterSize option to centrally control the scatter size
 + Add Structural-variantcalling workflow 
 + Add proper copyright headers to WDL files. So the free software license

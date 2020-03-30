@@ -44,6 +44,17 @@ workflow Somatic {
         Boolean performCnvCalling = false
         File? cnvPanelOfNormals
         File? preprocessedIntervals
+        String platform = "illumina"
+        String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter
+        String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter
+        Boolean useBwaKit = false
+
+        Boolean runStrelka = true
+        Boolean runVardict = true
+        Boolean runMutect2 = true
+        Boolean runManta = true
+        Boolean runCombineVariants = false
+        Int? cnvMinimumContigLength
         Int scatterSizeMillions = 1000
         Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
@@ -80,8 +91,12 @@ workflow Somatic {
                 bwaIndex = bwaIndex,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
+                adapterForward = adapterForward,
+                adapterReverse = adapterReverse,
+                useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
-                scatterSize = scatterSize
+                scatterSize = scatterSize,
+                platform = platform
         }
 
         String sampleIds = samp.id
@@ -133,7 +148,12 @@ workflow Somatic {
                     controlBam = sample.recalibratedBam[controlPostition.position],
                     controlBamIndex = sample.recalibratedBamIndex[controlPostition.position],
                     regions = regions,
-                    dockerImages = dockerImages
+                    dockerImages = dockerImages,
+                    runStrelka = runStrelka,
+                    runVardict = runVardict,
+                    runMutect2 = runMutect2,
+                    runManta = runManta,
+                    runCombineVariants = runCombineVariants
             }
 
             if (performCnvCalling) {
@@ -154,6 +174,7 @@ workflow Somatic {
                         referenceFasta = referenceFasta,
                         referenceFastaFai = referenceFastaFai,
                         referenceFastaDict = referenceFastaDict,
+                        minimumContigLength = cnvMinimumContigLength,
                         dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
                 }
             }
@@ -241,6 +262,10 @@ workflow Somatic {
         referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
         dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
         dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
+        useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
+        platform: {description: "The platform used for sequencing.", category: "advanced"}
+        adapterForward: {description: "The adapter to be removed from the reads first or single end reads.", category: "common"}
+        adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
         bwaIndex: {description: "The BWA index files.", category: "required"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         performCnvCalling: {description: "Whether or not CNV calling should be performed.", category: "common"}
@@ -252,10 +277,16 @@ workflow Somatic {
 
         dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
                            category: "advanced"}
+        cnvMinimumContigLength: {description: "The minimum length for a contig to be included in the CNV plots.", category: "advanced"}
         scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
               category: "advanced"}
         scatterSizeMillions:{ description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.",
                               category: "advanced"}
+        runStrelka: {description: "Whether or not to run Strelka.", category: "common"}
+        runManta: {description: "Whether or not manta should be run as part of the Strelka pipeline.", category: "common"}
+        runVardict: {description: "Whether or not to run VarDict.", category: "common"}
+        runMutect2: {description: "Whether or not to run Mutect2.", category: "common"}
+        runCombineVariants: {description: "Whether or not to combine the variant calling results into one VCF file.", category: "advanced"}
     }
 }
 

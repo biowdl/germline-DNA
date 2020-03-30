@@ -17,5 +17,5 @@
   },
   "Somatic.dbsnpVCF": "tests/data/wgs2.vcf.gz",
   "Somatic.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
-  "Somatic.sample.useBwaKit": true
+  "Somatic.useBwaKit": true
 }

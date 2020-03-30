@@ -16,8 +16,8 @@ biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_
 # This container contains: picard (2.18.7), bwa (0.7.17-r1188)
 "bwa+picard": "quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842:43ec6124f9f4f875515f9548733b8b4e5fed9aa6-0"
 bwakit: "biocontainers/bwakit:v0.7.15_cv1"
-cutadapt: "quay.io/biocontainers/cutadapt:2.4--py37h14c3975_0"
-fastqc: "quay.io/biocontainers/fastqc:0.11.7--4"
+cutadapt: "quay.io/biocontainers/cutadapt:2.8--py37h516909a_0"
+fastqc: "quay.io/biocontainers/fastqc:0.11.9--0"
 debian: "debian@sha256:f05c05a218b7a4a5fe979045b1c8e2a9ec3524e5611ebfdd0ef5b8040f9008fa"  # Used for general tasks
 gatk4: "quay.io/biocontainers/gatk4:4.1.2.0--1"
 gatk-broad: "broadinstitute/gatk:4.1.4.0"
