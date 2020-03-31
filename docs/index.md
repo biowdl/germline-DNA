@@ -58,8 +58,10 @@ Specific inputs for the germline pipeline are:
 
 ```json
 {
-  "Germline.XNonParRegions": "A BED file that lists all the non-PAR regions on the X chromosome.",
-  "Germline.YNonParRegions": "A BED file that lists all the non-PAR regions on the Y chromosome."
+  "Germline.XNonParRegions": "(Optional) A BED file that lists all the non-PAR regions on the X chromosome.",
+  "Germline.YNonParRegions": "(Optional) A BED file that lists all the non-PAR regions on the Y chromosome.",
+  "Germline.jointgenotyping": "Whether to call a multisample VCF using JointGenotyping or not.",
+  "Germline.singleSampleGvcf": "Whether to create a GVCF file for each sample."
 }
 ```
 These region files are required in order to have gender-aware variantcalling, 

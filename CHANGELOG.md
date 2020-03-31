@@ -11,6 +11,7 @@ that users understand how the changes affect the new version.
 
 version 3.0.0-dev
 -----------------
++ Add options to disable joint genotyping and allow per sample variant calling.
 + Make sure all important options are in the input section. No more nested
   inputs should be required for running this workflow.
 + Add scatterSize option to centrally control the scatter size
