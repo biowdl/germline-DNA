@@ -51,10 +51,35 @@ Germline.
     <i>File </i><br />
     The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.
 </dd>
+<dt id="Germline.svCalling.manta.cores"><a href="#Germline.svCalling.manta.cores">Germline.svCalling.manta.cores</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The the number of cores required to run a program
+</dd>
+<dt id="Germline.svCalling.manta.memoryGb"><a href="#Germline.svCalling.manta.memoryGb">Germline.svCalling.manta.memoryGb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
+    The memory required to run the manta
+</dd>
 </dl>
 
 ## Other common inputs
 <dl>
+<dt id="Germline.adapterForward"><a href="#Germline.adapterForward">Germline.adapterForward</a></dt>
+<dd>
+    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
+    The adapter to be removed from the reads first or single end reads.
+</dd>
+<dt id="Germline.adapterReverse"><a href="#Germline.adapterReverse">Germline.adapterReverse</a></dt>
+<dd>
+    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
+    The adapter to be removed from the reads second end reads.
+</dd>
+<dt id="Germline.jointgenotyping"><a href="#Germline.jointgenotyping">Germline.jointgenotyping</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not
+</dd>
 <dt id="Germline.outputDir"><a href="#Germline.outputDir">Germline.outputDir</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"."</code><br />
@@ -100,16 +125,6 @@ Germline.
     <i>Array[File]+? </i><br />
     An interval list describing the coordinates of the targets sequenced. This should only be used for targeted sequencing or WES. If defined targeted PCR metrics will be collected. Requires `ampliconIntervals` to also be defined.
 </dd>
-<dt id="Germline.sample.qc.adapterForward"><a href="#Germline.sample.qc.adapterForward">Germline.sample.qc.adapterForward</a></dt>
-<dd>
-    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
-    The adapter to be removed from the reads first or single end reads.
-</dd>
-<dt id="Germline.sample.qc.adapterReverse"><a href="#Germline.sample.qc.adapterReverse">Germline.sample.qc.adapterReverse</a></dt>
-<dd>
-    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
-    The adapter to be removed from the reads second end reads.
-</dd>
 <dt id="Germline.sample.qc.contaminations"><a href="#Germline.sample.qc.contaminations">Germline.sample.qc.contaminations</a></dt>
 <dd>
     <i>Array[String]+? </i><br />
@@ -119,6 +134,26 @@ Germline.
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>sub(basename(read1),"(\.fq)?(\.fastq)?(\.gz)?","")</code><br />
     The name of the readgroup.
+</dd>
+<dt id="Germline.singleSampleGvcf"><a href="#Germline.singleSampleGvcf">Germline.singleSampleGvcf</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether to output single-sample gvcfs
+</dd>
+<dt id="Germline.svCalling.manta.callRegions"><a href="#Germline.svCalling.manta.callRegions">Germline.svCalling.manta.callRegions</a></dt>
+<dd>
+    <i>File? </i><br />
+    The bed file which indicates the regions to operate on.
+</dd>
+<dt id="Germline.svCalling.manta.callRegionsIndex"><a href="#Germline.svCalling.manta.callRegionsIndex">Germline.svCalling.manta.callRegionsIndex</a></dt>
+<dd>
+    <i>File? </i><br />
+    The index of the bed file which indicates the regions to operate on.
+</dd>
+<dt id="Germline.svCalling.manta.exome"><a href="#Germline.svCalling.manta.exome">Germline.svCalling.manta.exome</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether or not the data is from exome sequencing.
 </dd>
 <dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.excludeIntervalList"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.excludeIntervalList">Germline.variantcalling.callAutosomal.haplotypeCaller.excludeIntervalList</a></dt>
 <dd>
@@ -160,25 +195,15 @@ Germline.
     <i>File? </i><br />
     Pedigree file for determining the population "founders"
 </dd>
-<dt id="Germline.variantcalling.jointgenotyping"><a href="#Germline.variantcalling.jointgenotyping">Germline.variantcalling.jointgenotyping</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not
-</dd>
-<dt id="Germline.variantcalling.singleSampleGvcf"><a href="#Germline.variantcalling.singleSampleGvcf">Germline.variantcalling.singleSampleGvcf</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether to output single-sample gvcfs
-</dd>
 <dt id="Germline.XNonParRegions"><a href="#Germline.XNonParRegions">Germline.XNonParRegions</a></dt>
 <dd>
     <i>File? </i><br />
-    Bed file with the non-PAR regions of X
+    Bed file with the non-PAR regions of X.
 </dd>
 <dt id="Germline.YNonParRegions"><a href="#Germline.YNonParRegions">Germline.YNonParRegions</a></dt>
 <dd>
     <i>File? </i><br />
-    Bed file with the non-PAR regions of Y
+    Bed file with the non-PAR regions of Y.
 </dd>
 </dl>
 
@@ -361,10 +386,20 @@ Germline.
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to MultiQC's `--zip-data-dir` flag.
 </dd>
+<dt id="Germline.platform"><a href="#Germline.platform">Germline.platform</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"illumina"</code><br />
+    The platform used for sequencing.
+</dd>
 <dt id="Germline.runMultiQC"><a href="#Germline.runMultiQC">Germline.runMultiQC</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>if outputDir == "." then false else true</code><br />
     Whether or not MultiQC should be run.
+</dd>
+<dt id="Germline.runSVcalling"><a href="#Germline.runSVcalling">Germline.runSVcalling</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether or not Structural-variantcalling should be run.
 </dd>
 <dt id="Germline.sample.bqsr.applyBqsr.javaXmx"><a href="#Germline.sample.bqsr.applyBqsr.javaXmx">Germline.sample.bqsr.applyBqsr.javaXmx</a></dt>
 <dd>
@@ -436,10 +471,10 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Germline.sample.bqsr.scatterSize"><a href="#Germline.sample.bqsr.scatterSize">Germline.sample.bqsr.scatterSize</a></dt>
+<dt id="Germline.sample.bqsr.scatterSizeMillions"><a href="#Germline.sample.bqsr.scatterSizeMillions">Germline.sample.bqsr.scatterSizeMillions</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1000000000</code><br />
-    The size of the scattered regions in bases. Scattering is used to speed up certain processes. The genome will be sseperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily
 </dd>
 <dt id="Germline.sample.bqsr.splitNCigarReads.javaXmx"><a href="#Germline.sample.bqsr.splitNCigarReads.javaXmx">Germline.sample.bqsr.splitNCigarReads.javaXmx</a></dt>
 <dd>
@@ -451,19 +486,29 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"16G"</code><br />
     The amount of memory this job will use.
 </dd>
+<dt id="Germline.sample.bwakit.compressionLevel"><a href="#Germline.sample.bwakit.compressionLevel">Germline.sample.bwakit.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level of the output BAM.
+</dd>
 <dt id="Germline.sample.bwakit.memory"><a href="#Germline.sample.bwakit.memory">Germline.sample.bwakit.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"10G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Germline.sample.bwakit.sortMemoryPerThread"><a href="#Germline.sample.bwakit.sortMemoryPerThread">Germline.sample.bwakit.sortMemoryPerThread</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory for each sorting thread.
 </dd>
 <dt id="Germline.sample.bwakit.sortThreads"><a href="#Germline.sample.bwakit.sortThreads">Germline.sample.bwakit.sortThreads</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
-    The number of threads to use for sorting.
+    <i>Int? </i><br />
+    The number of additional threads to use for sorting.
 </dd>
 <dt id="Germline.sample.bwakit.threads"><a href="#Germline.sample.bwakit.threads">Germline.sample.bwakit.threads</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The number of threads to use for alignment.
 </dd>
 <dt id="Germline.sample.bwaMem.memory"><a href="#Germline.sample.bwaMem.memory">Germline.sample.bwaMem.memory</a></dt>
@@ -478,7 +523,7 @@ Germline.
 </dd>
 <dt id="Germline.sample.bwaMem.threads"><a href="#Germline.sample.bwaMem.threads">Germline.sample.bwaMem.threads</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The number of threads to use.
 </dd>
 <dt id="Germline.sample.markdup.javaXmx"><a href="#Germline.sample.markdup.javaXmx">Germline.sample.markdup.javaXmx</a></dt>
@@ -586,11 +631,6 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Germline.sample.platform"><a href="#Germline.sample.platform">Germline.sample.platform</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"illumina"</code><br />
-    The platform used for sequencing.
-</dd>
 <dt id="Germline.sample.qc.Cutadapt.bwa"><a href="#Germline.sample.qc.Cutadapt.bwa">Germline.sample.qc.Cutadapt.bwa</a></dt>
 <dd>
     <i>Boolean? </i><br />
@@ -601,9 +641,14 @@ Germline.
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --colorspace flag.
 </dd>
-<dt id="Germline.sample.qc.Cutadapt.cores"><a href="#Germline.sample.qc.Cutadapt.cores">Germline.sample.qc.Cutadapt.cores</a></dt>
+<dt id="Germline.sample.qc.Cutadapt.compressionLevel"><a href="#Germline.sample.qc.Cutadapt.compressionLevel">Germline.sample.qc.Cutadapt.compressionLevel</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level if gzipped output is used.
+</dd>
+<dt id="Germline.sample.qc.Cutadapt.cores"><a href="#Germline.sample.qc.Cutadapt.cores">Germline.sample.qc.Cutadapt.cores</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The number of cores to use.
 </dd>
 <dt id="Germline.sample.qc.Cutadapt.cut"><a href="#Germline.sample.qc.Cutadapt.cut">Germline.sample.qc.Cutadapt.cut</a></dt>
@@ -811,11 +856,6 @@ Germline.
     <i>String? </i><br />
     Equivalent to cutadapt's --wildcard-file option.
 </dd>
-<dt id="Germline.sample.qc.Cutadapt.Z"><a href="#Germline.sample.qc.Cutadapt.Z">Germline.sample.qc.Cutadapt.Z</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to cutadapt's -Z flag.
-</dd>
 <dt id="Germline.sample.qc.Cutadapt.zeroCap"><a href="#Germline.sample.qc.Cutadapt.zeroCap">Germline.sample.qc.Cutadapt.zeroCap</a></dt>
 <dd>
     <i>Boolean? </i><br />
@@ -860,6 +900,11 @@ Germline.
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
+</dd>
+<dt id="Germline.sample.qc.FastqcRead1.memory"><a href="#Germline.sample.qc.FastqcRead1.memory">Germline.sample.qc.FastqcRead1.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
 </dd>
 <dt id="Germline.sample.qc.FastqcRead1.minLength"><a href="#Germline.sample.qc.FastqcRead1.minLength">Germline.sample.qc.FastqcRead1.minLength</a></dt>
 <dd>
@@ -926,6 +971,11 @@ Germline.
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
 </dd>
+<dt id="Germline.sample.qc.FastqcRead1After.memory"><a href="#Germline.sample.qc.FastqcRead1After.memory">Germline.sample.qc.FastqcRead1After.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
+</dd>
 <dt id="Germline.sample.qc.FastqcRead1After.minLength"><a href="#Germline.sample.qc.FastqcRead1After.minLength">Germline.sample.qc.FastqcRead1After.minLength</a></dt>
 <dd>
     <i>Int? </i><br />
@@ -990,6 +1040,11 @@ Germline.
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
+</dd>
+<dt id="Germline.sample.qc.FastqcRead2.memory"><a href="#Germline.sample.qc.FastqcRead2.memory">Germline.sample.qc.FastqcRead2.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
 </dd>
 <dt id="Germline.sample.qc.FastqcRead2.minLength"><a href="#Germline.sample.qc.FastqcRead2.minLength">Germline.sample.qc.FastqcRead2.minLength</a></dt>
 <dd>
@@ -1056,6 +1111,11 @@ Germline.
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
 </dd>
+<dt id="Germline.sample.qc.FastqcRead2After.memory"><a href="#Germline.sample.qc.FastqcRead2After.memory">Germline.sample.qc.FastqcRead2After.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
+</dd>
 <dt id="Germline.sample.qc.FastqcRead2After.minLength"><a href="#Germline.sample.qc.FastqcRead2After.minLength">Germline.sample.qc.FastqcRead2After.minLength</a></dt>
 <dd>
     <i>Int? </i><br />
@@ -1086,15 +1146,120 @@ Germline.
     <i>Boolean </i><i>&mdash; Default:</i> <code>defined(adapterForward) || defined(adapterReverse) || length(select_first([contaminations, []])) > 0</code><br />
     Whether or not adapters should be removed from the reads.
 </dd>
-<dt id="Germline.sample.useBwaKit"><a href="#Germline.sample.useBwaKit">Germline.sample.useBwaKit</a></dt>
+<dt id="Germline.scatterSize"><a href="#Germline.scatterSize">Germline.scatterSize</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>scatterSizeMillions * 1000000</code><br />
+    The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+</dd>
+<dt id="Germline.scatterSizeMillions"><a href="#Germline.scatterSizeMillions">Germline.scatterSizeMillions</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.
+</dd>
+<dt id="Germline.svCalling.clever.memory"><a href="#Germline.svCalling.clever.memory">Germline.svCalling.clever.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"15G"</code><br />
+    The memory required to run the programs
+</dd>
+<dt id="Germline.svCalling.clever.threads"><a href="#Germline.svCalling.clever.threads">Germline.svCalling.clever.threads</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>10</code><br />
+    The the number of threads required to run a program
+</dd>
+<dt id="Germline.svCalling.delly.memory"><a href="#Germline.svCalling.delly.memory">Germline.svCalling.delly.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"15G"</code><br />
+    The memory required to run the programs
+</dd>
+<dt id="Germline.svCalling.mateclever.cleverMaxDelLength"><a href="#Germline.svCalling.mateclever.cleverMaxDelLength">Germline.svCalling.mateclever.cleverMaxDelLength</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>100000</code><br />
+    The maximum deletion length to look for in Clever predictions.
+</dd>
+<dt id="Germline.svCalling.mateclever.maxLengthDiff"><a href="#Germline.svCalling.mateclever.maxLengthDiff">Germline.svCalling.mateclever.maxLengthDiff</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>30</code><br />
+    The maximum length difference between split-read and read-pair deletion to be considered identical.
+</dd>
+<dt id="Germline.svCalling.mateclever.maxOffset"><a href="#Germline.svCalling.mateclever.maxOffset">Germline.svCalling.mateclever.maxOffset</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>150</code><br />
+    The maximum center distance between split-read and read-pair deletion to be considered identical.
+</dd>
+<dt id="Germline.svCalling.mateclever.memory"><a href="#Germline.svCalling.mateclever.memory">Germline.svCalling.mateclever.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"15G"</code><br />
+    The memory required to run the programs
+</dd>
+<dt id="Germline.svCalling.mateclever.threads"><a href="#Germline.svCalling.mateclever.threads">Germline.svCalling.mateclever.threads</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>10</code><br />
+    The the number of threads required to run a program
+</dd>
+<dt id="Germline.svCalling.renameSample.javaXmx"><a href="#Germline.svCalling.renameSample.javaXmx">Germline.svCalling.renameSample.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    The max. memory allocated for JAVA
+</dd>
+<dt id="Germline.svCalling.renameSample.memory"><a href="#Germline.svCalling.renameSample.memory">Germline.svCalling.renameSample.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    The memory required to run the programs
+</dd>
+<dt id="Germline.svCalling.survivor.breakpointDistance"><a href="#Germline.svCalling.survivor.breakpointDistance">Germline.svCalling.survivor.breakpointDistance</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    The distance between pairwise breakpoints between SVs
+</dd>
+<dt id="Germline.svCalling.survivor.distanceBySvSize"><a href="#Germline.svCalling.survivor.distanceBySvSize">Germline.svCalling.survivor.distanceBySvSize</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>0</code><br />
+    A boolean to predict the pairwise distance between the SVs based on their size
+</dd>
+<dt id="Germline.svCalling.survivor.memory"><a href="#Germline.svCalling.survivor.memory">Germline.svCalling.survivor.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    The memory required to run the programs
+</dd>
+<dt id="Germline.svCalling.survivor.minSize"><a href="#Germline.svCalling.survivor.minSize">Germline.svCalling.survivor.minSize</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>30</code><br />
+    The mimimum size of SV to be merged
+</dd>
+<dt id="Germline.svCalling.survivor.strandType"><a href="#Germline.svCalling.survivor.strandType">Germline.svCalling.survivor.strandType</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    A boolean to include strand type of an SV to be merged
+</dd>
+<dt id="Germline.svCalling.survivor.suppVecs"><a href="#Germline.svCalling.survivor.suppVecs">Germline.svCalling.survivor.suppVecs</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The minimum number of SV callers to support the merging
+</dd>
+<dt id="Germline.svCalling.survivor.svType"><a href="#Germline.svCalling.survivor.svType">Germline.svCalling.survivor.svType</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    A boolean to include the type SV to be merged
+</dd>
+<dt id="Germline.useBwaKit"><a href="#Germline.useBwaKit">Germline.useBwaKit</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Whether or not BWA kit should be used. If false BWA mem will be used.
+</dd>
+<dt id="Germline.variantcalling.calculateRegions.mergeBeds.outputBed"><a href="#Germline.variantcalling.calculateRegions.mergeBeds.outputBed">Germline.variantcalling.calculateRegions.mergeBeds.outputBed</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"merged.bed"</code><br />
+    The path to write the output to
 </dd>
 <dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.contamination"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.contamination">Germline.variantcalling.callAutosomal.haplotypeCaller.contamination</a></dt>
 <dd>
     <i>Float? </i><br />
     Equivalent to HaplotypeCaller's `-contamination` option.
+</dd>
+<dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.emitRefConfidence"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.emitRefConfidence">Germline.variantcalling.callAutosomal.haplotypeCaller.emitRefConfidence</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>if gvcf then "GVCF" else "NONE"</code><br />
+    Whether to include reference calls. Three modes: 'NONE', 'BP_RESOLUTION' and 'GVCF'
 </dd>
 <dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.javaXmx"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.javaXmx">Germline.variantcalling.callAutosomal.haplotypeCaller.javaXmx</a></dt>
 <dd>
@@ -1106,10 +1271,20 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
     The amount of memory this job will use.
 </dd>
+<dt id="Germline.variantcalling.callAutosomal.haplotypeCaller.outputMode"><a href="#Germline.variantcalling.callAutosomal.haplotypeCaller.outputMode">Germline.variantcalling.callAutosomal.haplotypeCaller.outputMode</a></dt>
+<dd>
+    <i>String? </i><br />
+    Specifies which type of calls we should output. Same as HaplotypeCaller's `--output-mode` option.
+</dd>
 <dt id="Germline.variantcalling.callX.contamination"><a href="#Germline.variantcalling.callX.contamination">Germline.variantcalling.callX.contamination</a></dt>
 <dd>
     <i>Float? </i><br />
     Equivalent to HaplotypeCaller's `-contamination` option.
+</dd>
+<dt id="Germline.variantcalling.callX.emitRefConfidence"><a href="#Germline.variantcalling.callX.emitRefConfidence">Germline.variantcalling.callX.emitRefConfidence</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>if gvcf then "GVCF" else "NONE"</code><br />
+    Whether to include reference calls. Three modes: 'NONE', 'BP_RESOLUTION' and 'GVCF'
 </dd>
 <dt id="Germline.variantcalling.callX.javaXmx"><a href="#Germline.variantcalling.callX.javaXmx">Germline.variantcalling.callX.javaXmx</a></dt>
 <dd>
@@ -1121,10 +1296,20 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
     The amount of memory this job will use.
 </dd>
+<dt id="Germline.variantcalling.callX.outputMode"><a href="#Germline.variantcalling.callX.outputMode">Germline.variantcalling.callX.outputMode</a></dt>
+<dd>
+    <i>String? </i><br />
+    Specifies which type of calls we should output. Same as HaplotypeCaller's `--output-mode` option.
+</dd>
 <dt id="Germline.variantcalling.callY.contamination"><a href="#Germline.variantcalling.callY.contamination">Germline.variantcalling.callY.contamination</a></dt>
 <dd>
     <i>Float? </i><br />
     Equivalent to HaplotypeCaller's `-contamination` option.
+</dd>
+<dt id="Germline.variantcalling.callY.emitRefConfidence"><a href="#Germline.variantcalling.callY.emitRefConfidence">Germline.variantcalling.callY.emitRefConfidence</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>if gvcf then "GVCF" else "NONE"</code><br />
+    Whether to include reference calls. Three modes: 'NONE', 'BP_RESOLUTION' and 'GVCF'
 </dd>
 <dt id="Germline.variantcalling.callY.javaXmx"><a href="#Germline.variantcalling.callY.javaXmx">Germline.variantcalling.callY.javaXmx</a></dt>
 <dd>
@@ -1135,6 +1320,11 @@ Germline.
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Germline.variantcalling.callY.outputMode"><a href="#Germline.variantcalling.callY.outputMode">Germline.variantcalling.callY.outputMode</a></dt>
+<dd>
+    <i>String? </i><br />
+    Specifies which type of calls we should output. Same as HaplotypeCaller's `--output-mode` option.
 </dd>
 <dt id="Germline.variantcalling.gatherGvcfs.intervals"><a href="#Germline.variantcalling.gatherGvcfs.intervals">Germline.variantcalling.gatherGvcfs.intervals</a></dt>
 <dd>
@@ -1176,22 +1366,27 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"18G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Germline.variantcalling.mergeBeds.outputBed"><a href="#Germline.variantcalling.mergeBeds.outputBed">Germline.variantcalling.mergeBeds.outputBed</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"merged.bed"</code><br />
-    The path to write the output to
-</dd>
-<dt id="Germline.variantcalling.mergeSingleSample.intervals"><a href="#Germline.variantcalling.mergeSingleSample.intervals">Germline.variantcalling.mergeSingleSample.intervals</a></dt>
+<dt id="Germline.variantcalling.mergeSingleSampleGvcf.intervals"><a href="#Germline.variantcalling.mergeSingleSampleGvcf.intervals">Germline.variantcalling.mergeSingleSampleGvcf.intervals</a></dt>
 <dd>
     <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
     Bed files or interval lists describing the regions to operate on.
 </dd>
-<dt id="Germline.variantcalling.mergeSingleSample.javaXmx"><a href="#Germline.variantcalling.mergeSingleSample.javaXmx">Germline.variantcalling.mergeSingleSample.javaXmx</a></dt>
+<dt id="Germline.variantcalling.mergeSingleSampleGvcf.javaXmx"><a href="#Germline.variantcalling.mergeSingleSampleGvcf.javaXmx">Germline.variantcalling.mergeSingleSampleGvcf.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
-<dt id="Germline.variantcalling.mergeSingleSample.memory"><a href="#Germline.variantcalling.mergeSingleSample.memory">Germline.variantcalling.mergeSingleSample.memory</a></dt>
+<dt id="Germline.variantcalling.mergeSingleSampleGvcf.memory"><a href="#Germline.variantcalling.mergeSingleSampleGvcf.memory">Germline.variantcalling.mergeSingleSampleGvcf.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Germline.variantcalling.mergeSingleSampleVcf.javaXmx"><a href="#Germline.variantcalling.mergeSingleSampleVcf.javaXmx">Germline.variantcalling.mergeSingleSampleVcf.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Germline.variantcalling.mergeSingleSampleVcf.memory"><a href="#Germline.variantcalling.mergeSingleSampleVcf.memory">Germline.variantcalling.mergeSingleSampleVcf.memory</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
     The amount of memory this job will use.
@@ -1246,10 +1441,10 @@ Germline.
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to biopet scatterregions' `--notSplitContigs` flag.
 </dd>
-<dt id="Germline.variantcalling.scatterSize"><a href="#Germline.variantcalling.scatterSize">Germline.variantcalling.scatterSize</a></dt>
+<dt id="Germline.variantcalling.scatterSizeMillions"><a href="#Germline.variantcalling.scatterSizeMillions">Germline.variantcalling.scatterSizeMillions</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1000000000</code><br />
-    The size of the scattered regions in bases. Scattering is used to speed up certain processes. The genome will be sseperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily
 </dd>
 </dl>
 </details>

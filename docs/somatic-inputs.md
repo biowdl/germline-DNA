@@ -19,12 +19,12 @@ Somatic.
 <dt id="Somatic.dbsnpVCF"><a href="#Somatic.dbsnpVCF">Somatic.dbsnpVCF</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    dbsnp VCF file used for checking known sites
 </dd>
 <dt id="Somatic.dbsnpVCFIndex"><a href="#Somatic.dbsnpVCFIndex">Somatic.dbsnpVCFIndex</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    Index (.tbi) file for the dbsnp VCF
 </dd>
 <dt id="Somatic.dockerImagesFile"><a href="#Somatic.dockerImagesFile">Somatic.dockerImagesFile</a></dt>
 <dd>
@@ -34,17 +34,17 @@ Somatic.
 <dt id="Somatic.referenceFasta"><a href="#Somatic.referenceFasta">Somatic.referenceFasta</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    The reference fasta file
 </dd>
 <dt id="Somatic.referenceFastaDict"><a href="#Somatic.referenceFastaDict">Somatic.referenceFastaDict</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    Sequence dictionary (.dict) file of the reference
 </dd>
 <dt id="Somatic.referenceFastaFai"><a href="#Somatic.referenceFastaFai">Somatic.referenceFastaFai</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    Fasta index (.fai) file of the reference
 </dd>
 <dt id="Somatic.sampleConfigFile"><a href="#Somatic.sampleConfigFile">Somatic.sampleConfigFile</a></dt>
 <dd>
@@ -55,6 +55,21 @@ Somatic.
 
 ## Other common inputs
 <dl>
+<dt id="Somatic.adapterForward"><a href="#Somatic.adapterForward">Somatic.adapterForward</a></dt>
+<dd>
+    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
+    The adapter to be removed from the reads first or single end reads.
+</dd>
+<dt id="Somatic.adapterReverse"><a href="#Somatic.adapterReverse">Somatic.adapterReverse</a></dt>
+<dd>
+    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
+    The adapter to be removed from the reads second end reads.
+</dd>
+<dt id="Somatic.cnvPanelOfNormals"><a href="#Somatic.cnvPanelOfNormals">Somatic.cnvPanelOfNormals</a></dt>
+<dd>
+    <i>File? </i><br />
+    The panel of normals file to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly using the samples lacking a control sample in the samplesheet.
+</dd>
 <dt id="Somatic.CNVs.annotatedIntervals"><a href="#Somatic.CNVs.annotatedIntervals">Somatic.CNVs.annotatedIntervals</a></dt>
 <dd>
     <i>File? </i><br />
@@ -95,6 +110,26 @@ Somatic.
     <i>File? </i><br />
     A bed file describing the regions to call variants for.
 </dd>
+<dt id="Somatic.runManta"><a href="#Somatic.runManta">Somatic.runManta</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not manta should be run as part of the Strelka pipeline.
+</dd>
+<dt id="Somatic.runMutect2"><a href="#Somatic.runMutect2">Somatic.runMutect2</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not to run Mutect2.
+</dd>
+<dt id="Somatic.runStrelka"><a href="#Somatic.runStrelka">Somatic.runStrelka</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not to run Strelka.
+</dd>
+<dt id="Somatic.runVardict"><a href="#Somatic.runVardict">Somatic.runVardict</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not to run VarDict.
+</dd>
 <dt id="Somatic.sample.bqsr.regions"><a href="#Somatic.sample.bqsr.regions">Somatic.sample.bqsr.regions</a></dt>
 <dd>
     <i>File? </i><br />
@@ -130,16 +165,6 @@ Somatic.
     <i>Array[File]+? </i><br />
     An interval list describing the coordinates of the targets sequenced. This should only be used for targeted sequencing or WES. If defined targeted PCR metrics will be collected. Requires `ampliconIntervals` to also be defined.
 </dd>
-<dt id="Somatic.sample.qc.adapterForward"><a href="#Somatic.sample.qc.adapterForward">Somatic.sample.qc.adapterForward</a></dt>
-<dd>
-    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
-    The adapter to be removed from the reads first or single end reads.
-</dd>
-<dt id="Somatic.sample.qc.adapterReverse"><a href="#Somatic.sample.qc.adapterReverse">Somatic.sample.qc.adapterReverse</a></dt>
-<dd>
-    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
-    The adapter to be removed from the reads second end reads.
-</dd>
 <dt id="Somatic.sample.qc.contaminations"><a href="#Somatic.sample.qc.contaminations">Somatic.sample.qc.contaminations</a></dt>
 <dd>
     <i>Array[String]+? </i><br />
@@ -159,21 +184,6 @@ Somatic.
 <dd>
     <i>File? </i><br />
     A bed file describing regions to exclude.
-</dd>
-<dt id="Somatic.somaticVariantcalling.runMutect2"><a href="#Somatic.somaticVariantcalling.runMutect2">Somatic.somaticVariantcalling.runMutect2</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether or not to run Mutect2.
-</dd>
-<dt id="Somatic.somaticVariantcalling.runStrelka"><a href="#Somatic.somaticVariantcalling.runStrelka">Somatic.somaticVariantcalling.runStrelka</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether or not to run Strelka.
-</dd>
-<dt id="Somatic.somaticVariantcalling.runVardict"><a href="#Somatic.somaticVariantcalling.runVardict">Somatic.somaticVariantcalling.runVardict</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether or not to run VarDict.
 </dd>
 <dt id="Somatic.somaticVariantcalling.singleSomaticSeq.exclusionRegion"><a href="#Somatic.somaticVariantcalling.singleSomaticSeq.exclusionRegion">Somatic.somaticVariantcalling.singleSomaticSeq.exclusionRegion</a></dt>
 <dd>
@@ -195,17 +205,17 @@ Somatic.
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Whether or not the data is from RNA sequencing.
 </dd>
-<dt id="Somatic.somaticVariantcalling.strelka.runManta"><a href="#Somatic.somaticVariantcalling.strelka.runManta">Somatic.somaticVariantcalling.strelka.runManta</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether or not mata should be run.
-</dd>
 </dl>
 
 ## Advanced inputs
 <details>
 <summary> Show/Hide </summary>
 <dl>
+<dt id="Somatic.cnvMinimumContigLength"><a href="#Somatic.cnvMinimumContigLength">Somatic.cnvMinimumContigLength</a></dt>
+<dd>
+    <i>Int? </i><br />
+    The minimum length for a contig to be included in the CNV plots.
+</dd>
 <dt id="Somatic.CNVs.caseSample.callCopyRatioSegments.javaXmx"><a href="#Somatic.CNVs.caseSample.callCopyRatioSegments.javaXmx">Somatic.CNVs.caseSample.callCopyRatioSegments.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"6G"</code><br />
@@ -281,11 +291,6 @@ Somatic.
     <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.CNVs.caseSample.plotDenoisedCopyRatios.minimumContigLength"><a href="#Somatic.CNVs.caseSample.plotDenoisedCopyRatios.minimumContigLength">Somatic.CNVs.caseSample.plotDenoisedCopyRatios.minimumContigLength</a></dt>
-<dd>
-    <i>Int? </i><br />
-    The minimum length for a contig to be included in the plots.
-</dd>
 <dt id="Somatic.CNVs.caseSample.plotModeledSegments.javaXmx"><a href="#Somatic.CNVs.caseSample.plotModeledSegments.javaXmx">Somatic.CNVs.caseSample.plotModeledSegments.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"7G"</code><br />
@@ -295,11 +300,6 @@ Somatic.
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"21G"</code><br />
     The amount of memory this job will use.
-</dd>
-<dt id="Somatic.CNVs.caseSample.plotModeledSegments.minimumContigLength"><a href="#Somatic.CNVs.caseSample.plotModeledSegments.minimumContigLength">Somatic.CNVs.caseSample.plotModeledSegments.minimumContigLength</a></dt>
-<dd>
-    <i>Int? </i><br />
-    The minimum length for a contig to be included in the plots.
 </dd>
 <dt id="Somatic.CNVs.controlSample.callCopyRatioSegments.javaXmx"><a href="#Somatic.CNVs.controlSample.callCopyRatioSegments.javaXmx">Somatic.CNVs.controlSample.callCopyRatioSegments.javaXmx</a></dt>
 <dd>
@@ -376,11 +376,6 @@ Somatic.
     <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.CNVs.controlSample.plotDenoisedCopyRatios.minimumContigLength"><a href="#Somatic.CNVs.controlSample.plotDenoisedCopyRatios.minimumContigLength">Somatic.CNVs.controlSample.plotDenoisedCopyRatios.minimumContigLength</a></dt>
-<dd>
-    <i>Int? </i><br />
-    The minimum length for a contig to be included in the plots.
-</dd>
 <dt id="Somatic.CNVs.controlSample.plotModeledSegments.javaXmx"><a href="#Somatic.CNVs.controlSample.plotModeledSegments.javaXmx">Somatic.CNVs.controlSample.plotModeledSegments.javaXmx</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"7G"</code><br />
@@ -390,11 +385,6 @@ Somatic.
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"21G"</code><br />
     The amount of memory this job will use.
-</dd>
-<dt id="Somatic.CNVs.controlSample.plotModeledSegments.minimumContigLength"><a href="#Somatic.CNVs.controlSample.plotModeledSegments.minimumContigLength">Somatic.CNVs.controlSample.plotModeledSegments.minimumContigLength</a></dt>
-<dd>
-    <i>Int? </i><br />
-    The minimum length for a contig to be included in the plots.
 </dd>
 <dt id="Somatic.controlPostition.dockerImage"><a href="#Somatic.controlPostition.dockerImage">Somatic.controlPostition.dockerImage</a></dt>
 <dd>
@@ -651,6 +641,16 @@ Somatic.
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to MultiQC's `--zip-data-dir` flag.
 </dd>
+<dt id="Somatic.platform"><a href="#Somatic.platform">Somatic.platform</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"illumina"</code><br />
+    The platform used for sequencing.
+</dd>
+<dt id="Somatic.runCombineVariants"><a href="#Somatic.runCombineVariants">Somatic.runCombineVariants</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether or not to combine the variant calling results into one VCF file.
+</dd>
 <dt id="Somatic.runMultiQC"><a href="#Somatic.runMultiQC">Somatic.runMultiQC</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>if outputDir == "." then false else true</code><br />
@@ -726,10 +726,10 @@ Somatic.
     <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.sample.bqsr.scatterSize"><a href="#Somatic.sample.bqsr.scatterSize">Somatic.sample.bqsr.scatterSize</a></dt>
+<dt id="Somatic.sample.bqsr.scatterSizeMillions"><a href="#Somatic.sample.bqsr.scatterSizeMillions">Somatic.sample.bqsr.scatterSizeMillions</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1000000000</code><br />
-    The size of the scattered regions in bases. Scattering is used to speed up certain processes. The genome will be sseperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily
 </dd>
 <dt id="Somatic.sample.bqsr.splitNCigarReads.javaXmx"><a href="#Somatic.sample.bqsr.splitNCigarReads.javaXmx">Somatic.sample.bqsr.splitNCigarReads.javaXmx</a></dt>
 <dd>
@@ -741,19 +741,29 @@ Somatic.
     <i>String </i><i>&mdash; Default:</i> <code>"16G"</code><br />
     The amount of memory this job will use.
 </dd>
+<dt id="Somatic.sample.bwakit.compressionLevel"><a href="#Somatic.sample.bwakit.compressionLevel">Somatic.sample.bwakit.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level of the output BAM.
+</dd>
 <dt id="Somatic.sample.bwakit.memory"><a href="#Somatic.sample.bwakit.memory">Somatic.sample.bwakit.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"10G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sample.bwakit.sortMemoryPerThread"><a href="#Somatic.sample.bwakit.sortMemoryPerThread">Somatic.sample.bwakit.sortMemoryPerThread</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory for each sorting thread.
 </dd>
 <dt id="Somatic.sample.bwakit.sortThreads"><a href="#Somatic.sample.bwakit.sortThreads">Somatic.sample.bwakit.sortThreads</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
-    The number of threads to use for sorting.
+    <i>Int? </i><br />
+    The number of additional threads to use for sorting.
 </dd>
 <dt id="Somatic.sample.bwakit.threads"><a href="#Somatic.sample.bwakit.threads">Somatic.sample.bwakit.threads</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The number of threads to use for alignment.
 </dd>
 <dt id="Somatic.sample.bwaMem.memory"><a href="#Somatic.sample.bwaMem.memory">Somatic.sample.bwaMem.memory</a></dt>
@@ -768,7 +778,7 @@ Somatic.
 </dd>
 <dt id="Somatic.sample.bwaMem.threads"><a href="#Somatic.sample.bwaMem.threads">Somatic.sample.bwaMem.threads</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The number of threads to use.
 </dd>
 <dt id="Somatic.sample.markdup.javaXmx"><a href="#Somatic.sample.markdup.javaXmx">Somatic.sample.markdup.javaXmx</a></dt>
@@ -876,11 +886,6 @@ Somatic.
     <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.sample.platform"><a href="#Somatic.sample.platform">Somatic.sample.platform</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"illumina"</code><br />
-    The platform used for sequencing.
-</dd>
 <dt id="Somatic.sample.qc.Cutadapt.bwa"><a href="#Somatic.sample.qc.Cutadapt.bwa">Somatic.sample.qc.Cutadapt.bwa</a></dt>
 <dd>
     <i>Boolean? </i><br />
@@ -891,9 +896,14 @@ Somatic.
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --colorspace flag.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.cores"><a href="#Somatic.sample.qc.Cutadapt.cores">Somatic.sample.qc.Cutadapt.cores</a></dt>
+<dt id="Somatic.sample.qc.Cutadapt.compressionLevel"><a href="#Somatic.sample.qc.Cutadapt.compressionLevel">Somatic.sample.qc.Cutadapt.compressionLevel</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level if gzipped output is used.
+</dd>
+<dt id="Somatic.sample.qc.Cutadapt.cores"><a href="#Somatic.sample.qc.Cutadapt.cores">Somatic.sample.qc.Cutadapt.cores</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The number of cores to use.
 </dd>
 <dt id="Somatic.sample.qc.Cutadapt.cut"><a href="#Somatic.sample.qc.Cutadapt.cut">Somatic.sample.qc.Cutadapt.cut</a></dt>
@@ -1101,11 +1111,6 @@ Somatic.
     <i>String? </i><br />
     Equivalent to cutadapt's --wildcard-file option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.Z"><a href="#Somatic.sample.qc.Cutadapt.Z">Somatic.sample.qc.Cutadapt.Z</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to cutadapt's -Z flag.
-</dd>
 <dt id="Somatic.sample.qc.Cutadapt.zeroCap"><a href="#Somatic.sample.qc.Cutadapt.zeroCap">Somatic.sample.qc.Cutadapt.zeroCap</a></dt>
 <dd>
     <i>Boolean? </i><br />
@@ -1150,6 +1155,11 @@ Somatic.
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
+</dd>
+<dt id="Somatic.sample.qc.FastqcRead1.memory"><a href="#Somatic.sample.qc.FastqcRead1.memory">Somatic.sample.qc.FastqcRead1.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
 </dd>
 <dt id="Somatic.sample.qc.FastqcRead1.minLength"><a href="#Somatic.sample.qc.FastqcRead1.minLength">Somatic.sample.qc.FastqcRead1.minLength</a></dt>
 <dd>
@@ -1216,6 +1226,11 @@ Somatic.
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
 </dd>
+<dt id="Somatic.sample.qc.FastqcRead1After.memory"><a href="#Somatic.sample.qc.FastqcRead1After.memory">Somatic.sample.qc.FastqcRead1After.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
+</dd>
 <dt id="Somatic.sample.qc.FastqcRead1After.minLength"><a href="#Somatic.sample.qc.FastqcRead1After.minLength">Somatic.sample.qc.FastqcRead1After.minLength</a></dt>
 <dd>
     <i>Int? </i><br />
@@ -1280,6 +1295,11 @@ Somatic.
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
+</dd>
+<dt id="Somatic.sample.qc.FastqcRead2.memory"><a href="#Somatic.sample.qc.FastqcRead2.memory">Somatic.sample.qc.FastqcRead2.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
 </dd>
 <dt id="Somatic.sample.qc.FastqcRead2.minLength"><a href="#Somatic.sample.qc.FastqcRead2.minLength">Somatic.sample.qc.FastqcRead2.minLength</a></dt>
 <dd>
@@ -1346,6 +1366,11 @@ Somatic.
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
 </dd>
+<dt id="Somatic.sample.qc.FastqcRead2After.memory"><a href="#Somatic.sample.qc.FastqcRead2After.memory">Somatic.sample.qc.FastqcRead2After.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
+</dd>
 <dt id="Somatic.sample.qc.FastqcRead2After.minLength"><a href="#Somatic.sample.qc.FastqcRead2After.minLength">Somatic.sample.qc.FastqcRead2After.minLength</a></dt>
 <dd>
     <i>Int? </i><br />
@@ -1376,10 +1401,15 @@ Somatic.
     <i>Boolean </i><i>&mdash; Default:</i> <code>defined(adapterForward) || defined(adapterReverse) || length(select_first([contaminations, []])) > 0</code><br />
     Whether or not adapters should be removed from the reads.
 </dd>
-<dt id="Somatic.sample.useBwaKit"><a href="#Somatic.sample.useBwaKit">Somatic.sample.useBwaKit</a></dt>
+<dt id="Somatic.scatterSize"><a href="#Somatic.scatterSize">Somatic.scatterSize</a></dt>
 <dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Whether or not BWA kit should be used. If false BWA mem will be used.
+    <i>Int </i><i>&mdash; Default:</i> <code>scatterSizeMillions * 1000000</code><br />
+    The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+</dd>
+<dt id="Somatic.scatterSizeMillions"><a href="#Somatic.scatterSizeMillions">Somatic.scatterSizeMillions</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.
 </dd>
 <dt id="Somatic.somaticVariantcalling.combineVariants.dockerImage"><a href="#Somatic.somaticVariantcalling.combineVariants.dockerImage">Somatic.somaticVariantcalling.combineVariants.dockerImage</a></dt>
 <dd>
@@ -1596,11 +1626,6 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of threads to use.
 </dd>
-<dt id="Somatic.somaticVariantcalling.runCombineVariants"><a href="#Somatic.somaticVariantcalling.runCombineVariants">Somatic.somaticVariantcalling.runCombineVariants</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Whether or not to combine the variant calling results into one VCF file.
-</dd>
 <dt id="Somatic.somaticVariantcalling.singleSomaticSeq.lofreqVCF"><a href="#Somatic.somaticVariantcalling.singleSomaticSeq.lofreqVCF">Somatic.somaticVariantcalling.singleSomaticSeq.lofreqVCF</a></dt>
 <dd>
     <i>File? </i><br />
@@ -1803,7 +1828,7 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.uncompressedBamOutput"><a href="#Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.uncompressedBamOutput">Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.uncompressedBamOutput</a></dt>
 <dd>
-    <i>Boolean? </i><br />
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to samtools view's `-u` flag.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.excludeSpecificFilter"><a href="#Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.excludeSpecificFilter">Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.excludeSpecificFilter</a></dt>
@@ -1838,7 +1863,7 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.uncompressedBamOutput"><a href="#Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.uncompressedBamOutput">Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.uncompressedBamOutput</a></dt>
 <dd>
-    <i>Boolean? </i><br />
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to samtools view's `-u` flag.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.gatherVcfs.javaXmx"><a href="#Somatic.somaticVariantcalling.vardict.gatherVcfs.javaXmx">Somatic.somaticVariantcalling.vardict.gatherVcfs.javaXmx</a></dt>
@@ -1951,22 +1976,15 @@ Somatic.
     <i>File? </i><br />
     The index of the common variants VCF file.
 </dd>
-</dl>
-</details>
-
-
-
-## Other inputs
-<details>
-<summary> Show/Hide </summary>
-<dl>
-<dt id="Somatic.cnvPanelOfNormals"><a href="#Somatic.cnvPanelOfNormals">Somatic.cnvPanelOfNormals</a></dt>
+<dt id="Somatic.useBwaKit"><a href="#Somatic.useBwaKit">Somatic.useBwaKit</a></dt>
 <dd>
-    <i>File? </i><br />
-    ???
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether or not BWA kit should be used. If false BWA mem will be used.
 </dd>
 </dl>
 </details>
+
+
 
 
 
