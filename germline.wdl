@@ -27,8 +27,6 @@ import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
-import "tasks/vt.wdl" as vt
-import "tasks/samtools.wdl" as samtools
 
 workflow Germline {
     input {
@@ -44,6 +42,8 @@ workflow Germline {
         File? regions
         File? XNonParRegions
         File? YNonParRegions
+        Boolean jointgenotyping = true
+        Boolean singleSampleGvcf = false
         String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter
         String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter
         String platform = "illumina"
@@ -125,7 +125,9 @@ workflow Germline {
             outputDir = genotypingDir,
             vcfBasename = "multisample",
             dockerImages = dockerImages,
-            scatterSize = scatterSize
+            scatterSize = scatterSize,
+            jointgenotyping = jointgenotyping,
+            singleSampleGvcf = singleSampleGvcf
     }
 
     if (runMultiQC) {
@@ -140,8 +142,12 @@ workflow Germline {
     }
 
     output {
-        File multiSampleVcf = select_first([variantcalling.outputVcf])
-        File multisampleVcfIndex = select_first([variantcalling.outputVcfIndex])
+        File? multiSampleVcf = variantcalling.outputVcf
+        File? multisampleVcfIndex = variantcalling.outputVcfIndex
+        Array[File] singleSampleVcfs = variantcalling.singleSampleVcfs
+        Array[File] singleSampleVcfsIndex = variantcalling.singleSampleVcfsIndex
+        Array[File] singleSampleGvcfs = variantcalling.singleSampleGvcfsIndex
+        Array[File] singleSampleGvcfsIndex = variantcalling.singleSampleGvcfsIndex
         Array[File] recalibratedBams = sample.recalibratedBam
         Array[File] recalibratedBamIndexes = sample.recalibratedBamIndex
         Array[File] markdupBams = sample.markdupBam
@@ -180,6 +186,9 @@ workflow Germline {
               category: "advanced"}
         scatterSizeMillions:{ description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.",
                               category: "advanced"}
+        jointgenotyping: {description: "Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not",
+                  category: "common"}
+        singleSampleGvcf: {description: "Whether to output single-sample gvcfs", category: "common"}
 
     }
 }
