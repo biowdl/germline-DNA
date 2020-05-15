@@ -8,8 +8,8 @@
     cromwell run -o tests/cromwell_options.json
     -i tests/integration/Germline_SingleEnd.json germline.wdl
   files:
-    - path: "test-output/multisample_variants/multisample.vcf.gz"
-    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/multisample.vcf.gz"
+    - path: "test-output/multisample.vcf.gz.tbi"
     - path: "test-output/samples/wgs1-single-end/wgs1-single-end.bqsr.bam"
     - path: "test-output/samples/wgs1-single-end/wgs1-single-end.bqsr.bai"
     - path: "test-output/samples/wgs2-single-end/wgs2-single-end.bqsr.bam"
@@ -55,8 +55,8 @@
     sed -i "2i\"Germline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON germline.wdl'
   files:
-    - path: "test-output/multisample_variants/multisample.vcf.gz"
-    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/multisample.vcf.gz"
+    - path: "test-output/multisample.vcf.gz.tbi"
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bai"
     - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bam"
@@ -94,8 +94,8 @@
     sed -i "2i\"Germline.outputDir\":\"$PWD/test-output\"," $TEST_JSON ;
     cromwell run -i $TEST_JSON germline.wdl'
   files:
-    - path: "test-output/multisample_variants/multisample.vcf.gz"
-    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/multisample.vcf.gz"
+    - path: "test-output/multisample.vcf.gz.tbi"
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bai"
     - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bam"
@@ -130,8 +130,8 @@
     cromwell run -o tests/cromwell_options.json
     -i tests/integration/Germline_GenderAware.json germline.wdl
   files:
-    - path: "test-output/multisample_variants/multisample.vcf.gz"
-    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/multisample.vcf.gz"
+    - path: "test-output/multisample.vcf.gz.tbi"
 
 - name: Germline_FunctionalPairedEnd
   tags:
@@ -140,8 +140,8 @@
     cromwell run -o tests/cromwell_options.json
     -i tests/functional/Germline_PairedEnd.json germline.wdl
   files:
-    - path: "test-output/multisample_variants/multisample.vcf.gz"
-    - path: "test-output/multisample_variants/multisample.vcf.gz.tbi"
+    - path: "test-output/multisample.vcf.gz"
+    - path: "test-output/multisample.vcf.gz.tbi"
     - path: "test-output/samples/NA12878/NA12878.markdup.bam"
     - path: "test-output/samples/NA12878/NA12878.markdup.bai"
     - path: "test-output/samples/NA12878/metrics/NA12878.markdup.flagstats"
