@@ -9,6 +9,11 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
+version 3.1.0-dev
+-----------------
++ Restructure the pipeline so variant calling jobs are scheduled more 
+  efficiently.
+
 version 3.0.0
 -----------------
 + Add options to disable joint genotyping and allow per sample variant calling.
