@@ -262,6 +262,7 @@ This pipeline will produce a number of directories and files:
       Only present if `somatic.wdl` is used.  
     - **&lt;library>**: This directory contains a directory per readgroup.
       - **&lt;readgroup>**: Contains QC metrics and preprocessed FastQ files.
+- **variants**: If `germline.wdl` is used contains the variants called by GATK.
 - **multisample.vcf.gz**: A multisample VCF file with the variant calling
   results. Only present if `germline.wdl` is used.
 - **multiqc**: Contains the multiQC report.
