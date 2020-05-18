@@ -20,9 +20,11 @@ version 1.0
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import "sample.wdl" as sampleWorkflow
+import "sample.wdl" as sampleWf
 import "structural-variantcalling/structural-variantcalling.wdl" as structuralVariantCalling
-import "gatk-variantcalling/gatk-variantcalling.wdl" as gatkVariantWorkflow
+import "gatk-variantcalling/single-sample-variantcalling.wdl" as variantCallingWorkflow
+import "gatk-variantcalling/jointgenotyping.wdl" as jgwf
+import "gatk-variantcalling/calculate-regions.wdl" as calcRegions
 import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
@@ -55,8 +57,6 @@ workflow Germline {
         Boolean runSVcalling = false
     }
 
-    String genotypingDir = outputDir + "/multisample_variants/"
-
     # Parse docker Tags configuration and sample sheet
     call common.YamlToJson as ConvertDockerImagesFile {
         input:
@@ -71,13 +71,24 @@ workflow Germline {
     }
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
 
+    call calcRegions.CalculateRegions as calculateRegions {
+        input:
+            referenceFasta = referenceFasta,
+            referenceFastaFai = referenceFastaFai,
+            referenceFastaDict = referenceFastaDict,
+            XNonParRegions = XNonParRegions,
+            YNonParRegions = YNonParRegions,
+            regions = regions,
+            scatterSize = scatterSize,
+            dockerImages = dockerImages
+    }
 
     # Running sample subworkflow
-    scatter (samp in sampleConfig.samples) {
-        call sampleWorkflow.Sample as sample {
+    scatter (sample in sampleConfig.samples) {
+        call sampleWf.Sample as sampleWorkflow {
             input:
-                sampleDir = outputDir + "/samples/" + samp.id,
-                sample = samp,
+                sampleDir = outputDir + "/samples/" + sample.id,
+                sample = sample,
                 referenceFasta = referenceFasta,
                 referenceFastaFai = referenceFastaFai,
                 referenceFastaDict = referenceFastaDict,
@@ -92,49 +103,66 @@ workflow Germline {
                 platform = platform
         }
 
+        call variantCallingWorkflow.SingleSampleCalling as SingleSampleCalling {
+            input:
+                bam = sampleWorkflow.recalibratedBam,
+                bamIndex = sampleWorkflow.recalibratedBamIndex,
+                gender = select_first([sample.gender, "unknown"]),
+                sampleName = sample.id,
+                outputDir = outputDir + "/variants/",
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                referenceFastaDict = referenceFastaDict,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFIndex = dbsnpVCFIndex,
+                XNonParRegions = calculateRegions.Xregions,
+                YNonParRegions = calculateRegions.Yregions,
+                autosomalRegionScatters = calculateRegions.autosomalRegionScatters,
+                gvcf = jointgenotyping,
+                mergeVcf = !jointgenotyping || singleSampleGvcf,
+                dockerImages = dockerImages                    
+
+    }
+
         if (runSVcalling) {
             call structuralVariantCalling.SVcalling as svCalling {
                 input:
-                    bamFile = sample.markdupBam,
-                    bamIndex = sample.markdupBamIndex,
+                    bamFile = sampleWorkflow.markdupBam,
+                    bamIndex = sampleWorkflow.markdupBamIndex,
                     referenceFasta = referenceFasta,
                     referenceFastaFai = referenceFastaFai,
                     referenceFastaDict = referenceFastaDict,
                     bwaIndex = bwaIndex,
-                    sample = samp.id,
-                    outputDir = outputDir + "/samples/" + samp.id,
+                    sample = sample.id,
+                    outputDir = outputDir + "/samples/" + sample.id,
                     dockerImages = dockerImages
             }
         }
-        BamAndGender bamfilesAndGenders = object {file: sample.recalibratedBam,
-                                                  index: sample.recalibratedBamIndex,
-                                                  gender: samp.gender}
     }
 
-    call gatkVariantWorkflow.GatkVariantCalling as variantcalling {
-        input:
-            bamFilesAndGenders = bamfilesAndGenders,
-            referenceFasta = referenceFasta,
-            referenceFastaFai = referenceFastaFai,
-            referenceFastaDict = referenceFastaDict,
-            dbsnpVCF = dbsnpVCF,
-            dbsnpVCFIndex = dbsnpVCFIndex,
-            XNonParRegions = XNonParRegions,
-            YNonParRegions = YNonParRegions,
-            regions = regions,
-            outputDir = genotypingDir,
-            vcfBasename = "multisample",
-            dockerImages = dockerImages,
-            scatterSize = scatterSize,
-            jointgenotyping = jointgenotyping,
-            singleSampleGvcf = singleSampleGvcf
+    if (jointgenotyping) {
+        call jgwf.JointGenotyping as JointGenotyping {
+            input:
+                gvcfFiles = flatten(SingleSampleCalling.vcfScatters),
+                gvcfFilesIndex = flatten(SingleSampleCalling.vcfIndexScatters),
+                outputDir = outputDir,
+                vcfBasename = "multisample",
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                referenceFastaDict = referenceFastaDict,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFIndex = dbsnpVCFIndex,
+                regions = regions,
+                scatterSize = scatterSize,
+                dockerImages = dockerImages
+        }
     }
 
     if (runMultiQC) {
         call multiqc.MultiQC as multiqcTask {
             input:
                 # Multiqc will only run if these files are created.
-                dependencies = select_all([variantcalling.outputVcfIndex]),
+                dependencies = select_all(flatten([[JointGenotyping.multisampleVcfIndex], SingleSampleCalling.outputVcfIndex])),
                 outDir = outputDir + "/multiqc",
                 analysisDirectory = outputDir,
                 dockerImage = dockerImages["multiqc"]
@@ -142,17 +170,19 @@ workflow Germline {
     }
 
     output {
-        File? multiSampleVcf = variantcalling.outputVcf
-        File? multisampleVcfIndex = variantcalling.outputVcfIndex
-        Array[File] singleSampleVcfs = variantcalling.singleSampleVcfs
-        Array[File] singleSampleVcfsIndex = variantcalling.singleSampleVcfsIndex
-        Array[File] singleSampleGvcfs = variantcalling.singleSampleGvcfsIndex
-        Array[File] singleSampleGvcfsIndex = variantcalling.singleSampleGvcfsIndex
-        Array[File] recalibratedBams = sample.recalibratedBam
-        Array[File] recalibratedBamIndexes = sample.recalibratedBamIndex
-        Array[File] markdupBams = sample.markdupBam
-        Array[File] markudpBamIndexex = sample.markdupBamIndex
-        Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
+        File? multiSampleVcf = JointGenotyping.multisampleVcf
+        File? multisampleVcfIndex = JointGenotyping.multisampleVcfIndex
+        File? multisampleGVcf = JointGenotyping.multisampleGVcf
+        File? multisampleGVcfIndex = JointGenotyping.multisampleGVcfIndex
+        Array[File] singleSampleVcfs = if jointgenotyping then [] else select_all(SingleSampleCalling.outputVcf)
+        Array[File] singleSampleVcfsIndex = if jointgenotyping then [] else select_all(SingleSampleCalling.outputVcfIndex)
+        Array[File] singleSampleGvcfs = if jointgenotyping then select_all(SingleSampleCalling.outputVcf) else []
+        Array[File] singleSampleGvcfsIndex = if jointgenotyping then select_all(SingleSampleCalling.outputVcfIndex) else []
+        Array[File] recalibratedBams = sampleWorkflow.recalibratedBam
+        Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
+        Array[File] markdupBams = sampleWorkflow.markdupBam
+        Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
+        Array[File] bamMetricsFiles = flatten(sampleWorkflow.metricsFiles)
         Array[File?] cleverVCFs = svCalling.cleverVcf
         Array[File?] matecleverVCFs = svCalling.cleverVcf
         Array[File?] mantaVCFs = svCalling.mantaVcf
