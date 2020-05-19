@@ -160,13 +160,14 @@ workflow Germline {
     call multiqc.MultiQC as multiqcTask {
         input:
             # Multiqc will only run if these files are created.
-            reports = [],
+            reports = flatten(sampleWorkflow.reports),
             outDir = outputDir + "/multiqc",
-            analysisDirectory = outputDir,
             dockerImage = dockerImages["multiqc"]
     }
 
     output {
+        File multiqcReport = multiqcTask.multiqcReport
+        Array[File] reports = flatten(sampleWorkflow.reports)
         File? multiSampleVcf = JointGenotyping.multisampleVcf
         File? multisampleVcfIndex = JointGenotyping.multisampleVcfIndex
         File? multisampleGVcf = JointGenotyping.multisampleGVcf
@@ -179,7 +180,6 @@ workflow Germline {
         Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
         Array[File] markdupBams = sampleWorkflow.markdupBam
         Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
-        Array[File] bamMetricsFiles = flatten(sampleWorkflow.metricsFiles)
         Array[File?] cleverVCFs = svCalling.cleverVcf
         Array[File?] matecleverVCFs = svCalling.cleverVcf
         Array[File?] mantaVCFs = svCalling.mantaVcf
