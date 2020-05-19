@@ -53,7 +53,6 @@ workflow Germline {
         Int scatterSizeMillions = 1000
         Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
-        Boolean runMultiQC = if (outputDir == ".") then false else true
         Boolean runSVcalling = false
     }
 
@@ -158,15 +157,13 @@ workflow Germline {
         }
     }
 
-    if (runMultiQC) {
-        call multiqc.MultiQC as multiqcTask {
-            input:
-                # Multiqc will only run if these files are created.
-                dependencies = select_all(flatten([[JointGenotyping.multisampleVcfIndex], SingleSampleCalling.outputVcfIndex])),
-                outDir = outputDir + "/multiqc",
-                analysisDirectory = outputDir,
-                dockerImage = dockerImages["multiqc"]
-        }
+    call multiqc.MultiQC as multiqcTask {
+        input:
+            # Multiqc will only run if these files are created.
+            reports = [],
+            outDir = outputDir + "/multiqc",
+            analysisDirectory = outputDir,
+            dockerImage = dockerImages["multiqc"]
     }
 
     output {
