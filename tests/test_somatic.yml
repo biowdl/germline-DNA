@@ -22,10 +22,10 @@
 - name: Somatic_SingleEnd_CNV
   tags:
     - integration
-    - docker_conf_without_user
     - somatic
+  # One of the tools used for CNV calling won't run if docker is given the --user option
   command: >-
-    cromwell run -o tests/cromwell_options.json
+    cromwell run -o tests/cromwell_options_no_user.json
     -i tests/integration/Somatic_SingleEnd_CNV.json somatic.wdl
   files:
     - path: "test-output/samples/wgs2-single-end/CNVcalling/wgs2-single-end/wgs2-single-end.called.seg"
