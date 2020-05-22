@@ -29,8 +29,8 @@ for somatic variant calling.
 Where `options.json` contains the following json:
 ```json
 {
-"final_workflow_outputs_dir": "/path/to/outputs",
-"use_relative_output_paths": true,
+  "final_workflow_outputs_dir": "/path/to/outputs",
+  "use_relative_output_paths": true,
 }
 ```
 The `options.json` will make sure all outputs end up in `/path/to/outputs` in
