@@ -159,7 +159,6 @@ workflow Germline {
 
     call multiqc.MultiQC as multiqcTask {
         input:
-            # Multiqc will only run if these files are created.
             reports = flatten(sampleWorkflow.reports),
             outDir = outputDir + "/multiqc",
             dockerImage = dockerImages["multiqc"]
