@@ -27,6 +27,10 @@ stage: test
 
 install:
   - conda install --file requirements-test.txt
+    # FIXME temporary hack
+  - cromwell --version
+  - wget https://github.com/rhpvorderman/cromwell/releases/download/51-dev-94aa944/cromwell-51-94aa944-SNAP.jar -O ${HOME}/miniconda/share/cromwell/cromwell.jar
+  - cromwell --version
 
 script:
   - travis_wait 30 pytest --keep-workflow-wd-on-fail --tag $TEST tests/
@@ -38,23 +42,15 @@ after_failure:
 matrix:
   include:
     - env: TEST=Germline_SingleEnd
-    - env:
-      - TEST=Germline_PairedEnd
-      - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
-    - env:
-        - TEST=Germline_PairedEnd_bwakit
-        - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
+    - env: TEST=Germline_PairedEnd
+    - env: TEST=Germline_PairedEnd_bwakit
     - env: TEST=Somatic_SingleEnd
-    - env: # One of the tools used for CNV calling won't run if docker is given the --user option
-      - TEST=Somatic_SingleEnd_CNV
-      - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell_without_user.conf"
+    - env: TEST=Somatic_SingleEnd_CNV
+      # One of the tools needs to run without the --user flag for docker.
+      # This means the workflow directory cannot be removed.
       script: travis_wait 30 pytest --kwd --tag $TEST tests/
-    - env:
-      - TEST=Somatic_PairedEnd
-      - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
-    - env:
-        - TEST=Somatic_PairedEnd_bwakit
-        - _JAVA_OPTIONS="-Dconfig.file=tests/cromwell.conf"
+    - env: TEST=Somatic_PairedEnd
+    - env: TEST=Somatic_PairedEnd_bwakit
     - env: TEST=Germline_GenderAware
     - env: TEST="Womtool validate and submodule up to date"
       stage: lint

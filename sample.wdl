@@ -127,16 +127,15 @@ workflow Sample {
             dockerImages = dockerImages
     }
 
-    Array[Array[File]] allMetrics = [[metrics.flagstats],
-        metrics.picardMetricsFiles, metrics.rnaMetrics,
-        metrics.targetedPcrMetrics, [markdup.metricsFile], flatten(qc.reports)]
-
     output {
         File markdupBam = markdup.outputBam
         File markdupBamIndex = markdup.outputBamIndex
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
-        Array[File] metricsFiles = flatten(allMetrics)
+        Array[File] reports = flatten([flatten(qc.reports), 
+                                       metrics.reports, 
+                                       [bqsr.BQSRreport]
+                                       ])
     }
 
     parameter_meta {

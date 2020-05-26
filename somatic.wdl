@@ -58,8 +58,6 @@ workflow Somatic {
         Int scatterSizeMillions = 1000
         Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
-        Boolean runMultiQC = if (outputDir == ".") then false else true
-
         File dockerImagesFile
     }
 
@@ -80,11 +78,11 @@ workflow Somatic {
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
 
     # Running sample subworkflow
-    scatter (samp in sampleConfig.samples) {
-        call sampleWorkflow.Sample as sample {
+    scatter (sample in sampleConfig.samples) {
+        call sampleWorkflow.Sample as sampleWorkflow {
             input:
-                sampleDir = outputDir + "/samples/" + samp.id,
-                sample = samp,
+                sampleDir = outputDir + "/samples/" + sample.id,
+                sample = sample,
                 referenceFasta = referenceFasta,
                 referenceFastaFai = referenceFastaFai,
                 referenceFastaDict = referenceFastaDict,
@@ -99,10 +97,10 @@ workflow Somatic {
                 platform = platform
         }
 
-        String sampleIds = samp.id
-        if (!defined(samp.control)) {
-            File controlBams = sample.recalibratedBam
-            File controlBamIndexes = sample.recalibratedBamIndex
+        String sampleIds = sample.id
+        if (!defined(sample.control)) {
+            File controlBams = sampleWorkflow.recalibratedBam
+            File controlBamIndexes = sampleWorkflow.recalibratedBamIndex
         }
     }
 
@@ -120,33 +118,33 @@ workflow Somatic {
         }
     }
 
-    scatter (samp in sampleConfig.samples) {
-        if (defined(samp.control)) {
+    scatter (sample in sampleConfig.samples) {
+        if (defined(sample.control)) {
             call GetSamplePositionInArray as controlPostition  {
                 input:
                     sampleIds = sampleIds,
-                    sample = select_first([samp.control])
+                    sample = select_first([sample.control])
             }
 
             call GetSamplePositionInArray as casePosition  {
                 input:
                     sampleIds = sampleIds,
-                    sample = samp.id,
+                    sample = sample.id,
                     dockerImage = dockerImages["python"]
             }
 
             call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
                 input:
-                    outputDir = outputDir + "/samples/" + samp.id + "/somatic-variantcalling/",
+                    outputDir = outputDir + "/samples/" + sample.id + "/somatic-variantcalling/",
                     referenceFasta = referenceFasta,
                     referenceFastaFai = referenceFastaFai,
                     referenceFastaDict = referenceFastaDict,
-                    tumorSample = samp.id,
-                    tumorBam = sample.recalibratedBam[casePosition.position],
-                    tumorBamIndex = sample.recalibratedBamIndex[casePosition.position],
+                    tumorSample = sample.id,
+                    tumorBam = sampleWorkflow.recalibratedBam[casePosition.position],
+                    tumorBamIndex = sampleWorkflow.recalibratedBamIndex[casePosition.position],
                     controlSample = sampleIds[controlPostition.position],
-                    controlBam = sample.recalibratedBam[controlPostition.position],
-                    controlBamIndex = sample.recalibratedBamIndex[controlPostition.position],
+                    controlBam = sampleWorkflow.recalibratedBam[controlPostition.position],
+                    controlBamIndex = sampleWorkflow.recalibratedBamIndex[controlPostition.position],
                     regions = regions,
                     dockerImages = dockerImages,
                     runStrelka = runStrelka,
@@ -159,18 +157,18 @@ workflow Somatic {
             if (performCnvCalling) {
                 call pairedCnvCalling.PairedCnvCalling as CNVs {
                     input:
-                        caseSampleName = samp.id,
-                        caseBam = sample.recalibratedBam[casePosition.position],
-                        caseBamIndex = sample.recalibratedBamIndex[casePosition.position],
+                        caseSampleName = sample.id,
+                        caseBam = sampleWorkflow.recalibratedBam[casePosition.position],
+                        caseBamIndex = sampleWorkflow.recalibratedBamIndex[casePosition.position],
                         controlSampleName = sampleIds[controlPostition.position],
-                        controlBam = sample.recalibratedBam[controlPostition.position],
-                        controlBamIndex = sample.recalibratedBamIndex[controlPostition.position],
+                        controlBam = sampleWorkflow.recalibratedBam[controlPostition.position],
+                        controlBamIndex = sampleWorkflow.recalibratedBamIndex[controlPostition.position],
                         PON = select_first([cnvPanelOfNormals, generateCnvPanelOfNormals.PON]),
                         preprocessedIntervals = select_first([preprocessedIntervals,
                         generateCnvPanelOfNormals.preprocessedIntervals]),
                         commonVariantSites = dbsnpVCF,
                         commonVariantSitesIndex = dbsnpVCFIndex,
-                        outputDir = outputDir + "/samples/" + samp.id + "/CNVcalling/",
+                        outputDir = outputDir + "/samples/" + sample.id + "/CNVcalling/",
                         referenceFasta = referenceFasta,
                         referenceFastaFai = referenceFastaFai,
                         referenceFastaDict = referenceFastaDict,
@@ -181,23 +179,20 @@ workflow Somatic {
         }
     }
 
-    if (runMultiQC) {
-        call multiqc.MultiQC as multiqcTask {
-            input:
-                # Multiqc will only run if these files are created.
-                dependencies = select_all(somaticVariantcalling.somaticSeqSnvVcfIndex),
-                outDir = outputDir + "/multiqc",
-                analysisDirectory = outputDir,
-                dockerImage = dockerImages["multiqc"]
-        }
+    call multiqc.MultiQC as multiqcTask {
+        input:
+            reports = flatten(sampleWorkflow.reports),
+            outDir = outputDir + "/multiqc",
+            dockerImage = dockerImages["multiqc"]
     }
 
     output {
-        Array[File] recalibratedBams = sample.recalibratedBam
-        Array[File] recalibratedBamIndexes = sample.recalibratedBamIndex
-        Array[File] markdupBams = sample.markdupBam
-        Array[File] markdupBamIndex = sample.markdupBamIndex
-        Array[File] bamMetricsFiles = flatten(sample.metricsFiles)
+        File multiqcReport = multiqcTask.multiqcReport
+        Array[File] recalibratedBams = sampleWorkflow.recalibratedBam
+        Array[File] reports = flatten(sampleWorkflow.reports)
+        Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
+        Array[File] markdupBams = sampleWorkflow.markdupBam
+        Array[File] markdupBamIndex = sampleWorkflow.markdupBamIndex
         Array[File?] somaticSeqSnvVcf = somaticVariantcalling.somaticSeqSnvVcf
         Array[File?] somaticSeqSnvVcfIndex = somaticVariantcalling.somaticSeqSnvVcfIndex
         Array[File?] somaticSeqIndelVcf = somaticVariantcalling.somaticSeqIndelVcf

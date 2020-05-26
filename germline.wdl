@@ -53,7 +53,6 @@ workflow Germline {
         Int scatterSizeMillions = 1000
         Int scatterSize = scatterSizeMillions * 1000000
         # Only run multiQC if the user specified an outputDir
-        Boolean runMultiQC = if (outputDir == ".") then false else true
         Boolean runSVcalling = false
     }
 
@@ -158,18 +157,16 @@ workflow Germline {
         }
     }
 
-    if (runMultiQC) {
-        call multiqc.MultiQC as multiqcTask {
-            input:
-                # Multiqc will only run if these files are created.
-                dependencies = select_all(flatten([[JointGenotyping.multisampleVcfIndex], SingleSampleCalling.outputVcfIndex])),
-                outDir = outputDir + "/multiqc",
-                analysisDirectory = outputDir,
-                dockerImage = dockerImages["multiqc"]
-        }
+    call multiqc.MultiQC as multiqcTask {
+        input:
+            reports = flatten(sampleWorkflow.reports),
+            outDir = outputDir + "/multiqc",
+            dockerImage = dockerImages["multiqc"]
     }
 
     output {
+        File multiqcReport = multiqcTask.multiqcReport
+        Array[File] reports = flatten(sampleWorkflow.reports)
         File? multiSampleVcf = JointGenotyping.multisampleVcf
         File? multisampleVcfIndex = JointGenotyping.multisampleVcfIndex
         File? multisampleGVcf = JointGenotyping.multisampleGVcf
@@ -182,7 +179,6 @@ workflow Germline {
         Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
         Array[File] markdupBams = sampleWorkflow.markdupBam
         Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
-        Array[File] bamMetricsFiles = flatten(sampleWorkflow.metricsFiles)
         Array[File?] cleverVCFs = svCalling.cleverVcf
         Array[File?] matecleverVCFs = svCalling.cleverVcf
         Array[File?] mantaVCFs = svCalling.mantaVcf
