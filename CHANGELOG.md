@@ -11,6 +11,9 @@ that users understand how the changes affect the new version.
 
 version 4.0.0-dev
 -----------------
++ Tasks were updated to contain the `time_minutes` runtime attribute and
+  associated `timeMinutes` input, describing the maximum time the task will
+  take to run.
 + Document the use of cromwell's `final_workflow_outputs_dir` feature which 
   makes the germline and somatic pipelines usable on all of Cromwell's 
   supported backends. Users are encouraged to use this feature. `outputDir` references are removed from the documentation.
