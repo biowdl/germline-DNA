@@ -2,7 +2,9 @@
 
 This repository contains the [Biowdl](https://github.com/biowdl) 
 pipeline usable for processing germline-DNA data. Starting with FASTQ
-files and resulting in a multisample VCF files.
+files and resulting in VCF files. Can switch between joint genotyping 
+and single sample calling modes. It can also call the X and Y chromosomes
+with the correct ploidy if given BED files for the non-PAR regions.
 
 ## Documentation
 
