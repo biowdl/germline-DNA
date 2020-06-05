@@ -86,7 +86,7 @@ workflow Germline {
 
     # Running sample subworkflow
     scatter (sample in sampleConfig.samples) {
-        call sampleWf.Sample as sampleWorkflow {
+        call sampleWf.SampleWorkflow as sampleWorkflow {
             input:
                 sampleDir = outputDir + "/samples/" + sample.id,
                 sample = sample,
