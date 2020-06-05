@@ -86,6 +86,7 @@ workflow Germline {
 
     # Running sample subworkflow
     scatter (sample in sampleConfig.samples) {
+        String sampleIds = sample.id
         call sampleWf.SampleWorkflow as sampleWorkflow {
             input:
                 sampleDir = outputDir + "/samples/" + sample.id,
@@ -135,7 +136,7 @@ workflow Germline {
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 intervals = select_all([regions]),
-                outputPath = outputDir + "/variants/stats/" + sample.id + ".table"
+                outputPath = outputDir + "/variants/stats/" + sample.id + ".vcf.table"
         }
 
         if (runSVcalling) {
@@ -170,18 +171,34 @@ workflow Germline {
                 scatterSize = scatterSize,
                 dockerImages = dockerImages
         }
+
+        call gatk.VariantEval as VariantEvalMultiSample {
+            input: 
+                evalVcfs = [JointGenotyping.multisampleVcf],
+                evalVcfsIndex = [JointGenotyping.multisampleVcfIndex],
+                samples = sampleIds,
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                referenceFastaDict = referenceFastaDict,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFIndex = dbsnpVCFIndex,
+                intervals = select_all([regions]),
+                outputPath = outputDir + "/multisample.vcf.table"
+        }
     }
+
+    Array[File] allReports = flatten([flatten(sampleWorkflow.reports), VariantEvalSingleSample.table, select_all([VariantEvalMultiSample.table])])
 
     call multiqc.MultiQC as multiqcTask {
         input:
-            reports = flatten([flatten(sampleWorkflow.reports), VariantEvalSingleSample.table]),
+            reports = allReports,
             outDir = outputDir + "/multiqc",
             dockerImage = dockerImages["multiqc"]
     }
 
     output {
         File multiqcReport = multiqcTask.multiqcReport
-        Array[File] reports = flatten(sampleWorkflow.reports)
+        Array[File] reports = allReports
         File? multiSampleVcf = JointGenotyping.multisampleVcf
         File? multisampleVcfIndex = JointGenotyping.multisampleVcfIndex
         File? multisampleGVcf = JointGenotyping.multisampleGVcf
