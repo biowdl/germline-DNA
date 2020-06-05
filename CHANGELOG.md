@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 version 4.0.0-dev
 -----------------
++ Added Gatk VariantEval and bcftools stats to the pipeline for variant 
+  statistics. These stats are reported in the MultiQC report.
 + Tasks were updated to contain the `time_minutes` runtime attribute and
   associated `timeMinutes` input, describing the maximum time the task will
   take to run.
