@@ -201,13 +201,24 @@ workflow Germline {
                 intervals = select_all([regions]),
                 outputPath = outputDir + "/multisample.vcf.table"
         }
+        call bcftools.Stats as MultiSampleStats {
+            input:
+                inputVcf = JointGenotyping.multisampleVcf,
+                inputVcfIndex = JointGenotyping.multisampleVcfIndex,
+                outputPath = outputDir + "/multisample.vcf.stats",
+                fastaRef = referenceFasta,
+                fastaRefIndex = referenceFastaFai,
+                regionsFile = regions,
+                samples = sampleIds
+        }
     }
 
     Array[File] allReports = flatten([
         flatten(sampleWorkflow.reports), 
         VariantEvalSingleSample.table, 
         select_all(SingleSampleStats.stats), 
-        select_all([VariantEvalMultiSample.table])
+        select_all([VariantEvalMultiSample.table]),
+        select_all([MultiSampleStats.stats])
         ])
 
     call multiqc.MultiQC as multiqcTask {
