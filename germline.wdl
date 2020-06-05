@@ -129,6 +129,12 @@ workflow Germline {
                 evalVcfs = if mergeVcfs then select_all([SingleSampleCalling.outputVcf]) else SingleSampleCalling.vcfScatters,
                 evalVcfsIndex = if mergeVcfs then select_all([SingleSampleCalling.outputVcfIndex]) else SingleSampleCalling.vcfIndexScatters,
                 samples = [sample.id],
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                referenceFastaDict = referenceFastaDict,
+                dbsnpVCF = dbsnpVCF,
+                dbsnpVCFIndex = dbsnpVCFIndex,
+                intervals = select_all([regions]),
                 outputPath = outputDir + "/variants/stats/" + sample.id + ".table"
         }
 
