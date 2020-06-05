@@ -29,6 +29,7 @@ import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
+import "tasks/gatk.wdl" as gatk
 
 workflow Germline {
     input {
@@ -55,6 +56,7 @@ workflow Germline {
         # Only run multiQC if the user specified an outputDir
         Boolean runSVcalling = false
     }
+    Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
     # Parse docker Tags configuration and sample sheet
     call common.YamlToJson as ConvertDockerImagesFile {
@@ -101,7 +103,7 @@ workflow Germline {
                 scatterSize = scatterSize,
                 platform = platform
         }
-
+        
         call variantCallingWorkflow.SingleSampleCalling as SingleSampleCalling {
             input:
                 bam = sampleWorkflow.recalibratedBam,
@@ -118,10 +120,17 @@ workflow Germline {
                 YNonParRegions = calculateRegions.Yregions,
                 autosomalRegionScatters = calculateRegions.autosomalRegionScatters,
                 gvcf = jointgenotyping,
-                mergeVcf = !jointgenotyping || singleSampleGvcf,
+                mergeVcf = mergeVcfs,
                 dockerImages = dockerImages                    
+        }
 
-    }
+        call gatk.VariantEval as VariantEvalSingleSample {
+            input: 
+                evalVcfs = if mergeVcfs then select_all([SingleSampleCalling.outputVcf]) else SingleSampleCalling.vcfScatters,
+                evalVcfsIndex = if mergeVcfs then select_all([SingleSampleCalling.outputVcfIndex]) else SingleSampleCalling.vcfIndexScatters,
+                samples = [sample.id],
+                outputPath = outputDir + "/variants/stats/" + sample.id + ".table"
+        }
 
         if (runSVcalling) {
             call structuralVariantCalling.SVcalling as svCalling {
@@ -159,7 +168,7 @@ workflow Germline {
 
     call multiqc.MultiQC as multiqcTask {
         input:
-            reports = flatten(sampleWorkflow.reports),
+            reports = flatten([flatten(sampleWorkflow.reports), VariantEvalSingleSample.table]),
             outDir = outputDir + "/multiqc",
             dockerImage = dockerImages["multiqc"]
     }
