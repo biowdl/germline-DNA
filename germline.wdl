@@ -203,7 +203,12 @@ workflow Germline {
         }
     }
 
-    Array[File] allReports = flatten([flatten(sampleWorkflow.reports), VariantEvalSingleSample.table, select_all(SingleSampleStats.stats), select_all([VariantEvalMultiSample.table])])
+    Array[File] allReports = flatten([
+        flatten(sampleWorkflow.reports), 
+        VariantEvalSingleSample.table, 
+        select_all(SingleSampleStats.stats), 
+        select_all([VariantEvalMultiSample.table])
+        ])
 
     call multiqc.MultiQC as multiqcTask {
         input:
