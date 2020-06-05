@@ -30,6 +30,7 @@ import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
 import "tasks/gatk.wdl" as gatk
+import "tasks/bcftools.wdl" as bcftools
 
 workflow Germline {
     input {
@@ -136,7 +137,22 @@ workflow Germline {
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 intervals = select_all([regions]),
-                outputPath = outputDir + "/variants/stats/" + sample.id + ".vcf.table"
+                outputPath = outputDir + "/variants/" + sample.id + ".vcf.table"
+        }
+
+        # Bcftools can not combine the stats for multiple vcfs. So we only call
+        # It when there is a per sample vcf.
+        if (defined(SingleSampleCalling.outputVcf)) {
+            call bcftools.Stats as SingleSampleStats {
+                input:
+                    inputVcf = select_first([SingleSampleCalling.outputVcf]),
+                    inputVcfIndex = select_first([SingleSampleCalling.outputVcfIndex]),
+                    outputPath = outputDir + "/variants/" + sample.id + ".vcf.stats",
+                    fastaRef = referenceFasta,
+                    fastaRefIndex = referenceFastaFai,
+                    regionsFile = regions,
+                    samples = [sample.id]
+            }
         }
 
         if (runSVcalling) {
@@ -187,7 +203,7 @@ workflow Germline {
         }
     }
 
-    Array[File] allReports = flatten([flatten(sampleWorkflow.reports), VariantEvalSingleSample.table, select_all([VariantEvalMultiSample.table])])
+    Array[File] allReports = flatten([flatten(sampleWorkflow.reports), VariantEvalSingleSample.table, select_all(SingleSampleStats.stats), select_all([VariantEvalMultiSample.table])])
 
     call multiqc.MultiQC as multiqcTask {
         input:
