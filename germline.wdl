@@ -29,8 +29,6 @@ import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
-import "tasks/gatk.wdl" as gatk
-import "tasks/bcftools.wdl" as bcftools
 
 workflow Germline {
     input {
@@ -120,40 +118,13 @@ workflow Germline {
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 XNonParRegions = calculateRegions.Xregions,
                 YNonParRegions = calculateRegions.Yregions,
+                statsRegions = regions,
                 autosomalRegionScatters = calculateRegions.autosomalRegionScatters,
                 gvcf = jointgenotyping,
                 mergeVcf = mergeVcfs,
                 dockerImages = dockerImages                    
         }
 
-        call gatk.VariantEval as VariantEvalSingleSample {
-            input: 
-                evalVcfs = if mergeVcfs then select_all([SingleSampleCalling.outputVcf]) else SingleSampleCalling.vcfScatters,
-                evalVcfsIndex = if mergeVcfs then select_all([SingleSampleCalling.outputVcfIndex]) else SingleSampleCalling.vcfIndexScatters,
-                samples = [sample.id],
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFIndex = dbsnpVCFIndex,
-                intervals = select_all([regions]),
-                outputPath = outputDir + "/variants/" + sample.id + ".vcf.table"
-        }
-
-        # Bcftools can not combine the stats for multiple vcfs. So we only call
-        # It when there is a per sample vcf.
-        if (defined(SingleSampleCalling.outputVcf)) {
-            call bcftools.Stats as SingleSampleStats {
-                input:
-                    inputVcf = select_first([SingleSampleCalling.outputVcf]),
-                    inputVcfIndex = select_first([SingleSampleCalling.outputVcfIndex]),
-                    outputPath = outputDir + "/variants/" + sample.id + ".vcf.stats",
-                    fastaRef = referenceFasta,
-                    fastaRefIndex = referenceFastaFai,
-                    regionsFile = regions,
-                    samples = [sample.id]
-            }
-        }
 
         if (runSVcalling) {
             call structuralVariantCalling.SVcalling as svCalling {
@@ -181,44 +152,17 @@ workflow Germline {
                 referenceFasta = referenceFasta,
                 referenceFastaFai = referenceFastaFai,
                 referenceFastaDict = referenceFastaDict,
+                sampleIds = sampleIds,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 regions = regions,
                 scatterSize = scatterSize,
                 dockerImages = dockerImages
         }
-
-        call gatk.VariantEval as VariantEvalMultiSample {
-            input: 
-                evalVcfs = [JointGenotyping.multisampleVcf],
-                evalVcfsIndex = [JointGenotyping.multisampleVcfIndex],
-                samples = sampleIds,
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFIndex = dbsnpVCFIndex,
-                intervals = select_all([regions]),
-                outputPath = outputDir + "/multisample.vcf.table"
-        }
-        call bcftools.Stats as MultiSampleStats {
-            input:
-                inputVcf = JointGenotyping.multisampleVcf,
-                inputVcfIndex = JointGenotyping.multisampleVcfIndex,
-                outputPath = outputDir + "/multisample.vcf.stats",
-                fastaRef = referenceFasta,
-                fastaRefIndex = referenceFastaFai,
-                regionsFile = regions,
-                samples = sampleIds
-        }
     }
 
     Array[File] allReports = flatten([
-        flatten(sampleWorkflow.reports), 
-        VariantEvalSingleSample.table, 
-        select_all(SingleSampleStats.stats), 
-        select_all([VariantEvalMultiSample.table]),
-        select_all([MultiSampleStats.stats])
+        flatten(sampleWorkflow.reports), flatten(SingleSampleCalling.reports), select_first([JointGenotyping.reports, []])
         ])
 
     call multiqc.MultiQC as multiqcTask {
