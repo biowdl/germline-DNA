@@ -20,9 +20,6 @@ version 1.0
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import "tasks/biopet/biopet.wdl" as biopet
-import "tasks/common.wdl" as common
-import "tasks/samtools.wdl" as samtools
 import "BamMetrics/bammetrics.wdl" as bammetrics
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "structs.wdl" as structs
@@ -31,7 +28,7 @@ import "tasks/bwa.wdl" as bwa
 import "QC/QC.wdl" as qc
 
 
-workflow Sample {
+workflow SampleWorkflow {
     input {
         Sample sample
         String sampleDir
@@ -53,7 +50,7 @@ workflow Sample {
         String libraryDir = sampleDir + "/lib_" + readgroup.lib_id
         String readgroupDir = libraryDir + "/rg_" + readgroup.id
 
-        call qc.QC as qc {
+        call qc.QC as QC {
             input:
                 outputDir = readgroupDir,
                 read1 = readgroup.R1,
@@ -66,8 +63,8 @@ workflow Sample {
         if (! useBwaKit) {
             call bwa.Mem as bwaMem {
                 input:
-                    read1 = qc.qcRead1,
-                    read2 = qc.qcRead2,
+                    read1 = QC.qcRead1,
+                    read2 = QC.qcRead2,
                     outputPath = readgroupDir + "/" + basename(readgroup.R1) + ".bam",
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
@@ -78,8 +75,8 @@ workflow Sample {
         if (useBwaKit) {
             call bwa.Kit as bwakit {
                 input:
-                    read1 = qc.qcRead1,
-                    read2 = qc.qcRead2,
+                    read1 = QC.qcRead1,
+                    read2 = QC.qcRead2,
                     outputPrefix = readgroupDir + "/" + basename(readgroup.R1),
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
@@ -132,7 +129,7 @@ workflow Sample {
         File markdupBamIndex = markdup.outputBamIndex
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
-        Array[File] reports = flatten([flatten(qc.reports), 
+        Array[File] reports = flatten([flatten(QC.reports), 
                                        metrics.reports, 
                                        [bqsr.BQSRreport]
                                        ])

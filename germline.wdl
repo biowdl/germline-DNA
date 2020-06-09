@@ -55,6 +55,7 @@ workflow Germline {
         # Only run multiQC if the user specified an outputDir
         Boolean runSVcalling = false
     }
+    Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
     # Parse docker Tags configuration and sample sheet
     call common.YamlToJson as ConvertDockerImagesFile {
@@ -84,7 +85,8 @@ workflow Germline {
 
     # Running sample subworkflow
     scatter (sample in sampleConfig.samples) {
-        call sampleWf.Sample as sampleWorkflow {
+        String sampleIds = sample.id
+        call sampleWf.SampleWorkflow as sampleWorkflow {
             input:
                 sampleDir = outputDir + "/samples/" + sample.id,
                 sample = sample,
@@ -101,7 +103,7 @@ workflow Germline {
                 scatterSize = scatterSize,
                 platform = platform
         }
-
+        
         call variantCallingWorkflow.SingleSampleCalling as SingleSampleCalling {
             input:
                 bam = sampleWorkflow.recalibratedBam,
@@ -116,12 +118,13 @@ workflow Germline {
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 XNonParRegions = calculateRegions.Xregions,
                 YNonParRegions = calculateRegions.Yregions,
+                statsRegions = regions,
                 autosomalRegionScatters = calculateRegions.autosomalRegionScatters,
                 gvcf = jointgenotyping,
-                mergeVcf = !jointgenotyping || singleSampleGvcf,
+                mergeVcf = mergeVcfs,
                 dockerImages = dockerImages                    
+        }
 
-    }
 
         if (runSVcalling) {
             call structuralVariantCalling.SVcalling as svCalling {
@@ -149,6 +152,7 @@ workflow Germline {
                 referenceFasta = referenceFasta,
                 referenceFastaFai = referenceFastaFai,
                 referenceFastaDict = referenceFastaDict,
+                sampleIds = sampleIds,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 regions = regions,
@@ -157,16 +161,20 @@ workflow Germline {
         }
     }
 
+    Array[File] allReports = flatten([
+        flatten(sampleWorkflow.reports), flatten(SingleSampleCalling.reports), select_first([JointGenotyping.reports, []])
+        ])
+
     call multiqc.MultiQC as multiqcTask {
         input:
-            reports = flatten(sampleWorkflow.reports),
+            reports = allReports,
             outDir = outputDir + "/multiqc",
             dockerImage = dockerImages["multiqc"]
     }
 
     output {
         File multiqcReport = multiqcTask.multiqcReport
-        Array[File] reports = flatten(sampleWorkflow.reports)
+        Array[File] reports = allReports
         File? multiSampleVcf = JointGenotyping.multisampleVcf
         File? multisampleVcfIndex = JointGenotyping.multisampleVcfIndex
         File? multisampleGVcf = JointGenotyping.multisampleGVcf

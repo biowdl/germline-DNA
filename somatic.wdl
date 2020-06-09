@@ -79,7 +79,7 @@ workflow Somatic {
 
     # Running sample subworkflow
     scatter (sample in sampleConfig.samples) {
-        call sampleWorkflow.Sample as sampleWorkflow {
+        call sampleWorkflow.SampleWorkflow as sampleWorkflow {
             input:
                 sampleDir = outputDir + "/samples/" + sample.id,
                 sample = sample,
