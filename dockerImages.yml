@@ -9,7 +9,6 @@
 # Tools are sorted alphabetically for ease of use.
 
 bedtools: "quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3"
-biopet-scatterregions: "quay.io/biocontainers/biopet-scatterregions:0.2--0"
 biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_0"
 # A mulled container is needed to have both picard and bwa in one container.
 # quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842
@@ -17,6 +16,7 @@ biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_
 "bwa+picard": "quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842:43ec6124f9f4f875515f9548733b8b4e5fed9aa6-0"
 bwakit: "biocontainers/bwakit:v0.7.15_cv1"
 bcftools: "quay.io/biocontainers/bcftools:1.9--ha228f0b_3"
+chunked-scatter: "quay.io/biocontainers/chunked-scatter:0.2.0--py_0"
 clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
 cutadapt: "quay.io/biocontainers/cutadapt:2.8--py37h516909a_0"
 debian: "debian@sha256:f05c05a218b7a4a5fe979045b1c8e2a9ec3524e5611ebfdd0ef5b8040f9008fa"  # Used for general tasks

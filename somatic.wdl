@@ -29,6 +29,7 @@ import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
+import "tasks/chunked-scatter.wdl" as chunkedScatter
 
 workflow Somatic {
     input {
@@ -56,7 +57,7 @@ workflow Somatic {
         Boolean runCombineVariants = false
         Int? cnvMinimumContigLength
         Int scatterSizeMillions = 1000
-        Int scatterSize = scatterSizeMillions * 1000000
+        Int? scatterSize
         # Only run multiQC if the user specified an outputDir
         File dockerImagesFile
     }
@@ -77,6 +78,14 @@ workflow Somatic {
     }
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
 
+    call chunkedScatter.ScatterRegions as scatterList {
+        input:
+            inputFile = select_first([regions, referenceFastaFai]),
+            scatterSize = scatterSize,
+            scatterSizeMillions = scatterSizeMillions,
+            dockerImage = dockerImages["chunked-scatter"]
+    }
+
     # Running sample subworkflow
     scatter (sample in sampleConfig.samples) {
         call sampleWorkflow.SampleWorkflow as sampleWorkflow {
@@ -93,7 +102,7 @@ workflow Somatic {
                 adapterReverse = adapterReverse,
                 useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
-                scatterSize = scatterSize,
+                scatters = scatterList.scatters,
                 platform = platform
         }
 

@@ -41,7 +41,7 @@ workflow SampleWorkflow {
         Map[String, String] dockerImages
         String platform = "illumina"
         Boolean useBwaKit = false
-        Int scatterSize = 1000000000
+        Array[File] scatters
         String? adapterForward
         String? adapterReverse
     }
@@ -110,7 +110,7 @@ workflow SampleWorkflow {
             dbsnpVCF = dbsnpVCF,
             dbsnpVCFIndex = dbsnpVCFIndex,
             dockerImages = dockerImages,
-            scatterSize = scatterSize
+            scatters = scatters
     }
 
     call bammetrics.BamMetrics as metrics {

@@ -29,6 +29,7 @@ import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
+import "tasks/chunked-scatter.wdl" as chunkedScatter
 
 workflow Germline {
     input {
@@ -51,7 +52,7 @@ workflow Germline {
         String platform = "illumina"
         Boolean useBwaKit = false
         Int scatterSizeMillions = 1000
-        Int scatterSize = scatterSizeMillions * 1000000
+        Int? scatterSize
         # Only run multiQC if the user specified an outputDir
         Boolean runSVcalling = false
     }
@@ -80,7 +81,16 @@ workflow Germline {
             YNonParRegions = YNonParRegions,
             regions = regions,
             scatterSize = scatterSize,
+            scatterSizeMillions = scatterSizeMillions,
             dockerImages = dockerImages
+    }
+
+    call chunkedScatter.ScatterRegions as scatterList {
+        input:
+            inputFile = select_first([regions, referenceFastaFai]),
+            scatterSize = scatterSize,
+            scatterSizeMillions = scatterSizeMillions,
+            dockerImage = dockerImages["chunked-scatter"]
     }
 
     # Running sample subworkflow
@@ -100,7 +110,7 @@ workflow Germline {
                 adapterReverse = adapterReverse,
                 useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
-                scatterSize = scatterSize,
+                scatters = scatterList.scatters,
                 platform = platform
         }
         
