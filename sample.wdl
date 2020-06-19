@@ -42,6 +42,7 @@ workflow SampleWorkflow {
         String platform = "illumina"
         Boolean useBwaKit = false
         Array[File] scatters
+        Int bwaThreads = 4
         String? adapterForward
         String? adapterReverse
     }
@@ -68,6 +69,7 @@ workflow SampleWorkflow {
                     outputPath = readgroupDir + "/" + basename(readgroup.R1) + ".bam",
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
+                    threads = bwaThreads,
                     dockerImage = dockerImages["bwa+picard"]
             }
         }
@@ -80,6 +82,7 @@ workflow SampleWorkflow {
                     outputPrefix = readgroupDir + "/" + basename(readgroup.R1),
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
+                    threads = bwaThreads,
                     dockerImage = dockerImages["bwakit"]
             }
         }

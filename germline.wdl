@@ -53,6 +53,7 @@ workflow Germline {
         Boolean useBwaKit = false
         Int scatterSizeMillions = 1000
         Int? scatterSize
+        Int bwaThreads = 4
         # Only run multiQC if the user specified an outputDir
         Boolean runSVcalling = false
     }
@@ -111,6 +112,7 @@ workflow Germline {
                 useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
                 scatters = scatterList.scatters,
+                bwaThreads = bwaThreads,
                 platform = platform
         }
         

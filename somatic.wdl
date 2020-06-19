@@ -58,6 +58,7 @@ workflow Somatic {
         Int? cnvMinimumContigLength
         Int scatterSizeMillions = 1000
         Int? scatterSize
+        Int bwaThreads = 4
         # Only run multiQC if the user specified an outputDir
         File dockerImagesFile
     }
@@ -103,6 +104,7 @@ workflow Somatic {
                 useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
                 scatters = scatterList.scatters,
+                bwaThreads = bwaThreads,
                 platform = platform
         }
 

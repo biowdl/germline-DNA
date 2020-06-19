@@ -17,6 +17,7 @@
   },
   "Germline.dbsnpVCF": "tests/data/wgs2.vcf.gz",
   "Germline.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
+  "Germline.bwaThreads": 1,
   "Germline.useBwaKit": true,
   "Germline.jointgenotyping": false,
   "Germline.runSVcalling": true

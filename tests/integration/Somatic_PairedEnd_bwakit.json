@@ -15,6 +15,7 @@
       "tests/data/reference/bwa/reference.fasta.alt"
     ]
   },
+  "Somatic.bwaThreads": 1,
   "Somatic.dbsnpVCF": "tests/data/wgs2.vcf.gz",
   "Somatic.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
   "Somatic.useBwaKit": true
