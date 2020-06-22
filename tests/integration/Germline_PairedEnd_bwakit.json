@@ -20,5 +20,5 @@
   "Germline.bwaThreads": 1,
   "Germline.useBwaKit": true,
   "Germline.jointgenotyping": false,
-  "Germline.runSVcalling": true
+  "Germline.runSVcalling": false
 }

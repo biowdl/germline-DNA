@@ -19,5 +19,5 @@
   "Germline.XNonParRegions": "tests/data/gender-aware/x_non_par.bed",
   "Germline.YNonParRegions": "tests/data/gender-aware/y_non_par.bed",
   "Germline.bwaThreads": 1,
-  "Germline.runSVcalling": true
+  "Germline.runSVcalling": false
 }
