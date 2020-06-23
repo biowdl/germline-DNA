@@ -113,20 +113,6 @@
     - path: "test-output/variants/wgs2-paired-end.vcf.gz.tbi"
     - path: "test-output/samples/wgs1-paired-end/metrics/wgs1-paired-end.markdup.flagstats"
     - path: "test-output/samples/wgs2-paired-end/metrics/wgs2-paired-end.markdup.flagstats"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/delly/wgs1-paired-end.delly.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/delly/wgs2-paired-end.delly.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/mateclever/deletions.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/mateclever/deletions.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.clever.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.clever.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.delly.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.delly.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.manta.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.manta.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
 
 - name: Germline_GenderAware
   tags:
