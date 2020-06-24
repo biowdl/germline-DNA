@@ -25,7 +25,6 @@ import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "structs.wdl" as structs
 import "tasks/picard.wdl" as picard
 import "tasks/bwa.wdl" as bwa
-import "tasks/samtools.wdl" as samtools
 import "QC/QC.wdl" as qc
 
 
@@ -86,23 +85,16 @@ workflow SampleWorkflow {
                     threads = bwaThreads,
                     dockerImage = dockerImages["bwakit"]
             }
-
-            call samtools.Sort as sortkit {
-                input: 
-                    inputBam = bwakit.outputBam,
-                    outputPath = readgroupDir + "/" + basename(bwakit.outputBam, "\.bam$")  + ".sorted.bam",
-                    dockerImage = dockerImages["samtools"]
-            }
         }
     }
 
     call picard.MarkDuplicates as markdup {
         input:
             inputBams = if useBwaKit
-                then select_all(sortkit.outputBam)
+                then select_all(bwakit.outputBam)
                 else select_all(bwaMem.outputBam),
             inputBamIndexes = if useBwaKit
-                then select_all(sortkit.outputBamIndex)
+                then select_all(bwakit.outputBamIndex)
                 else select_all(bwaMem.outputBamIndex),
             outputBamPath = sampleDir + "/" + sample.id + ".markdup.bam",
             metricsPath = sampleDir + "/" + sample.id + ".markdup.metrics",
