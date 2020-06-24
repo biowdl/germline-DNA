@@ -90,6 +90,7 @@
   tags:
     - integration
     - germline
+    - bwakit
   command: >-
     cromwell run -o tests/cromwell_options.json
     -i tests/integration/Germline_PairedEnd_bwakit.json germline.wdl
