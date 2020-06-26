@@ -134,6 +134,7 @@ workflow SampleWorkflow {
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
         Array[File] reports = flatten([flatten(QC.reports), 
                                        metrics.reports, 
+                                       [markdup.metricsFile],
                                        [bqsr.BQSRreport]
                                        ])
     }
