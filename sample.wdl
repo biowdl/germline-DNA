@@ -70,7 +70,7 @@ workflow SampleWorkflow {
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
                     threads = bwaThreads,
-                    dockerImage = dockerImages["bwa+picard"]
+                    dockerImage = dockerImages["bwa+samtools"]
             }
         }
 
@@ -83,7 +83,7 @@ workflow SampleWorkflow {
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
                     threads = bwaThreads,
-                    dockerImage = dockerImages["bwakit"]
+                    dockerImage = dockerImages["bwakit+samtools"]
             }
         }
     }
@@ -93,9 +93,6 @@ workflow SampleWorkflow {
             inputBams = if useBwaKit
                 then select_all(bwakit.outputBam)
                 else select_all(bwaMem.outputBam),
-            inputBamIndexes = if useBwaKit
-                then select_all(bwakit.outputBamIndex)
-                else select_all(bwaMem.outputBamIndex),
             outputBamPath = sampleDir + "/" + sample.id + ".markdup.bam",
             metricsPath = sampleDir + "/" + sample.id + ".markdup.metrics",
             dockerImage = dockerImages["picard"]
