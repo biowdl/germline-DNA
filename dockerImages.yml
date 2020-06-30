@@ -28,6 +28,7 @@ manta: "quay.io/biocontainers/manta:1.4.0--py27_1"
 multiqc: "quay.io/biocontainers/multiqc:1.7--py_1"
 picard: "quay.io/biocontainers/picard:2.20.5--0"
 python: "python:3.7-slim"
+sambamba: "quay.io/biocontainers/sambamba:0.7.1--h148d290_2"
 samtools: "quay.io/biocontainers/samtools:1.8--h46bd0b3_5"
 strelka: "quay.io/biocontainers/strelka:2.9.7--0"
 smoove: quay.io/biocontainers/smoove:0.2.5--0

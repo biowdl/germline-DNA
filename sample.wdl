@@ -23,8 +23,8 @@ version 1.0
 import "BamMetrics/bammetrics.wdl" as bammetrics
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "structs.wdl" as structs
-import "tasks/picard.wdl" as picard
 import "tasks/bwa.wdl" as bwa
+import "tasks/sambamba.wdl" as sambamba
 import "QC/QC.wdl" as qc
 
 
@@ -88,14 +88,13 @@ workflow SampleWorkflow {
         }
     }
 
-    call picard.MarkDuplicates as markdup {
+    call sambamba.Markdup as markdup {
         input:
             inputBams = if useBwaKit
                 then select_all(bwakit.outputBam)
                 else select_all(bwaMem.outputBam),
-            outputBamPath = sampleDir + "/" + sample.id + ".markdup.bam",
-            metricsPath = sampleDir + "/" + sample.id + ".markdup.metrics",
-            dockerImage = dockerImages["picard"]
+            outputPath = sampleDir + "/" + sample.id + ".markdup.bam",
+            dockerImage = dockerImages["sambamba"]
     }
 
     call preprocess.GatkPreprocess as bqsr {
@@ -130,8 +129,7 @@ workflow SampleWorkflow {
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
         Array[File] reports = flatten([flatten(QC.reports), 
-                                       metrics.reports, 
-                                       [markdup.metricsFile],
+                                       metrics.reports,
                                        [bqsr.BQSRreport]
                                        ])
     }
