@@ -293,6 +293,7 @@ workflow Somatic {
         runVardict: {description: "Whether or not to run VarDict.", category: "common"}
         runMutect2: {description: "Whether or not to run Mutect2.", category: "common"}
         runCombineVariants: {description: "Whether or not to combine the variant calling results into one VCF file.", category: "advanced"}
+        bwaThreads: {description: "The amount of threads for the alignment process", category: "advanced"}
     }
 }
 
