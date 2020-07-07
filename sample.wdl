@@ -23,8 +23,8 @@ version 1.0
 import "BamMetrics/bammetrics.wdl" as bammetrics
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "structs.wdl" as structs
-import "tasks/picard.wdl" as picard
 import "tasks/bwa.wdl" as bwa
+import "tasks/sambamba.wdl" as sambamba
 import "QC/QC.wdl" as qc
 
 
@@ -41,7 +41,8 @@ workflow SampleWorkflow {
         Map[String, String] dockerImages
         String platform = "illumina"
         Boolean useBwaKit = false
-        Int scatterSize = 1000000000
+        Array[File] scatters
+        Int bwaThreads = 4
         String? adapterForward
         String? adapterReverse
     }
@@ -68,7 +69,8 @@ workflow SampleWorkflow {
                     outputPath = readgroupDir + "/" + basename(readgroup.R1) + ".bam",
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
-                    dockerImage = dockerImages["bwa+picard"]
+                    threads = bwaThreads,
+                    dockerImage = dockerImages["bwa+samtools"]
             }
         }
 
@@ -80,22 +82,19 @@ workflow SampleWorkflow {
                     outputPrefix = readgroupDir + "/" + basename(readgroup.R1),
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
-                    dockerImage = dockerImages["bwakit"]
+                    threads = bwaThreads,
+                    dockerImage = dockerImages["bwakit+samtools"]
             }
         }
     }
 
-    call picard.MarkDuplicates as markdup {
+    call sambamba.Markdup as markdup {
         input:
             inputBams = if useBwaKit
                 then select_all(bwakit.outputBam)
                 else select_all(bwaMem.outputBam),
-            inputBamIndexes = if useBwaKit
-                then select_all(bwakit.outputBamIndex)
-                else select_all(bwaMem.outputBamIndex),
-            outputBamPath = sampleDir + "/" + sample.id + ".markdup.bam",
-            metricsPath = sampleDir + "/" + sample.id + ".markdup.metrics",
-            dockerImage = dockerImages["picard"]
+            outputPath = sampleDir + "/" + sample.id + ".markdup.bam",
+            dockerImage = dockerImages["sambamba"]
     }
 
     call preprocess.GatkPreprocess as bqsr {
@@ -110,7 +109,7 @@ workflow SampleWorkflow {
             dbsnpVCF = dbsnpVCF,
             dbsnpVCFIndex = dbsnpVCFIndex,
             dockerImages = dockerImages,
-            scatterSize = scatterSize
+            scatters = scatters
     }
 
     call bammetrics.BamMetrics as metrics {
@@ -130,7 +129,7 @@ workflow SampleWorkflow {
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
         Array[File] reports = flatten([flatten(QC.reports), 
-                                       metrics.reports, 
+                                       metrics.reports,
                                        [bqsr.BQSRreport]
                                        ])
     }
@@ -149,7 +148,7 @@ workflow SampleWorkflow {
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
         adapterForward: {description: "The adapter to be removed from the reads first or single end reads.", category: "common"}
         adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
-        scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
-              category: "advanced"}
+        scatters: {description: "List of bed files to be used for scattering", category: "advanced"}
+        bwaThreads: {description: "The amount of threads for the alignment process", category: "advanced"}
     }
 }

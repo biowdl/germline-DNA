@@ -11,7 +11,19 @@ that users understand how the changes affect the new version.
 
 version 4.0.0-dev
 -----------------
-+ Added Gatk VariantEval and bcftools stats to the pipeline for variant 
++ Performance has improved as a result of extensive benchmarking and profiling.
+  Details can be found [here](https://github.com/biowdl/ngs-performance-choices/).
++ Added a bwaThreads option to the input. This sets the number of threads used
+  by the BWA aligner, and is a major influencer of wall clock time.
++ Use scatter-regions from the chunked-scatter python package as scattering 
+  tool. The old biopet-scatterregions package did not support scattersizes
+  larger than 2 billion, making it impossible to have the whole human genome in
+  one scatter.
++ Use sambamba markdup for marking duplicates with 2 threads which reduces 
+  wall clock time.
++ Updated default BWA containers. Both `bwa` and `bwakit` now contain 0.7.17
+  and include samtools 1.10 for fast sorting.
++ Added bcftools stats to the pipeline for variant 
   statistics. These stats are reported in the MultiQC report.
 + Tasks were updated to contain the `time_minutes` runtime attribute and
   associated `timeMinutes` input, describing the maximum time the task will

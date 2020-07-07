@@ -29,6 +29,7 @@ import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
+import "tasks/chunked-scatter.wdl" as chunkedScatter
 
 workflow Somatic {
     input {
@@ -56,7 +57,8 @@ workflow Somatic {
         Boolean runCombineVariants = false
         Int? cnvMinimumContigLength
         Int scatterSizeMillions = 1000
-        Int scatterSize = scatterSizeMillions * 1000000
+        Int? scatterSize
+        Int bwaThreads = 4
         # Only run multiQC if the user specified an outputDir
         File dockerImagesFile
     }
@@ -77,6 +79,14 @@ workflow Somatic {
     }
     SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
 
+    call chunkedScatter.ScatterRegions as scatterList {
+        input:
+            inputFile = select_first([regions, referenceFastaFai]),
+            scatterSize = scatterSize,
+            scatterSizeMillions = scatterSizeMillions,
+            dockerImage = dockerImages["chunked-scatter"]
+    }
+
     # Running sample subworkflow
     scatter (sample in sampleConfig.samples) {
         call sampleWorkflow.SampleWorkflow as sampleWorkflow {
@@ -93,7 +103,8 @@ workflow Somatic {
                 adapterReverse = adapterReverse,
                 useBwaKit = useBwaKit,
                 dockerImages = dockerImages,
-                scatterSize = scatterSize,
+                scatters = scatterList.scatters,
+                bwaThreads = bwaThreads,
                 platform = platform
         }
 
@@ -282,6 +293,7 @@ workflow Somatic {
         runVardict: {description: "Whether or not to run VarDict.", category: "common"}
         runMutect2: {description: "Whether or not to run Mutect2.", category: "common"}
         runCombineVariants: {description: "Whether or not to combine the variant calling results into one VCF file.", category: "advanced"}
+        bwaThreads: {description: "The amount of threads for the alignment process", category: "advanced"}
     }
 }
 

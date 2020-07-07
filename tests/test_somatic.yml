@@ -64,6 +64,7 @@
   tags:
     - integration
     - somatic
+    - bwakit
   command: >-
     cromwell run -o tests/cromwell_options.json
     -i tests/integration/Somatic_PairedEnd_bwakit.json somatic.wdl

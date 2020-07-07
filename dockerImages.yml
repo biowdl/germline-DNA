@@ -9,14 +9,14 @@
 # Tools are sorted alphabetically for ease of use.
 
 bedtools: "quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3"
-biopet-scatterregions: "quay.io/biocontainers/biopet-scatterregions:0.2--0"
 biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_0"
-# A mulled container is needed to have both picard and bwa in one container.
-# quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842
-# This container contains: picard (2.18.7), bwa (0.7.17-r1188)
-"bwa+picard": "quay.io/biocontainers/mulled-v2-002f51ea92721407ef440b921fb5940f424be842:43ec6124f9f4f875515f9548733b8b4e5fed9aa6-0"
-bwakit: "biocontainers/bwakit:v0.7.15_cv1"
+# A mulled container is needed to have both samtools and bwa in one container.
+# This container contains: samtools (1.10), bwa (0.7.17-r1188)
+bwa+samtools: "quay.io/biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
+# Contains bwa 0.7.17 bwakit 0.7.17.dev1 and samtools 1.10
+bwakit+samtools: "quay.io/biocontainers/mulled-v2-ad317f19f5881324e963f6a6d464d696a2825ab6:c59b7a73c87a9fe81737d5d628e10a3b5807f453-0"
 bcftools: "quay.io/biocontainers/bcftools:1.9--ha228f0b_3"
+chunked-scatter: "quay.io/biocontainers/chunked-scatter:0.2.0--py_0"
 clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
 cutadapt: "quay.io/biocontainers/cutadapt:2.8--py37h516909a_0"
 debian: "debian@sha256:f05c05a218b7a4a5fe979045b1c8e2a9ec3524e5611ebfdd0ef5b8040f9008fa"  # Used for general tasks
@@ -28,6 +28,7 @@ manta: "quay.io/biocontainers/manta:1.4.0--py27_1"
 multiqc: "quay.io/biocontainers/multiqc:1.7--py_1"
 picard: "quay.io/biocontainers/picard:2.20.5--0"
 python: "python:3.7-slim"
+sambamba: "quay.io/biocontainers/sambamba:0.7.1--h148d290_2"
 samtools: "quay.io/biocontainers/samtools:1.8--h46bd0b3_5"
 strelka: "quay.io/biocontainers/strelka:2.9.7--0"
 smoove: quay.io/biocontainers/smoove:0.2.5--0
