@@ -20,11 +20,19 @@ developed by the SASC team at [Leiden University Medical Center](https://www.lum
 ## Usage
 You can run these pipelines using
 [Cromwell](http://cromwell.readthedocs.io/en/stable/):
+
+First download the latest version of the pipeline wdl file and 
+zip imports package from the [releases page](https://github.com/biowdl/germline-DNA/releases).
+
+The pipeline can then be run with the following command:
 ```bash
-java -jar cromwell-<version>.jar run -o options.json -i inputs.json <pipeline>.wdl
+java -jar cromwell-<version>.jar run \
+  -o options.json \
+  -i inputs.json \
+  --imports <pipeline>_v<version>.zip \
+  <pipeline>_<version>.wdl
 ```
-Use `germline.wdl` to perform germline variant calling and `somatic.wdl`
-for somatic variant calling.
+
 
 Where `options.json` contains the following json:
 ```json
