@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 version 4.0.0-dev
 -----------------
++ WDL files and import zip packages are now offered with every release to 
+  make downloading and running much easier.
 + Performance has improved as a result of extensive benchmarking and profiling.
   Details can be found [here](https://github.com/biowdl/ngs-performance-choices/).
 + Added a bwaThreads option to the input. This sets the number of threads used
