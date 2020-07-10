@@ -94,12 +94,14 @@ workflow Germline {
             dockerImage = dockerImages["chunked-scatter"]
     }
 
+    
     # Running sample subworkflow
     scatter (sample in sampleConfig.samples) {
         String sampleIds = sample.id
+        String sampleDir = outputDir + "/samples/" + sample.id + "/"
         call sampleWf.SampleWorkflow as sampleWorkflow {
             input:
-                sampleDir = outputDir + "/samples/" + sample.id,
+                sampleDir = sampleDir,
                 sample = sample,
                 referenceFasta = referenceFasta,
                 referenceFastaFai = referenceFastaFai,
@@ -122,7 +124,7 @@ workflow Germline {
                 bamIndex = sampleWorkflow.recalibratedBamIndex,
                 gender = select_first([sample.gender, "unknown"]),
                 sampleName = sample.id,
-                outputDir = outputDir + "/variants/",
+                outputDir = sampleDir,
                 referenceFasta = referenceFasta,
                 referenceFastaFai = referenceFastaFai,
                 referenceFastaDict = referenceFastaDict,
@@ -148,7 +150,7 @@ workflow Germline {
                     referenceFastaDict = referenceFastaDict,
                     bwaIndex = bwaIndex,
                     sample = sample.id,
-                    outputDir = outputDir + "/samples/" + sample.id,
+                    outputDir = sampleDir,
                     dockerImages = dockerImages
             }
         }
@@ -180,7 +182,7 @@ workflow Germline {
     call multiqc.MultiQC as multiqcTask {
         input:
             reports = allReports,
-            outDir = outputDir + "/multiqc",
+            outDir = outputDir,
             dockerImage = dockerImages["multiqc"]
     }
 
