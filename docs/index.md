@@ -33,7 +33,6 @@ java -jar cromwell-<version>.jar run \
   <pipeline>_<version>.wdl
 ```
 
-
 Where `options.json` contains the following json:
 ```json
 {
