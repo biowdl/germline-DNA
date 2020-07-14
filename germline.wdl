@@ -94,7 +94,6 @@ workflow Germline {
             dockerImage = dockerImages["chunked-scatter"]
     }
 
-    
     # Running sample subworkflow
     scatter (sample in sampleConfig.samples) {
         String sampleIds = sample.id
