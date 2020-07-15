@@ -57,6 +57,8 @@ workflow Germline {
         # Only run multiQC if the user specified an outputDir
         Boolean runSVcalling = false
     }
+    meta {allowNestedInputs: true}
+
     Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
     # Parse docker Tags configuration and sample sheet

@@ -63,6 +63,8 @@ workflow Somatic {
         File dockerImagesFile
     }
 
+    meta {allowNestedInputs: true}
+
     # Parse docker Tags configuration and sample sheet
     call common.YamlToJson as ConvertDockerImagesFile {
         input:
