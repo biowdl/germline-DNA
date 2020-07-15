@@ -269,7 +269,9 @@ This pipeline will produce a number of directories and files:
   - **&lt;sample>**: Contains a variety of files, including the BAM files
     for this library (`*.markdup.bam`) and a BAM file with additional 
     preprocessing performed used for variant calling (`*.bsqr.bam`).
-    It also contains a directory per library.  
+    It contains the vcf file for the sample if germline.wdl was used and 
+    a single sample vcf was produced.
+    It also contains a directory per readgroup.  
     - **CNVcalling**: Contains the CNV calling results for this sample
       and its control sample. Only present if `somatic.wdl` is used with
       CNV calling enabled.  
@@ -277,10 +279,9 @@ This pipeline will produce a number of directories and files:
       Only present if `somatic.wdl` is used.  
     - **&lt;library>**: This directory contains a directory per readgroup.
       - **&lt;readgroup>**: Contains QC metrics and preprocessed FastQ files.
-- **variants**: If `germline.wdl` is used contains the variants called by GATK.
 - **multisample.vcf.gz**: A multisample VCF file with the variant calling
   results. Only present if `germline.wdl` is used.
-- **multiqc**: Contains the multiQC report.
+- **multiqc_report.html**: The multiQC report.
 - **PON**: A generated panel of normals and the preprocessed intervals.
   Only present if `somatic.wdl` is used with CNV calling enabled and no
   PON or preprocessed intervals were provided in the inputs
