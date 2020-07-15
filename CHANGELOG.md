@@ -11,7 +11,11 @@ that users understand how the changes affect the new version.
 
 version 4.0.0-dev
 -----------------
-
++ Changes in Cromwell 48 made it impossible to use the wide array of inputs
+  in our documentation (such as 
+  `Germline.sampleWorkflow.QC.Cutadapt.minimumLength`). Fixes have been made 
+  upstream and in the pipeline. From Cromwell 52 onwards these options are
+  available again.
 + WDL files and import zip packages are now offered with every release to 
   make downloading and running much easier.
 + The output directory was restructured to contain less nested folders.
