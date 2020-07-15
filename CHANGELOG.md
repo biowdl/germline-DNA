@@ -11,6 +11,9 @@ that users understand how the changes affect the new version.
 
 version 4.0.0-dev
 -----------------
+
++ WDL files and import zip packages are now offered with every release to 
+  make downloading and running much easier.
 + The output directory was restructured to contain less nested folders.
 + Performance has improved as a result of extensive benchmarking and profiling.
   Details can be found [here](https://github.com/biowdl/ngs-performance-choices/).
