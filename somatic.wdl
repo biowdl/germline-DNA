@@ -62,6 +62,7 @@ workflow Somatic {
         # Only run multiQC if the user specified an outputDir
         File dockerImagesFile
     }
+    meta {allowNestedInputs: true}
 
     # Parse docker Tags configuration and sample sheet
     call common.YamlToJson as ConvertDockerImagesFile {

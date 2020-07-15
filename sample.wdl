@@ -46,6 +46,7 @@ workflow SampleWorkflow {
         String? adapterForward
         String? adapterReverse
     }
+    meta {allowNestedInputs: true}
 
     scatter (readgroup in sample.readgroups) {
         String readgroupDir = sampleDir + "/lib_" + readgroup.lib_id + "--rg_" + readgroup.id
