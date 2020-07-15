@@ -63,8 +63,6 @@ workflow Somatic {
         File dockerImagesFile
     }
 
-    String genotypingDir = outputDir + "/multisample_variants/"
-
     # Parse docker Tags configuration and sample sheet
     call common.YamlToJson as ConvertDockerImagesFile {
         input:
@@ -193,7 +191,7 @@ workflow Somatic {
     call multiqc.MultiQC as multiqcTask {
         input:
             reports = flatten(sampleWorkflow.reports),
-            outDir = outputDir + "/multiqc",
+            outDir = outputDir,
             dockerImage = dockerImages["multiqc"]
     }
 

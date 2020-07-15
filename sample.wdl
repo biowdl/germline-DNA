@@ -48,8 +48,7 @@ workflow SampleWorkflow {
     }
 
     scatter (readgroup in sample.readgroups) {
-        String libraryDir = sampleDir + "/lib_" + readgroup.lib_id
-        String readgroupDir = libraryDir + "/rg_" + readgroup.id
+        String readgroupDir = sampleDir + "/lib_" + readgroup.lib_id + "--rg_" + readgroup.id
 
         call qc.QC as QC {
             input:
@@ -66,7 +65,7 @@ workflow SampleWorkflow {
                 input:
                     read1 = QC.qcRead1,
                     read2 = QC.qcRead2,
-                    outputPath = readgroupDir + "/" + basename(readgroup.R1) + ".bam",
+                    outputPath = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id + ".bam",
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
                     threads = bwaThreads,
@@ -79,7 +78,7 @@ workflow SampleWorkflow {
                 input:
                     read1 = QC.qcRead1,
                     read2 = QC.qcRead2,
-                    outputPrefix = readgroupDir + "/" + basename(readgroup.R1),
+                    outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = bwaIndex,
                     threads = bwaThreads,
@@ -116,7 +115,7 @@ workflow SampleWorkflow {
         input:
             bam = markdup.outputBam,
             bamIndex = markdup.outputBamIndex,
-            outputDir = sampleDir + "/metrics",
+            outputDir = sampleDir,
             referenceFasta = referenceFasta,
             referenceFastaFai = referenceFastaFai,
             referenceFastaDict = referenceFastaDict,
