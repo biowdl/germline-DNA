@@ -19,7 +19,6 @@ bcftools: "quay.io/biocontainers/bcftools:1.9--ha228f0b_3"
 chunked-scatter: "quay.io/biocontainers/chunked-scatter:0.2.0--py_0"
 clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
 cutadapt: "quay.io/biocontainers/cutadapt:2.8--py37h516909a_0"
-debian: "debian@sha256:f05c05a218b7a4a5fe979045b1c8e2a9ec3524e5611ebfdd0ef5b8040f9008fa"  # Used for general tasks
 delly: "quay.io/biocontainers/delly:0.8.1--h4037b6b_1"
 fastqc: "quay.io/biocontainers/fastqc:0.11.9--0"
 gatk4: "quay.io/biocontainers/gatk4:4.1.7.0--py38_0"
