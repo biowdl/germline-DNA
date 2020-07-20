@@ -7,7 +7,7 @@
 # command.
 
 # Tools are sorted alphabetically for ease of use.
-
+bcftools: "quay.io/biocontainers/bcftools:1.10.2--h4f4756c_2"
 bedtools: "quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3"
 biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_0"
 # A mulled container is needed to have both samtools and bwa in one container.
@@ -15,21 +15,20 @@ biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_
 bwa+samtools: "quay.io/biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
 # Contains bwa 0.7.17 bwakit 0.7.17.dev1 and samtools 1.10
 bwakit+samtools: "quay.io/biocontainers/mulled-v2-ad317f19f5881324e963f6a6d464d696a2825ab6:c59b7a73c87a9fe81737d5d628e10a3b5807f453-0"
-bcftools: "quay.io/biocontainers/bcftools:1.9--ha228f0b_3"
-chunked-scatter: "quay.io/biocontainers/chunked-scatter:0.2.0--py_0"
+chunked-scatter: "quay.io/biocontainers/chunked-scatter:1.0.0--py_0"
 clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
-cutadapt: "quay.io/biocontainers/cutadapt:2.8--py37h516909a_0"
-debian: "debian@sha256:f05c05a218b7a4a5fe979045b1c8e2a9ec3524e5611ebfdd0ef5b8040f9008fa"  # Used for general tasks
+cutadapt: "quay.io/biocontainers/cutadapt:2.10--py37h516909a_0"
 delly: "quay.io/biocontainers/delly:0.8.1--h4037b6b_1"
 fastqc: "quay.io/biocontainers/fastqc:0.11.9--0"
-gatk4: "quay.io/biocontainers/gatk4:4.1.7.0--py38_0"
-gatk-broad: "broadinstitute/gatk:4.1.4.0"
+gatk4: "quay.io/biocontainers/gatk4:4.1.8.0--py38h37ae868_0"
+gatk-broad: "broadinstitute/gatk:4.1.8.0"
 manta: "quay.io/biocontainers/manta:1.4.0--py27_1"
-multiqc: "quay.io/biocontainers/multiqc:1.7--py_1"
-picard: "quay.io/biocontainers/picard:2.20.5--0"
-python: "python:3.7-slim"
+multiqc: "quay.io/biocontainers/multiqc:1.9--pyh9f0ad1d_0"
+picard: "quay.io/biocontainers/picard:2.23.2--0"
+# Python 3.7-slim on buster
+python: "python@sha256:e0f6a4df17d5707637fa3557ab266f44dddc46ebfc82b0f1dbe725103961da4e"
 sambamba: "quay.io/biocontainers/sambamba:0.7.1--h148d290_2"
-samtools: "quay.io/biocontainers/samtools:1.8--h46bd0b3_5"
+samtools: "quay.io/biocontainers/samtools:1.10--h9402c20_2"
 strelka: "quay.io/biocontainers/strelka:2.9.7--0"
 smoove: quay.io/biocontainers/smoove:0.2.5--0
 somaticseq: "lethalfang/somaticseq:3.1.0"

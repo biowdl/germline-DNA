@@ -302,7 +302,8 @@ task GetSamplePositionInArray {
         Array[String] sampleIds
         String sample
 
-        String dockerImage = "python:3.7-slim"
+        # python:3.7-slim's sha256 digest. This image is based on debian buster.
+        String dockerImage = "python@sha256:e0f6a4df17d5707637fa3557ab266f44dddc46ebfc82b0f1dbe725103961da4e"
     }
 
     command <<<

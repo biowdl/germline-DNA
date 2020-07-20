@@ -23,6 +23,7 @@
   tags:
     - integration
     - somatic
+    - cnv
   # One of the tools used for CNV calling won't run if docker is given the --user option
   command: >-
     cromwell run -o tests/cromwell_options_no_user.json

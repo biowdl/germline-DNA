@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 version 4.0.0-dev
 -----------------
++ Updated default versions for several tools to the newest version. Pin the 
+  volatile python container to a specific hash digest.
 + Changes in Cromwell 48 made it impossible to use the wide array of inputs
   in our documentation (such as 
   `Germline.sampleWorkflow.QC.Cutadapt.minimumLength`). Fixes have been made 
