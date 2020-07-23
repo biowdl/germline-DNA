@@ -24,6 +24,7 @@ import "BamMetrics/bammetrics.wdl" as bammetrics
 import "gatk-preprocess/gatk-preprocess.wdl" as preprocess
 import "structs.wdl" as structs
 import "tasks/bwa.wdl" as bwa
+import "tasks/bwa-mem2.wdl" as bwamem2
 import "tasks/sambamba.wdl" as sambamba
 import "QC/QC.wdl" as qc
 
@@ -35,7 +36,8 @@ workflow SampleWorkflow {
         File referenceFasta
         File referenceFastaFai
         File referenceFastaDict
-        BwaIndex bwaIndex
+        BwaIndex? bwaIndex
+        BwaIndex? bwaMem2Index
         File dbsnpVCF
         File dbsnpVCFIndex
         Map[String, String] dockerImages
@@ -61,22 +63,40 @@ workflow SampleWorkflow {
                 dockerImages = dockerImages
         }
 
-        call bwa.Mem as bwaMem {
-            input:
-                read1 = QC.qcRead1,
-                read2 = QC.qcRead2,
-                outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
-                readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
-                bwaIndex = bwaIndex,
-                threads = bwaThreads,
-                usePostalt = useBwaKit,
-                dockerImage = dockerImages["bwakit+samtools"]
+        if (defined(bwaMem2Index)) {
+            call bwamem2.Mem as bwamem2Mem {
+                input:
+                    read1 = QC.qcRead1,
+                    read2 = QC.qcRead2,
+                    outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
+                    readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
+                    bwaIndex = select_first([bwaIndex]),
+                    threads = bwaThreads,
+                    usePostalt = useBwaKit,
+                    dockerImage = dockerImages["bwamem2+kit+samtools"]
+            }
+        }
+        # We assume bwaIndex is present. If not, we create a crash.
+        if (!defined(bwaMem2Index)) {
+            call bwa.Mem as bwaMem {
+                input:
+                    read1 = QC.qcRead1,
+                    read2 = QC.qcRead2,
+                    outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
+                    readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
+                    bwaIndex = select_first([bwaIndex]),
+                    threads = bwaThreads,
+                    usePostalt = useBwaKit,
+                    dockerImage = dockerImages["bwakit+samtools"]
+            }
         }
     }
 
     call sambamba.Markdup as markdup {
         input:
-            inputBams = bwaMem.outputBam,
+            inputBams = if defined(bwaMem2Index) 
+                        then select_all(bwamem2Mem.outputBam) 
+                        else select_all(bwaMem.outputBam),
             outputPath = sampleDir + "/" + sample.id + ".markdup.bam",
             dockerImage = dockerImages["sambamba"]
     }

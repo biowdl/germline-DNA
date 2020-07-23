@@ -38,7 +38,8 @@ workflow Germline {
         File referenceFasta
         File referenceFastaFai
         File referenceFastaDict
-        BwaIndex bwaIndex
+        BwaIndex? bwaIndex
+        BwaIndex? bwaMem2Index
         File dockerImagesFile
         File dbsnpVCF
         File dbsnpVCFIndex
@@ -108,6 +109,7 @@ workflow Germline {
                 referenceFastaFai = referenceFastaFai,
                 referenceFastaDict = referenceFastaDict,
                 bwaIndex = bwaIndex,
+                bwaMem2Index = bwaMem2Index,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 adapterForward = adapterForward,
@@ -141,7 +143,7 @@ workflow Germline {
         }
 
 
-        if (runSVcalling) {
+        if (runSVcalling && defined(bwaIndex)) {
             call structuralVariantCalling.SVcalling as svCalling {
                 input:
                     bamFile = sampleWorkflow.markdupBam,
@@ -149,7 +151,7 @@ workflow Germline {
                     referenceFasta = referenceFasta,
                     referenceFastaFai = referenceFastaFai,
                     referenceFastaDict = referenceFastaDict,
-                    bwaIndex = bwaIndex,
+                    bwaIndex = select_first([bwaIndex]),
                     sample = sample.id,
                     outputDir = sampleDir,
                     dockerImages = dockerImages
