@@ -70,13 +70,13 @@ workflow SampleWorkflow {
                     read2 = QC.qcRead2,
                     outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
-                    bwaIndex = select_first([bwaIndex]),
+                    bwaIndex = select_first([bwaMem2Index]),
                     threads = bwaThreads,
                     usePostalt = useBwaKit,
                     dockerImage = dockerImages["bwamem2+kit+samtools"]
             }
         }
-        # We assume bwaIndex is present. If not, we create a crash.
+        # We assume bwaIndex present if bwamem2index is not present. If not, we create a crash.
         if (!defined(bwaMem2Index)) {
             call bwa.Mem as bwaMem {
                 input:
