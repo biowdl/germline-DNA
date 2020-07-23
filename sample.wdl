@@ -61,38 +61,22 @@ workflow SampleWorkflow {
                 dockerImages = dockerImages
         }
 
-        if (! useBwaKit) {
-            call bwa.Mem as bwaMem {
-                input:
-                    read1 = QC.qcRead1,
-                    read2 = QC.qcRead2,
-                    outputPath = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id + ".bam",
-                    readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
-                    bwaIndex = bwaIndex,
-                    threads = bwaThreads,
-                    dockerImage = dockerImages["bwa+samtools"]
-            }
-        }
-
-        if (useBwaKit) {
-            call bwa.Kit as bwakit {
-                input:
-                    read1 = QC.qcRead1,
-                    read2 = QC.qcRead2,
-                    outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
-                    readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
-                    bwaIndex = bwaIndex,
-                    threads = bwaThreads,
-                    dockerImage = dockerImages["bwakit+samtools"]
-            }
+        call bwa.Mem as bwaMem {
+            input:
+                read1 = QC.qcRead1,
+                read2 = QC.qcRead2,
+                outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
+                readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
+                bwaIndex = bwaIndex,
+                threads = bwaThreads,
+                usePostalt = useBwaKit,
+                dockerImage = dockerImages["bwakit+samtools"]
         }
     }
 
     call sambamba.Markdup as markdup {
         input:
-            inputBams = if useBwaKit
-                then select_all(bwakit.outputBam)
-                else select_all(bwaMem.outputBam),
+            inputBams = bwaMem.outputBam,
             outputPath = sampleDir + "/" + sample.id + ".markdup.bam",
             dockerImage = dockerImages["sambamba"]
     }
