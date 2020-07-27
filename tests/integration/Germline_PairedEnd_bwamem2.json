@@ -8,6 +8,7 @@
     "fastaFile": "tests/data/reference/bwa-mem2/reference.fasta",
     "indexFiles": [
       "tests/data/reference/bwa-mem2/reference.fasta.0123",
+      "tests/data/reference/bwa-mem2/reference.fasta.alt",
       "tests/data/reference/bwa-mem2/reference.fasta.amb",
       "tests/data/reference/bwa-mem2/reference.fasta.ann",
       "tests/data/reference/bwa-mem2/reference.fasta.bwt.2bit.64",
