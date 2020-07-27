@@ -13,7 +13,7 @@ biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_
 # Contains bwa 0.7.17 bwakit 0.7.17.dev1 and samtools 1.10
 bwakit+samtools: "quay.io/biocontainers/mulled-v2-ad317f19f5881324e963f6a6d464d696a2825ab6:c59b7a73c87a9fe81737d5d628e10a3b5807f453-0"
 # Contains bwa-mem2 bwakit 0.7.17.dev1 and samtools 1.10
-bwamem2+kit+samtools: "biowdl/bwamem2-kit:2.0-dev2"  # TODO: Update to biocontainer.
+bwamem2+kit+samtools: "quay.io/biocontainers/mulled-v2-6a15c99309c82b345497d24489bee67bbb76c2f6:1c9c3227b9bf825a8dc9726a25701aa23c0b1f12-0"
 chunked-scatter: "quay.io/biocontainers/chunked-scatter:1.0.0--py_0"
 clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
 cutadapt: "quay.io/biocontainers/cutadapt:2.10--py37h516909a_0"
