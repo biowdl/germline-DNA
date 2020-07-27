@@ -141,7 +141,8 @@ workflow SampleWorkflow {
     parameter_meta {
         sample: {description: "The sample information: sample id, readgroups, etc.", category: "required"}
         sampleDir: {description: "The directory the output should be written to.", category: "required"}
-        bwaIndex: {description: "The BWA index files.", category: "required"}
+        bwaIndex: {description: "The BWA index files. These or the bwaMem2Index should be provided.", category: "common"}
+        bwaMem2Index: {description: "The bwa-mem2 index files. These or the bwaIndex should be provided.", category: "common"}
         referenceFasta: { description: "The reference fasta file", category: "required" }
         referenceFastaFai: { description: "Fasta index (.fai) file of the reference", category: "required" }
         referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
