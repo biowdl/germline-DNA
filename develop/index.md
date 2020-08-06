@@ -20,11 +20,28 @@ developed by the SASC team at [Leiden University Medical Center](https://www.lum
 ## Usage
 You can run these pipelines using
 [Cromwell](http://cromwell.readthedocs.io/en/stable/):
+
+First download the latest version of the pipeline wdl file and 
+zip imports package from the [releases page](https://github.com/biowdl/germline-DNA/releases).
+
+The pipeline can then be run with the following command:
 ```bash
-java -jar cromwell-<version>.jar run -i inputs.json <pipeline>.wdl
+java -jar cromwell-<version>.jar run \
+  -o options.json \
+  -i inputs.json \
+  --imports <pipeline>_v<version>.zip \
+  <pipeline>_<version>.wdl
 ```
-Use `germline.wdl` to perform germline variant calling and `somatic.wdl`
-for somatic variant calling.
+
+Where `options.json` contains the following json:
+```json
+{
+  "final_workflow_outputs_dir": "/path/to/outputs",
+  "use_relative_output_paths": true,
+}
+```
+The `options.json` will make sure all outputs end up in `/path/to/outputs` in
+an easy to navigate folder structure. 
 
 ### Inputs
 Inputs are provided through a JSON file. The minimally required inputs are
@@ -46,7 +63,6 @@ Replace `<pipeline>` with either `Germline` or `Somatic`.
   "<pipeline>.dbsnpVCF": "A path to a dbSNP VCF file",
   "<pipeline>.dbsnpVCFIndex": "The path to the index (.tbi) file associated with the dbSNP VCF",
   "<pipeline>.sampleConfigFile": "A sample configuration file (see below)",
-  "<pipeline>.outputDir": "The path to the output directory",
   "<pipeline>.referenceFasta": "A path to a reference fasta",
   "<pipeline>.referenceFastaFai": "The path to the index associated with the reference fasta",
   "<pipeline>.referenceFastaDict": "The path to the dict file associated with the reference fasta",
@@ -210,7 +226,6 @@ can be used for Germline as long as the starting `Somatic.` is replaced with
   "Somatic.dbsnpVCF": "/home/user/genomes/human/dbsnp/dbsnp-151.vcf.gz",
   "Somatic.dbsnpVCFIndex": "/home/user/genomes/human/dbsnp/dbsnp-151.vcf.gz.tbi",
   "Somatic.sampleConfigFiles": "/home/user/analysis/samples.yml",
-  "Somatic.outputDir": "/home/user/analysis/results",
   "Somatic.referenceFasta": "/home/user/genomes/human/GRCh38.fasta",
   "Somatic.referenceFastaFai": "/home/user/genomes/human/GRCh38.fasta.fai",
   "Somatic.referenceFastaDict": "/home/user/genomes/human/GRCh38.dict",
@@ -254,7 +269,9 @@ This pipeline will produce a number of directories and files:
   - **&lt;sample>**: Contains a variety of files, including the BAM files
     for this library (`*.markdup.bam`) and a BAM file with additional 
     preprocessing performed used for variant calling (`*.bsqr.bam`).
-    It also contains a directory per library.  
+    It contains the vcf file for the sample if germline.wdl was used and 
+    a single sample vcf was produced.
+    It also contains a directory per readgroup.  
     - **CNVcalling**: Contains the CNV calling results for this sample
       and its control sample. Only present if `somatic.wdl` is used with
       CNV calling enabled.  
@@ -264,7 +281,7 @@ This pipeline will produce a number of directories and files:
       - **&lt;readgroup>**: Contains QC metrics and preprocessed FastQ files.
 - **multisample.vcf.gz**: A multisample VCF file with the variant calling
   results. Only present if `germline.wdl` is used.
-- **multiqc**: Contains the multiQC report.
+- **multiqc_report.html**: The multiQC report.
 - **PON**: A generated panel of normals and the preprocessed intervals.
   Only present if `somatic.wdl` is used with CNV calling enabled and no
   PON or preprocessed intervals were provided in the inputs

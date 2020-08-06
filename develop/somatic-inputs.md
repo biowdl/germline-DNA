@@ -19,12 +19,12 @@ Somatic.
 <dt id="Somatic.dbsnpVCF"><a href="#Somatic.dbsnpVCF">Somatic.dbsnpVCF</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    dbsnp VCF file used for checking known sites
 </dd>
 <dt id="Somatic.dbsnpVCFIndex"><a href="#Somatic.dbsnpVCFIndex">Somatic.dbsnpVCFIndex</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    Index (.tbi) file for the dbsnp VCF
 </dd>
 <dt id="Somatic.dockerImagesFile"><a href="#Somatic.dockerImagesFile">Somatic.dockerImagesFile</a></dt>
 <dd>
@@ -34,17 +34,17 @@ Somatic.
 <dt id="Somatic.referenceFasta"><a href="#Somatic.referenceFasta">Somatic.referenceFasta</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    The reference fasta file
 </dd>
 <dt id="Somatic.referenceFastaDict"><a href="#Somatic.referenceFastaDict">Somatic.referenceFastaDict</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    Sequence dictionary (.dict) file of the reference
 </dd>
 <dt id="Somatic.referenceFastaFai"><a href="#Somatic.referenceFastaFai">Somatic.referenceFastaFai</a></dt>
 <dd>
     <i>File </i><br />
-    ???
+    Fasta index (.fai) file of the reference
 </dd>
 <dt id="Somatic.sampleConfigFile"><a href="#Somatic.sampleConfigFile">Somatic.sampleConfigFile</a></dt>
 <dd>
@@ -55,6 +55,21 @@ Somatic.
 
 ## Other common inputs
 <dl>
+<dt id="Somatic.adapterForward"><a href="#Somatic.adapterForward">Somatic.adapterForward</a></dt>
+<dd>
+    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
+    The adapter to be removed from the reads first or single end reads.
+</dd>
+<dt id="Somatic.adapterReverse"><a href="#Somatic.adapterReverse">Somatic.adapterReverse</a></dt>
+<dd>
+    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
+    The adapter to be removed from the reads second end reads.
+</dd>
+<dt id="Somatic.cnvPanelOfNormals"><a href="#Somatic.cnvPanelOfNormals">Somatic.cnvPanelOfNormals</a></dt>
+<dd>
+    <i>File? </i><br />
+    The panel of normals file to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly using the samples lacking a control sample in the samplesheet.
+</dd>
 <dt id="Somatic.CNVs.annotatedIntervals"><a href="#Somatic.CNVs.annotatedIntervals">Somatic.CNVs.annotatedIntervals</a></dt>
 <dd>
     <i>File? </i><br />
@@ -95,57 +110,62 @@ Somatic.
     <i>File? </i><br />
     A bed file describing the regions to call variants for.
 </dd>
-<dt id="Somatic.sample.bqsr.regions"><a href="#Somatic.sample.bqsr.regions">Somatic.sample.bqsr.regions</a></dt>
+<dt id="Somatic.runManta"><a href="#Somatic.runManta">Somatic.runManta</a></dt>
 <dd>
-    <i>File? </i><br />
-    A bed file describing the regions to operate on.
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not manta should be run as part of the Strelka pipeline.
 </dd>
-<dt id="Somatic.sample.bqsr.splitSplicedReads"><a href="#Somatic.sample.bqsr.splitSplicedReads">Somatic.sample.bqsr.splitSplicedReads</a></dt>
+<dt id="Somatic.runMutect2"><a href="#Somatic.runMutect2">Somatic.runMutect2</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not to run Mutect2.
+</dd>
+<dt id="Somatic.runStrelka"><a href="#Somatic.runStrelka">Somatic.runStrelka</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not to run Strelka.
+</dd>
+<dt id="Somatic.runVardict"><a href="#Somatic.runVardict">Somatic.runVardict</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not to run VarDict.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.splitSplicedReads"><a href="#Somatic.sampleWorkflow.bqsr.splitSplicedReads">Somatic.sampleWorkflow.bqsr.splitSplicedReads</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Whether or not gatk's SplitNCgarReads should be run to split spliced reads. This should be enabled for RNAseq samples.
 </dd>
-<dt id="Somatic.sample.bwakit.sixtyFour"><a href="#Somatic.sample.bwakit.sixtyFour">Somatic.sample.bwakit.sixtyFour</a></dt>
+<dt id="Somatic.sampleWorkflow.bwakit.sixtyFour"><a href="#Somatic.sampleWorkflow.bwakit.sixtyFour">Somatic.sampleWorkflow.bwakit.sixtyFour</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Whether or not the index uses the '.64' suffixes.
 </dd>
-<dt id="Somatic.sample.metrics.ampliconIntervals"><a href="#Somatic.sample.metrics.ampliconIntervals">Somatic.sample.metrics.ampliconIntervals</a></dt>
+<dt id="Somatic.sampleWorkflow.metrics.ampliconIntervals"><a href="#Somatic.sampleWorkflow.metrics.ampliconIntervals">Somatic.sampleWorkflow.metrics.ampliconIntervals</a></dt>
 <dd>
     <i>File? </i><br />
     An interval list describinig the coordinates of the amplicons sequenced. This should only be used for targeted sequencing or WES. Required if `ampliconIntervals` is defined.
 </dd>
-<dt id="Somatic.sample.metrics.refRefflat"><a href="#Somatic.sample.metrics.refRefflat">Somatic.sample.metrics.refRefflat</a></dt>
+<dt id="Somatic.sampleWorkflow.metrics.refRefflat"><a href="#Somatic.sampleWorkflow.metrics.refRefflat">Somatic.sampleWorkflow.metrics.refRefflat</a></dt>
 <dd>
     <i>File? </i><br />
     A refflat file containing gene annotations. If defined RNA sequencing metrics will be collected.
 </dd>
-<dt id="Somatic.sample.metrics.strandedness"><a href="#Somatic.sample.metrics.strandedness">Somatic.sample.metrics.strandedness</a></dt>
+<dt id="Somatic.sampleWorkflow.metrics.strandedness"><a href="#Somatic.sampleWorkflow.metrics.strandedness">Somatic.sampleWorkflow.metrics.strandedness</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"None"</code><br />
     The strandedness of the RNA sequencing library preparation. One of "None" (unstranded), "FR" (forward-reverse: first read equal transcript) or "RF" (reverse-forward: second read equals transcript).
 </dd>
-<dt id="Somatic.sample.metrics.targetIntervals"><a href="#Somatic.sample.metrics.targetIntervals">Somatic.sample.metrics.targetIntervals</a></dt>
+<dt id="Somatic.sampleWorkflow.metrics.targetIntervals"><a href="#Somatic.sampleWorkflow.metrics.targetIntervals">Somatic.sampleWorkflow.metrics.targetIntervals</a></dt>
 <dd>
     <i>Array[File]+? </i><br />
     An interval list describing the coordinates of the targets sequenced. This should only be used for targeted sequencing or WES. If defined targeted PCR metrics will be collected. Requires `ampliconIntervals` to also be defined.
 </dd>
-<dt id="Somatic.sample.qc.adapterForward"><a href="#Somatic.sample.qc.adapterForward">Somatic.sample.qc.adapterForward</a></dt>
-<dd>
-    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
-    The adapter to be removed from the reads first or single end reads.
-</dd>
-<dt id="Somatic.sample.qc.adapterReverse"><a href="#Somatic.sample.qc.adapterReverse">Somatic.sample.qc.adapterReverse</a></dt>
-<dd>
-    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
-    The adapter to be removed from the reads second end reads.
-</dd>
-<dt id="Somatic.sample.qc.contaminations"><a href="#Somatic.sample.qc.contaminations">Somatic.sample.qc.contaminations</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.contaminations"><a href="#Somatic.sampleWorkflow.QC.contaminations">Somatic.sampleWorkflow.QC.contaminations</a></dt>
 <dd>
     <i>Array[String]+? </i><br />
     Contaminants/adapters to be removed from the reads.
 </dd>
-<dt id="Somatic.sample.qc.readgroupName"><a href="#Somatic.sample.qc.readgroupName">Somatic.sample.qc.readgroupName</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.readgroupName"><a href="#Somatic.sampleWorkflow.QC.readgroupName">Somatic.sampleWorkflow.QC.readgroupName</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>sub(basename(read1),"(\.fq)?(\.fastq)?(\.gz)?","")</code><br />
     The name of the readgroup.
@@ -159,21 +179,6 @@ Somatic.
 <dd>
     <i>File? </i><br />
     A bed file describing regions to exclude.
-</dd>
-<dt id="Somatic.somaticVariantcalling.runMutect2"><a href="#Somatic.somaticVariantcalling.runMutect2">Somatic.somaticVariantcalling.runMutect2</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether or not to run Mutect2.
-</dd>
-<dt id="Somatic.somaticVariantcalling.runStrelka"><a href="#Somatic.somaticVariantcalling.runStrelka">Somatic.somaticVariantcalling.runStrelka</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether or not to run Strelka.
-</dd>
-<dt id="Somatic.somaticVariantcalling.runVardict"><a href="#Somatic.somaticVariantcalling.runVardict">Somatic.somaticVariantcalling.runVardict</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether or not to run VarDict.
 </dd>
 <dt id="Somatic.somaticVariantcalling.singleSomaticSeq.exclusionRegion"><a href="#Somatic.somaticVariantcalling.singleSomaticSeq.exclusionRegion">Somatic.somaticVariantcalling.singleSomaticSeq.exclusionRegion</a></dt>
 <dd>
@@ -195,36 +200,51 @@ Somatic.
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Whether or not the data is from RNA sequencing.
 </dd>
-<dt id="Somatic.somaticVariantcalling.strelka.runManta"><a href="#Somatic.somaticVariantcalling.strelka.runManta">Somatic.somaticVariantcalling.strelka.runManta</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Whether or not mata should be run.
-</dd>
 </dl>
 
 ## Advanced inputs
 <details>
 <summary> Show/Hide </summary>
 <dl>
+<dt id="Somatic.bwaThreads"><a href="#Somatic.bwaThreads">Somatic.bwaThreads</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
+    The amount of threads for the alignment process
+</dd>
+<dt id="Somatic.cnvMinimumContigLength"><a href="#Somatic.cnvMinimumContigLength">Somatic.cnvMinimumContigLength</a></dt>
+<dd>
+    <i>Int? </i><br />
+    The minimum length for a contig to be included in the CNV plots.
+</dd>
 <dt id="Somatic.CNVs.caseSample.callCopyRatioSegments.javaXmx"><a href="#Somatic.CNVs.caseSample.callCopyRatioSegments.javaXmx">Somatic.CNVs.caseSample.callCopyRatioSegments.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"6G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.caseSample.callCopyRatioSegments.memory"><a href="#Somatic.CNVs.caseSample.callCopyRatioSegments.memory">Somatic.CNVs.caseSample.callCopyRatioSegments.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"21G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.CNVs.caseSample.callCopyRatioSegments.timeMinutes"><a href="#Somatic.CNVs.caseSample.callCopyRatioSegments.timeMinutes">Somatic.CNVs.caseSample.callCopyRatioSegments.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.caseSample.collectAllelicCounts.javaXmx"><a href="#Somatic.CNVs.caseSample.collectAllelicCounts.javaXmx">Somatic.CNVs.caseSample.collectAllelicCounts.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"30G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"10G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.caseSample.collectAllelicCounts.memory"><a href="#Somatic.CNVs.caseSample.collectAllelicCounts.memory">Somatic.CNVs.caseSample.collectAllelicCounts.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"90G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"11G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.CNVs.caseSample.collectAllelicCounts.timeMinutes"><a href="#Somatic.CNVs.caseSample.collectAllelicCounts.timeMinutes">Somatic.CNVs.caseSample.collectAllelicCounts.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>120</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.caseSample.collectReadCounts.intervalMergingRule"><a href="#Somatic.CNVs.caseSample.collectReadCounts.intervalMergingRule">Somatic.CNVs.caseSample.collectReadCounts.intervalMergingRule</a></dt>
 <dd>
@@ -238,18 +258,28 @@ Somatic.
 </dd>
 <dt id="Somatic.CNVs.caseSample.collectReadCounts.memory"><a href="#Somatic.CNVs.caseSample.collectReadCounts.memory">Somatic.CNVs.caseSample.collectReadCounts.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"35G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.CNVs.caseSample.collectReadCounts.timeMinutes"><a href="#Somatic.CNVs.caseSample.collectReadCounts.timeMinutes">Somatic.CNVs.caseSample.collectReadCounts.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"G") * 5))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.caseSample.denoiseReadCounts.javaXmx"><a href="#Somatic.CNVs.caseSample.denoiseReadCounts.javaXmx">Somatic.CNVs.caseSample.denoiseReadCounts.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.caseSample.denoiseReadCounts.memory"><a href="#Somatic.CNVs.caseSample.denoiseReadCounts.memory">Somatic.CNVs.caseSample.denoiseReadCounts.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"39G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.CNVs.caseSample.denoiseReadCounts.timeMinutes"><a href="#Somatic.CNVs.caseSample.denoiseReadCounts.timeMinutes">Somatic.CNVs.caseSample.denoiseReadCounts.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>5</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.caseSample.modelSegments.javaXmx"><a href="#Somatic.CNVs.caseSample.modelSegments.javaXmx">Somatic.CNVs.caseSample.modelSegments.javaXmx</a></dt>
 <dd>
@@ -263,7 +293,7 @@ Somatic.
 </dd>
 <dt id="Somatic.CNVs.caseSample.modelSegments.memory"><a href="#Somatic.CNVs.caseSample.modelSegments.memory">Somatic.CNVs.caseSample.modelSegments.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"64G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"11G"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Somatic.CNVs.caseSample.modelSegments.minimumTotalAlleleCountCase"><a href="#Somatic.CNVs.caseSample.modelSegments.minimumTotalAlleleCountCase">Somatic.CNVs.caseSample.modelSegments.minimumTotalAlleleCountCase</a></dt>
@@ -271,55 +301,70 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>if defined(normalAllelicCounts) then 0 else 30</code><br />
     Equivalent to gatk ModelSeqments' `--minimum-total-allele-count-case` option.
 </dd>
+<dt id="Somatic.CNVs.caseSample.modelSegments.timeMinutes"><a href="#Somatic.CNVs.caseSample.modelSegments.timeMinutes">Somatic.CNVs.caseSample.modelSegments.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>60</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.CNVs.caseSample.plotDenoisedCopyRatios.javaXmx"><a href="#Somatic.CNVs.caseSample.plotDenoisedCopyRatios.javaXmx">Somatic.CNVs.caseSample.plotDenoisedCopyRatios.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"7G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.caseSample.plotDenoisedCopyRatios.memory"><a href="#Somatic.CNVs.caseSample.plotDenoisedCopyRatios.memory">Somatic.CNVs.caseSample.plotDenoisedCopyRatios.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.CNVs.caseSample.plotDenoisedCopyRatios.minimumContigLength"><a href="#Somatic.CNVs.caseSample.plotDenoisedCopyRatios.minimumContigLength">Somatic.CNVs.caseSample.plotDenoisedCopyRatios.minimumContigLength</a></dt>
+<dt id="Somatic.CNVs.caseSample.plotDenoisedCopyRatios.timeMinutes"><a href="#Somatic.CNVs.caseSample.plotDenoisedCopyRatios.timeMinutes">Somatic.CNVs.caseSample.plotDenoisedCopyRatios.timeMinutes</a></dt>
 <dd>
-    <i>Int? </i><br />
-    The minimum length for a contig to be included in the plots.
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.caseSample.plotModeledSegments.javaXmx"><a href="#Somatic.CNVs.caseSample.plotModeledSegments.javaXmx">Somatic.CNVs.caseSample.plotModeledSegments.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"7G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.caseSample.plotModeledSegments.memory"><a href="#Somatic.CNVs.caseSample.plotModeledSegments.memory">Somatic.CNVs.caseSample.plotModeledSegments.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"21G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.CNVs.caseSample.plotModeledSegments.minimumContigLength"><a href="#Somatic.CNVs.caseSample.plotModeledSegments.minimumContigLength">Somatic.CNVs.caseSample.plotModeledSegments.minimumContigLength</a></dt>
+<dt id="Somatic.CNVs.caseSample.plotModeledSegments.timeMinutes"><a href="#Somatic.CNVs.caseSample.plotModeledSegments.timeMinutes">Somatic.CNVs.caseSample.plotModeledSegments.timeMinutes</a></dt>
 <dd>
-    <i>Int? </i><br />
-    The minimum length for a contig to be included in the plots.
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.controlSample.callCopyRatioSegments.javaXmx"><a href="#Somatic.CNVs.controlSample.callCopyRatioSegments.javaXmx">Somatic.CNVs.controlSample.callCopyRatioSegments.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"6G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.controlSample.callCopyRatioSegments.memory"><a href="#Somatic.CNVs.controlSample.callCopyRatioSegments.memory">Somatic.CNVs.controlSample.callCopyRatioSegments.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"21G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.CNVs.controlSample.callCopyRatioSegments.timeMinutes"><a href="#Somatic.CNVs.controlSample.callCopyRatioSegments.timeMinutes">Somatic.CNVs.controlSample.callCopyRatioSegments.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.controlSample.collectAllelicCounts.javaXmx"><a href="#Somatic.CNVs.controlSample.collectAllelicCounts.javaXmx">Somatic.CNVs.controlSample.collectAllelicCounts.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"30G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"10G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.controlSample.collectAllelicCounts.memory"><a href="#Somatic.CNVs.controlSample.collectAllelicCounts.memory">Somatic.CNVs.controlSample.collectAllelicCounts.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"90G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"11G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.CNVs.controlSample.collectAllelicCounts.timeMinutes"><a href="#Somatic.CNVs.controlSample.collectAllelicCounts.timeMinutes">Somatic.CNVs.controlSample.collectAllelicCounts.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>120</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.controlSample.collectReadCounts.intervalMergingRule"><a href="#Somatic.CNVs.controlSample.collectReadCounts.intervalMergingRule">Somatic.CNVs.controlSample.collectReadCounts.intervalMergingRule</a></dt>
 <dd>
@@ -333,18 +378,28 @@ Somatic.
 </dd>
 <dt id="Somatic.CNVs.controlSample.collectReadCounts.memory"><a href="#Somatic.CNVs.controlSample.collectReadCounts.memory">Somatic.CNVs.controlSample.collectReadCounts.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"35G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.CNVs.controlSample.collectReadCounts.timeMinutes"><a href="#Somatic.CNVs.controlSample.collectReadCounts.timeMinutes">Somatic.CNVs.controlSample.collectReadCounts.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"G") * 5))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.controlSample.denoiseReadCounts.javaXmx"><a href="#Somatic.CNVs.controlSample.denoiseReadCounts.javaXmx">Somatic.CNVs.controlSample.denoiseReadCounts.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.controlSample.denoiseReadCounts.memory"><a href="#Somatic.CNVs.controlSample.denoiseReadCounts.memory">Somatic.CNVs.controlSample.denoiseReadCounts.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"39G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.CNVs.controlSample.denoiseReadCounts.timeMinutes"><a href="#Somatic.CNVs.controlSample.denoiseReadCounts.timeMinutes">Somatic.CNVs.controlSample.denoiseReadCounts.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>5</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.controlSample.modelSegments.javaXmx"><a href="#Somatic.CNVs.controlSample.modelSegments.javaXmx">Somatic.CNVs.controlSample.modelSegments.javaXmx</a></dt>
 <dd>
@@ -358,7 +413,7 @@ Somatic.
 </dd>
 <dt id="Somatic.CNVs.controlSample.modelSegments.memory"><a href="#Somatic.CNVs.controlSample.modelSegments.memory">Somatic.CNVs.controlSample.modelSegments.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"64G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"11G"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Somatic.CNVs.controlSample.modelSegments.minimumTotalAlleleCountCase"><a href="#Somatic.CNVs.controlSample.modelSegments.minimumTotalAlleleCountCase">Somatic.CNVs.controlSample.modelSegments.minimumTotalAlleleCountCase</a></dt>
@@ -366,39 +421,44 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>if defined(normalAllelicCounts) then 0 else 30</code><br />
     Equivalent to gatk ModelSeqments' `--minimum-total-allele-count-case` option.
 </dd>
+<dt id="Somatic.CNVs.controlSample.modelSegments.timeMinutes"><a href="#Somatic.CNVs.controlSample.modelSegments.timeMinutes">Somatic.CNVs.controlSample.modelSegments.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>60</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.CNVs.controlSample.plotDenoisedCopyRatios.javaXmx"><a href="#Somatic.CNVs.controlSample.plotDenoisedCopyRatios.javaXmx">Somatic.CNVs.controlSample.plotDenoisedCopyRatios.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"7G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.controlSample.plotDenoisedCopyRatios.memory"><a href="#Somatic.CNVs.controlSample.plotDenoisedCopyRatios.memory">Somatic.CNVs.controlSample.plotDenoisedCopyRatios.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.CNVs.controlSample.plotDenoisedCopyRatios.minimumContigLength"><a href="#Somatic.CNVs.controlSample.plotDenoisedCopyRatios.minimumContigLength">Somatic.CNVs.controlSample.plotDenoisedCopyRatios.minimumContigLength</a></dt>
+<dt id="Somatic.CNVs.controlSample.plotDenoisedCopyRatios.timeMinutes"><a href="#Somatic.CNVs.controlSample.plotDenoisedCopyRatios.timeMinutes">Somatic.CNVs.controlSample.plotDenoisedCopyRatios.timeMinutes</a></dt>
 <dd>
-    <i>Int? </i><br />
-    The minimum length for a contig to be included in the plots.
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.CNVs.controlSample.plotModeledSegments.javaXmx"><a href="#Somatic.CNVs.controlSample.plotModeledSegments.javaXmx">Somatic.CNVs.controlSample.plotModeledSegments.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"7G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.CNVs.controlSample.plotModeledSegments.memory"><a href="#Somatic.CNVs.controlSample.plotModeledSegments.memory">Somatic.CNVs.controlSample.plotModeledSegments.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"21G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.CNVs.controlSample.plotModeledSegments.minimumContigLength"><a href="#Somatic.CNVs.controlSample.plotModeledSegments.minimumContigLength">Somatic.CNVs.controlSample.plotModeledSegments.minimumContigLength</a></dt>
+<dt id="Somatic.CNVs.controlSample.plotModeledSegments.timeMinutes"><a href="#Somatic.CNVs.controlSample.plotModeledSegments.timeMinutes">Somatic.CNVs.controlSample.plotModeledSegments.timeMinutes</a></dt>
 <dd>
-    <i>Int? </i><br />
-    The minimum length for a contig to be included in the plots.
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.controlPostition.dockerImage"><a href="#Somatic.controlPostition.dockerImage">Somatic.controlPostition.dockerImage</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"python:3.7-slim"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"python@sha256:e0f6a4df17d5707637fa3557ab266f44dddc46ebfc82b0f1dbe725103961da4e"</code><br />
     The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
 </dd>
 <dt id="Somatic.ConvertDockerImagesFile.dockerImage"><a href="#Somatic.ConvertDockerImagesFile.dockerImage">Somatic.ConvertDockerImagesFile.dockerImage</a></dt>
@@ -406,10 +466,20 @@ Somatic.
     <i>String </i><i>&mdash; Default:</i> <code>"quay.io/biocontainers/biowdl-input-converter:0.2.1--py_0"</code><br />
     The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
 </dd>
+<dt id="Somatic.ConvertDockerImagesFile.memory"><a href="#Somatic.ConvertDockerImagesFile.memory">Somatic.ConvertDockerImagesFile.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"128M"</code><br />
+    The maximum amount of memory the job will need.
+</dd>
 <dt id="Somatic.ConvertDockerImagesFile.outputJson"><a href="#Somatic.ConvertDockerImagesFile.outputJson">Somatic.ConvertDockerImagesFile.outputJson</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>basename(yaml,"\.ya?ml$") + ".json"</code><br />
     The location the output JSON file should be written to.
+</dd>
+<dt id="Somatic.ConvertDockerImagesFile.timeMinutes"><a href="#Somatic.ConvertDockerImagesFile.timeMinutes">Somatic.ConvertDockerImagesFile.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.ConvertSampleConfig.checkFileMd5sums"><a href="#Somatic.ConvertSampleConfig.checkFileMd5sums">Somatic.ConvertSampleConfig.checkFileMd5sums</a></dt>
 <dd>
@@ -431,6 +501,11 @@ Somatic.
     <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
     Whether or not the existance of the files mentioned in the samplesheet should be checked.
 </dd>
+<dt id="Somatic.ConvertSampleConfig.timeMinutes"><a href="#Somatic.ConvertSampleConfig.timeMinutes">Somatic.ConvertSampleConfig.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.generateCnvPanelOfNormals.annotateIntervals.featureQueryLookahead"><a href="#Somatic.generateCnvPanelOfNormals.annotateIntervals.featureQueryLookahead">Somatic.generateCnvPanelOfNormals.annotateIntervals.featureQueryLookahead</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1000000</code><br />
@@ -448,8 +523,13 @@ Somatic.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.annotateIntervals.memory"><a href="#Somatic.generateCnvPanelOfNormals.annotateIntervals.memory">Somatic.generateCnvPanelOfNormals.annotateIntervals.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"10G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.generateCnvPanelOfNormals.annotateIntervals.timeMinutes"><a href="#Somatic.generateCnvPanelOfNormals.annotateIntervals.timeMinutes">Somatic.generateCnvPanelOfNormals.annotateIntervals.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>5</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.collectReadCounts.intervalMergingRule"><a href="#Somatic.generateCnvPanelOfNormals.collectReadCounts.intervalMergingRule">Somatic.generateCnvPanelOfNormals.collectReadCounts.intervalMergingRule</a></dt>
 <dd>
@@ -463,8 +543,13 @@ Somatic.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.collectReadCounts.memory"><a href="#Somatic.generateCnvPanelOfNormals.collectReadCounts.memory">Somatic.generateCnvPanelOfNormals.collectReadCounts.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"35G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.generateCnvPanelOfNormals.collectReadCounts.timeMinutes"><a href="#Somatic.generateCnvPanelOfNormals.collectReadCounts.timeMinutes">Somatic.generateCnvPanelOfNormals.collectReadCounts.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"G") * 5))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.javaXmx"><a href="#Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.javaXmx">Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.javaXmx</a></dt>
 <dd>
@@ -473,8 +558,13 @@ Somatic.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.memory"><a href="#Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.memory">Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"21G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.timeMinutes"><a href="#Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.timeMinutes">Somatic.generateCnvPanelOfNormals.createReadCountPanelOfNormals.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>5</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.performExplicitGcCorrection"><a href="#Somatic.generateCnvPanelOfNormals.performExplicitGcCorrection">Somatic.generateCnvPanelOfNormals.performExplicitGcCorrection</a></dt>
 <dd>
@@ -493,18 +583,23 @@ Somatic.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.preprocessIntervals.javaXmx"><a href="#Somatic.generateCnvPanelOfNormals.preprocessIntervals.javaXmx">Somatic.generateCnvPanelOfNormals.preprocessIntervals.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.preprocessIntervals.memory"><a href="#Somatic.generateCnvPanelOfNormals.preprocessIntervals.memory">Somatic.generateCnvPanelOfNormals.preprocessIntervals.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"10G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Somatic.generateCnvPanelOfNormals.preprocessIntervals.padding"><a href="#Somatic.generateCnvPanelOfNormals.preprocessIntervals.padding">Somatic.generateCnvPanelOfNormals.preprocessIntervals.padding</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>if defined(intervals) then 250 else 0</code><br />
     The padding to be added to the bins. Should be 0 if contiguos binning is used, eg with WGS.
+</dd>
+<dt id="Somatic.generateCnvPanelOfNormals.preprocessIntervals.timeMinutes"><a href="#Somatic.generateCnvPanelOfNormals.preprocessIntervals.timeMinutes">Somatic.generateCnvPanelOfNormals.preprocessIntervals.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(referenceFasta,"G") * 6))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.multiqcTask.clConfig"><a href="#Somatic.multiqcTask.clConfig">Somatic.multiqcTask.clConfig</a></dt>
 <dd>
@@ -524,7 +619,7 @@ Somatic.
 <dt id="Somatic.multiqcTask.dataDir"><a href="#Somatic.multiqcTask.dataDir">Somatic.multiqcTask.dataDir</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Equivalent to MultiQC's `--data-dir` flag.
+    Whether to output a data dir. Sets `--data-dir` or `--no-data-dir` flag.
 </dd>
 <dt id="Somatic.multiqcTask.dataFormat"><a href="#Somatic.multiqcTask.dataFormat">Somatic.multiqcTask.dataFormat</a></dt>
 <dd>
@@ -586,11 +681,6 @@ Somatic.
     <i>String? </i><br />
     Equivalent to MultiQC's `--ignore-samples` option.
 </dd>
-<dt id="Somatic.multiqcTask.ignoreSymlinks"><a href="#Somatic.multiqcTask.ignoreSymlinks">Somatic.multiqcTask.ignoreSymlinks</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Equivalent to MultiQC's `--ignore-symlinks` flag.
-</dd>
 <dt id="Somatic.multiqcTask.interactive"><a href="#Somatic.multiqcTask.interactive">Somatic.multiqcTask.interactive</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
@@ -608,18 +698,13 @@ Somatic.
 </dd>
 <dt id="Somatic.multiqcTask.memory"><a href="#Somatic.multiqcTask.memory">Somatic.multiqcTask.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    <i>String? </i><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Somatic.multiqcTask.module"><a href="#Somatic.multiqcTask.module">Somatic.multiqcTask.module</a></dt>
 <dd>
     <i>Array[String]+? </i><br />
     Equivalent to MultiQC's `--module` option.
-</dd>
-<dt id="Somatic.multiqcTask.noDataDir"><a href="#Somatic.multiqcTask.noDataDir">Somatic.multiqcTask.noDataDir</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Equivalent to MultiQC's `--no-data-dir` flag.
 </dd>
 <dt id="Somatic.multiqcTask.pdf"><a href="#Somatic.multiqcTask.pdf">Somatic.multiqcTask.pdf</a></dt>
 <dd>
@@ -641,6 +726,11 @@ Somatic.
     <i>String? </i><br />
     Equivalent to MultiQC's `--template` option.
 </dd>
+<dt id="Somatic.multiqcTask.timeMinutes"><a href="#Somatic.multiqcTask.timeMinutes">Somatic.multiqcTask.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2 + ceil((size(reports,"G") * 8))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.multiqcTask.title"><a href="#Somatic.multiqcTask.title">Somatic.multiqcTask.title</a></dt>
 <dd>
     <i>String? </i><br />
@@ -648,738 +738,893 @@ Somatic.
 </dd>
 <dt id="Somatic.multiqcTask.zipDataDir"><a href="#Somatic.multiqcTask.zipDataDir">Somatic.multiqcTask.zipDataDir</a></dt>
 <dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
     Equivalent to MultiQC's `--zip-data-dir` flag.
 </dd>
-<dt id="Somatic.runMultiQC"><a href="#Somatic.runMultiQC">Somatic.runMultiQC</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>if outputDir == "." then false else true</code><br />
-    Whether or not MultiQC should be run.
-</dd>
-<dt id="Somatic.sample.bqsr.applyBqsr.javaXmx"><a href="#Somatic.sample.bqsr.applyBqsr.javaXmx">Somatic.sample.bqsr.applyBqsr.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.bqsr.applyBqsr.memory"><a href="#Somatic.sample.bqsr.applyBqsr.memory">Somatic.sample.bqsr.applyBqsr.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.bqsr.baseRecalibrator.javaXmx"><a href="#Somatic.sample.bqsr.baseRecalibrator.javaXmx">Somatic.sample.bqsr.baseRecalibrator.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFIndexes"><a href="#Somatic.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFIndexes">Somatic.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFIndexes</a></dt>
-<dd>
-    <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
-    The indexed for the known variant VCFs.
-</dd>
-<dt id="Somatic.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFs"><a href="#Somatic.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFs">Somatic.sample.bqsr.baseRecalibrator.knownIndelsSitesVCFs</a></dt>
-<dd>
-    <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
-    VCF files with known indels.
-</dd>
-<dt id="Somatic.sample.bqsr.baseRecalibrator.memory"><a href="#Somatic.sample.bqsr.baseRecalibrator.memory">Somatic.sample.bqsr.baseRecalibrator.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.bqsr.gatherBamFiles.javaXmx"><a href="#Somatic.sample.bqsr.gatherBamFiles.javaXmx">Somatic.sample.bqsr.gatherBamFiles.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.bqsr.gatherBamFiles.memory"><a href="#Somatic.sample.bqsr.gatherBamFiles.memory">Somatic.sample.bqsr.gatherBamFiles.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.bqsr.gatherBqsr.javaXmx"><a href="#Somatic.sample.bqsr.gatherBqsr.javaXmx">Somatic.sample.bqsr.gatherBqsr.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.bqsr.gatherBqsr.memory"><a href="#Somatic.sample.bqsr.gatherBqsr.memory">Somatic.sample.bqsr.gatherBqsr.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.bqsr.scatterList.bamFile"><a href="#Somatic.sample.bqsr.scatterList.bamFile">Somatic.sample.bqsr.scatterList.bamFile</a></dt>
-<dd>
-    <i>File? </i><br />
-    Equivalent to biopet scatterregions' `--bamfile` option.
-</dd>
-<dt id="Somatic.sample.bqsr.scatterList.bamIndex"><a href="#Somatic.sample.bqsr.scatterList.bamIndex">Somatic.sample.bqsr.scatterList.bamIndex</a></dt>
-<dd>
-    <i>File? </i><br />
-    The index for the bamfile given through bamFile.
-</dd>
-<dt id="Somatic.sample.bqsr.scatterList.javaXmx"><a href="#Somatic.sample.bqsr.scatterList.javaXmx">Somatic.sample.bqsr.scatterList.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.bqsr.scatterList.memory"><a href="#Somatic.sample.bqsr.scatterList.memory">Somatic.sample.bqsr.scatterList.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.bqsr.scatterSize"><a href="#Somatic.sample.bqsr.scatterSize">Somatic.sample.bqsr.scatterSize</a></dt>
-<dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1000000000</code><br />
-    The size of the scattered regions in bases. Scattering is used to speed up certain processes. The genome will be sseperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
-</dd>
-<dt id="Somatic.sample.bqsr.splitNCigarReads.javaXmx"><a href="#Somatic.sample.bqsr.splitNCigarReads.javaXmx">Somatic.sample.bqsr.splitNCigarReads.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.bqsr.splitNCigarReads.memory"><a href="#Somatic.sample.bqsr.splitNCigarReads.memory">Somatic.sample.bqsr.splitNCigarReads.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"16G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.bwakit.memory"><a href="#Somatic.sample.bwakit.memory">Somatic.sample.bwakit.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"10G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.bwakit.sortThreads"><a href="#Somatic.sample.bwakit.sortThreads">Somatic.sample.bwakit.sortThreads</a></dt>
-<dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
-    The number of threads to use for sorting.
-</dd>
-<dt id="Somatic.sample.bwakit.threads"><a href="#Somatic.sample.bwakit.threads">Somatic.sample.bwakit.threads</a></dt>
-<dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
-    The number of threads to use for alignment.
-</dd>
-<dt id="Somatic.sample.bwaMem.memory"><a href="#Somatic.sample.bwaMem.memory">Somatic.sample.bwaMem.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.bwaMem.picardXmx"><a href="#Somatic.sample.bwaMem.picardXmx">Somatic.sample.bwaMem.picardXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to picard SortSam. Should be lower than `memory` to accommodate JVM overhead and BWA mem's memory usage.
-</dd>
-<dt id="Somatic.sample.bwaMem.threads"><a href="#Somatic.sample.bwaMem.threads">Somatic.sample.bwaMem.threads</a></dt>
-<dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
-    The number of threads to use.
-</dd>
-<dt id="Somatic.sample.markdup.javaXmx"><a href="#Somatic.sample.markdup.javaXmx">Somatic.sample.markdup.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.markdup.memory"><a href="#Somatic.sample.markdup.memory">Somatic.sample.markdup.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.markdup.read_name_regex"><a href="#Somatic.sample.markdup.read_name_regex">Somatic.sample.markdup.read_name_regex</a></dt>
-<dd>
-    <i>String? </i><br />
-    Equivalent to the `READ_NAME_REGEX` option of MarkDuplicates.
-</dd>
-<dt id="Somatic.sample.metrics.ampliconIntervalsLists.javaXmx"><a href="#Somatic.sample.metrics.ampliconIntervalsLists.javaXmx">Somatic.sample.metrics.ampliconIntervalsLists.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.metrics.ampliconIntervalsLists.memory"><a href="#Somatic.sample.metrics.ampliconIntervalsLists.memory">Somatic.sample.metrics.ampliconIntervalsLists.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.collectAlignmentSummaryMetrics"><a href="#Somatic.sample.metrics.picardMetrics.collectAlignmentSummaryMetrics">Somatic.sample.metrics.picardMetrics.collectAlignmentSummaryMetrics</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to the `PROGRAM=CollectAlignmentSummaryMetrics` argument.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.collectBaseDistributionByCycle"><a href="#Somatic.sample.metrics.picardMetrics.collectBaseDistributionByCycle">Somatic.sample.metrics.picardMetrics.collectBaseDistributionByCycle</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to the `PROGRAM=CollectBaseDistributionByCycle` argument.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.collectGcBiasMetrics"><a href="#Somatic.sample.metrics.picardMetrics.collectGcBiasMetrics">Somatic.sample.metrics.picardMetrics.collectGcBiasMetrics</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to the `PROGRAM=CollectGcBiasMetrics` argument.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.collectInsertSizeMetrics"><a href="#Somatic.sample.metrics.picardMetrics.collectInsertSizeMetrics">Somatic.sample.metrics.picardMetrics.collectInsertSizeMetrics</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to the `PROGRAM=CollectInsertSizeMetrics` argument.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.collectQualityYieldMetrics"><a href="#Somatic.sample.metrics.picardMetrics.collectQualityYieldMetrics">Somatic.sample.metrics.picardMetrics.collectQualityYieldMetrics</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to the `PROGRAM=CollectQualityYieldMetrics` argument.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.collectSequencingArtifactMetrics"><a href="#Somatic.sample.metrics.picardMetrics.collectSequencingArtifactMetrics">Somatic.sample.metrics.picardMetrics.collectSequencingArtifactMetrics</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to the `PROGRAM=CollectSequencingArtifactMetrics` argument.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.javaXmx"><a href="#Somatic.sample.metrics.picardMetrics.javaXmx">Somatic.sample.metrics.picardMetrics.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.meanQualityByCycle"><a href="#Somatic.sample.metrics.picardMetrics.meanQualityByCycle">Somatic.sample.metrics.picardMetrics.meanQualityByCycle</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to the `PROGRAM=MeanQualityByCycle` argument.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.memory"><a href="#Somatic.sample.metrics.picardMetrics.memory">Somatic.sample.metrics.picardMetrics.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.metrics.picardMetrics.qualityScoreDistribution"><a href="#Somatic.sample.metrics.picardMetrics.qualityScoreDistribution">Somatic.sample.metrics.picardMetrics.qualityScoreDistribution</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to the `PROGRAM=QualityScoreDistribution` argument.
-</dd>
-<dt id="Somatic.sample.metrics.rnaSeqMetrics.javaXmx"><a href="#Somatic.sample.metrics.rnaSeqMetrics.javaXmx">Somatic.sample.metrics.rnaSeqMetrics.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.metrics.rnaSeqMetrics.memory"><a href="#Somatic.sample.metrics.rnaSeqMetrics.memory">Somatic.sample.metrics.rnaSeqMetrics.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"32G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.metrics.targetIntervalsLists.javaXmx"><a href="#Somatic.sample.metrics.targetIntervalsLists.javaXmx">Somatic.sample.metrics.targetIntervalsLists.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.metrics.targetIntervalsLists.memory"><a href="#Somatic.sample.metrics.targetIntervalsLists.memory">Somatic.sample.metrics.targetIntervalsLists.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.metrics.targetMetrics.javaXmx"><a href="#Somatic.sample.metrics.targetMetrics.javaXmx">Somatic.sample.metrics.targetMetrics.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
-</dd>
-<dt id="Somatic.sample.metrics.targetMetrics.memory"><a href="#Somatic.sample.metrics.targetMetrics.memory">Somatic.sample.metrics.targetMetrics.memory</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"12G"</code><br />
-    The amount of memory this job will use.
-</dd>
-<dt id="Somatic.sample.platform"><a href="#Somatic.sample.platform">Somatic.sample.platform</a></dt>
+<dt id="Somatic.platform"><a href="#Somatic.platform">Somatic.platform</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"illumina"</code><br />
     The platform used for sequencing.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.bwa"><a href="#Somatic.sample.qc.Cutadapt.bwa">Somatic.sample.qc.Cutadapt.bwa</a></dt>
+<dt id="Somatic.runCombineVariants"><a href="#Somatic.runCombineVariants">Somatic.runCombineVariants</a></dt>
 <dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --bwa flag.
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether or not to combine the variant calling results into one VCF file.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.colorspace"><a href="#Somatic.sample.qc.Cutadapt.colorspace">Somatic.sample.qc.Cutadapt.colorspace</a></dt>
+<dt id="Somatic.sampleWorkflow.bqsr.applyBqsr.javaXmxMb"><a href="#Somatic.sampleWorkflow.bqsr.applyBqsr.javaXmxMb">Somatic.sampleWorkflow.bqsr.applyBqsr.javaXmxMb</a></dt>
 <dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --colorspace flag.
+    <i>Int </i><i>&mdash; Default:</i> <code>2048</code><br />
+    The maximum memory available to the program in megabytes. Should be lower than `memoryMb` to accommodate JVM overhead.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.cores"><a href="#Somatic.sample.qc.Cutadapt.cores">Somatic.sample.qc.Cutadapt.cores</a></dt>
+<dt id="Somatic.sampleWorkflow.bqsr.applyBqsr.memoryMb"><a href="#Somatic.sampleWorkflow.bqsr.applyBqsr.memoryMb">Somatic.sampleWorkflow.bqsr.applyBqsr.memoryMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>javaXmxMb + 512</code><br />
+    The amount of memory this job will use in megabytes.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.baseRecalibrator.javaXmxMb"><a href="#Somatic.sampleWorkflow.bqsr.baseRecalibrator.javaXmxMb">Somatic.sampleWorkflow.bqsr.baseRecalibrator.javaXmxMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1024</code><br />
+    The maximum memory available to the program in megabytes. Should be lower than `memoryMb` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.baseRecalibrator.knownIndelsSitesVCFIndexes"><a href="#Somatic.sampleWorkflow.bqsr.baseRecalibrator.knownIndelsSitesVCFIndexes">Somatic.sampleWorkflow.bqsr.baseRecalibrator.knownIndelsSitesVCFIndexes</a></dt>
+<dd>
+    <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    The indexed for the known variant VCFs.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.baseRecalibrator.knownIndelsSitesVCFs"><a href="#Somatic.sampleWorkflow.bqsr.baseRecalibrator.knownIndelsSitesVCFs">Somatic.sampleWorkflow.bqsr.baseRecalibrator.knownIndelsSitesVCFs</a></dt>
+<dd>
+    <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    VCF files with known indels.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.baseRecalibrator.memoryMb"><a href="#Somatic.sampleWorkflow.bqsr.baseRecalibrator.memoryMb">Somatic.sampleWorkflow.bqsr.baseRecalibrator.memoryMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>javaXmxMb + 512</code><br />
+    The amount of memory this job will use in megabytes.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.gatherBamFiles.compressionLevel"><a href="#Somatic.sampleWorkflow.bqsr.gatherBamFiles.compressionLevel">Somatic.sampleWorkflow.bqsr.gatherBamFiles.compressionLevel</a></dt>
+<dd>
+    <i>Int? </i><br />
+    The compression level of the output BAM.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.gatherBamFiles.createMd5File"><a href="#Somatic.sampleWorkflow.bqsr.gatherBamFiles.createMd5File">Somatic.sampleWorkflow.bqsr.gatherBamFiles.createMd5File</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    ???
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.gatherBamFiles.javaXmxMb"><a href="#Somatic.sampleWorkflow.bqsr.gatherBamFiles.javaXmxMb">Somatic.sampleWorkflow.bqsr.gatherBamFiles.javaXmxMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1024</code><br />
+    The maximum memory available to the program in megabytes. Should be lower than `memoryMb` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.gatherBamFiles.memoryMb"><a href="#Somatic.sampleWorkflow.bqsr.gatherBamFiles.memoryMb">Somatic.sampleWorkflow.bqsr.gatherBamFiles.memoryMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>javaXmxMb + 512</code><br />
+    The amount of memory this job will use in megabytes.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.gatherBamFiles.timeMinutes"><a href="#Somatic.sampleWorkflow.bqsr.gatherBamFiles.timeMinutes">Somatic.sampleWorkflow.bqsr.gatherBamFiles.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBams,"G") * 1))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.gatherBqsr.javaXmxMb"><a href="#Somatic.sampleWorkflow.bqsr.gatherBqsr.javaXmxMb">Somatic.sampleWorkflow.bqsr.gatherBqsr.javaXmxMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>256</code><br />
+    The maximum memory available to the program in megabytes. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.gatherBqsr.memoryMb"><a href="#Somatic.sampleWorkflow.bqsr.gatherBqsr.memoryMb">Somatic.sampleWorkflow.bqsr.gatherBqsr.memoryMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>256 + javaXmxMb</code><br />
+    The amount of memory this job will use in megabytes.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.gatherBqsr.timeMinutes"><a href="#Somatic.sampleWorkflow.bqsr.gatherBqsr.timeMinutes">Somatic.sampleWorkflow.bqsr.gatherBqsr.timeMinutes</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
-    The number of cores to use.
+    The maximum amount of time the job will run in minutes.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.cut"><a href="#Somatic.sample.qc.Cutadapt.cut">Somatic.sample.qc.Cutadapt.cut</a></dt>
+<dt id="Somatic.sampleWorkflow.bqsr.splitNCigarReads.javaXmx"><a href="#Somatic.sampleWorkflow.bqsr.splitNCigarReads.javaXmx">Somatic.sampleWorkflow.bqsr.splitNCigarReads.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.bqsr.splitNCigarReads.memory"><a href="#Somatic.sampleWorkflow.bqsr.splitNCigarReads.memory">Somatic.sampleWorkflow.bqsr.splitNCigarReads.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.bwakit.compressionLevel"><a href="#Somatic.sampleWorkflow.bwakit.compressionLevel">Somatic.sampleWorkflow.bwakit.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level of the output BAM.
+</dd>
+<dt id="Somatic.sampleWorkflow.bwakit.memoryGb"><a href="#Somatic.sampleWorkflow.bwakit.memoryGb">Somatic.sampleWorkflow.bwakit.memoryGb</a></dt>
 <dd>
     <i>Int? </i><br />
-    Equivalent to cutadapt's --cut option.
+    The amount of memory this job will use in gigabytes.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.discardTrimmed"><a href="#Somatic.sample.qc.Cutadapt.discardTrimmed">Somatic.sample.qc.Cutadapt.discardTrimmed</a></dt>
+<dt id="Somatic.sampleWorkflow.bwakit.sortMemoryPerThreadGb"><a href="#Somatic.sampleWorkflow.bwakit.sortMemoryPerThreadGb">Somatic.sampleWorkflow.bwakit.sortMemoryPerThreadGb</a></dt>
 <dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --quality-cutoff option.
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The amount of memory for each sorting thread in gigabytes.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.discardUntrimmed"><a href="#Somatic.sample.qc.Cutadapt.discardUntrimmed">Somatic.sample.qc.Cutadapt.discardUntrimmed</a></dt>
-<dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --discard-untrimmed option.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.doubleEncode"><a href="#Somatic.sample.qc.Cutadapt.doubleEncode">Somatic.sample.qc.Cutadapt.doubleEncode</a></dt>
-<dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --double-encode flag.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.errorRate"><a href="#Somatic.sample.qc.Cutadapt.errorRate">Somatic.sample.qc.Cutadapt.errorRate</a></dt>
-<dd>
-    <i>Float? </i><br />
-    Equivalent to cutadapt's --error-rate option.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.front"><a href="#Somatic.sample.qc.Cutadapt.front">Somatic.sample.qc.Cutadapt.front</a></dt>
-<dd>
-    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
-    A list of 5' ligated adapter sequences to be cut from the given first or single end fastq file.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.frontRead2"><a href="#Somatic.sample.qc.Cutadapt.frontRead2">Somatic.sample.qc.Cutadapt.frontRead2</a></dt>
-<dd>
-    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
-    A list of 5' ligated adapter sequences to be cut from the given second end fastq file.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.infoFilePath"><a href="#Somatic.sample.qc.Cutadapt.infoFilePath">Somatic.sample.qc.Cutadapt.infoFilePath</a></dt>
-<dd>
-    <i>String? </i><br />
-    Equivalent to cutadapt's --info-file option.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.interleaved"><a href="#Somatic.sample.qc.Cutadapt.interleaved">Somatic.sample.qc.Cutadapt.interleaved</a></dt>
-<dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --interleaved flag.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.length"><a href="#Somatic.sample.qc.Cutadapt.length">Somatic.sample.qc.Cutadapt.length</a></dt>
+<dt id="Somatic.sampleWorkflow.bwakit.sortThreads"><a href="#Somatic.sampleWorkflow.bwakit.sortThreads">Somatic.sampleWorkflow.bwakit.sortThreads</a></dt>
 <dd>
     <i>Int? </i><br />
-    Equivalent to cutadapt's --length option.
+    The number of threads to use for sorting.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.lengthTag"><a href="#Somatic.sample.qc.Cutadapt.lengthTag">Somatic.sample.qc.Cutadapt.lengthTag</a></dt>
+<dt id="Somatic.sampleWorkflow.bwakit.timeMinutes"><a href="#Somatic.sampleWorkflow.bwakit.timeMinutes">Somatic.sampleWorkflow.bwakit.timeMinutes</a></dt>
 <dd>
-    <i>String? </i><br />
-    Equivalent to cutadapt's --length-tag option.
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size([read1, read2],"G") * 220 / threads))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.maq"><a href="#Somatic.sample.qc.Cutadapt.maq">Somatic.sample.qc.Cutadapt.maq</a></dt>
+<dt id="Somatic.sampleWorkflow.bwaMem.compressionLevel"><a href="#Somatic.sampleWorkflow.bwaMem.compressionLevel">Somatic.sampleWorkflow.bwaMem.compressionLevel</a></dt>
 <dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --maq flag.
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level of the output BAM.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.maskAdapter"><a href="#Somatic.sample.qc.Cutadapt.maskAdapter">Somatic.sample.qc.Cutadapt.maskAdapter</a></dt>
-<dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --mask-adapter flag.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.matchReadWildcards"><a href="#Somatic.sample.qc.Cutadapt.matchReadWildcards">Somatic.sample.qc.Cutadapt.matchReadWildcards</a></dt>
-<dd>
-    <i>Boolean? </i><br />
-    Equivalent to cutadapt's --match-read-wildcards flag.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.maximumLength"><a href="#Somatic.sample.qc.Cutadapt.maximumLength">Somatic.sample.qc.Cutadapt.maximumLength</a></dt>
+<dt id="Somatic.sampleWorkflow.bwaMem.memoryGb"><a href="#Somatic.sampleWorkflow.bwaMem.memoryGb">Somatic.sampleWorkflow.bwaMem.memoryGb</a></dt>
 <dd>
     <i>Int? </i><br />
-    Equivalent to cutadapt's --maximum-length option.
+    The amount of memory this job will use in gigabytes.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.maxN"><a href="#Somatic.sample.qc.Cutadapt.maxN">Somatic.sample.qc.Cutadapt.maxN</a></dt>
+<dt id="Somatic.sampleWorkflow.bwaMem.sortMemoryPerThreadGb"><a href="#Somatic.sampleWorkflow.bwaMem.sortMemoryPerThreadGb">Somatic.sampleWorkflow.bwaMem.sortMemoryPerThreadGb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The amount of memory for each sorting thread in gigabytes.
+</dd>
+<dt id="Somatic.sampleWorkflow.bwaMem.sortThreads"><a href="#Somatic.sampleWorkflow.bwaMem.sortThreads">Somatic.sampleWorkflow.bwaMem.sortThreads</a></dt>
 <dd>
     <i>Int? </i><br />
-    Equivalent to cutadapt's --max-n option.
+    The number of threads to use for sorting.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.memory"><a href="#Somatic.sample.qc.Cutadapt.memory">Somatic.sample.qc.Cutadapt.memory</a></dt>
+<dt id="Somatic.sampleWorkflow.bwaMem.timeMinutes"><a href="#Somatic.sampleWorkflow.bwaMem.timeMinutes">Somatic.sampleWorkflow.bwaMem.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size([read1, read2],"G") * 200 / threads))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.compressionLevel"><a href="#Somatic.sampleWorkflow.markdup.compressionLevel">Somatic.sampleWorkflow.markdup.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    Compression level from 0 (uncompressed) to 9 (best).
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.hashTableSize"><a href="#Somatic.sampleWorkflow.markdup.hashTableSize">Somatic.sampleWorkflow.markdup.hashTableSize</a></dt>
+<dd>
+    <i>Int? </i><br />
+    Sets sambamba's hash table size
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.ioBufferSize"><a href="#Somatic.sampleWorkflow.markdup.ioBufferSize">Somatic.sampleWorkflow.markdup.ioBufferSize</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>128</code><br />
+    The amount of mb allocated to each IO buffer. Sambamba uses two IO buffers.
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.memoryMb"><a href="#Somatic.sampleWorkflow.markdup.memoryMb">Somatic.sampleWorkflow.markdup.memoryMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1024 + sortBufferSize + 2 * ioBufferSize</code><br />
+    The amount of memory available to the job in megabytes.
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.overFlowListSize"><a href="#Somatic.sampleWorkflow.markdup.overFlowListSize">Somatic.sampleWorkflow.markdup.overFlowListSize</a></dt>
+<dd>
+    <i>Int? </i><br />
+    Sets sambamba's overflow list size
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.removeDuplicates"><a href="#Somatic.sampleWorkflow.markdup.removeDuplicates">Somatic.sampleWorkflow.markdup.removeDuplicates</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether to remove the duplicates (instead of only marking them).
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.sortBufferSize"><a href="#Somatic.sampleWorkflow.markdup.sortBufferSize">Somatic.sampleWorkflow.markdup.sortBufferSize</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2048</code><br />
+    The amount of mb allocated to the sort buffer
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.threads"><a href="#Somatic.sampleWorkflow.markdup.threads">Somatic.sampleWorkflow.markdup.threads</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The number of threads that will be used for this task.
+</dd>
+<dt id="Somatic.sampleWorkflow.markdup.timeMinutes"><a href="#Somatic.sampleWorkflow.markdup.timeMinutes">Somatic.sampleWorkflow.markdup.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBams,"G") * 8)) / threads</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.javaXmx"><a href="#Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.javaXmx">Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.memory"><a href="#Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.memory">Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.memory</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The amount of memory this job will use.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.minimumLength"><a href="#Somatic.sample.qc.Cutadapt.minimumLength">Somatic.sample.qc.Cutadapt.minimumLength</a></dt>
+<dt id="Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.timeMinutes"><a href="#Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.timeMinutes">Somatic.sampleWorkflow.metrics.ampliconIntervalsLists.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>5</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.collectAlignmentSummaryMetrics"><a href="#Somatic.sampleWorkflow.metrics.collectAlignmentSummaryMetrics">Somatic.sampleWorkflow.metrics.collectAlignmentSummaryMetrics</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Equivalent to the `PROGRAM=CollectAlignmentSummaryMetrics` argument in Picard.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.Flagstat.memory"><a href="#Somatic.sampleWorkflow.metrics.Flagstat.memory">Somatic.sampleWorkflow.metrics.Flagstat.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    The amount of memory needed for the job.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.Flagstat.timeMinutes"><a href="#Somatic.sampleWorkflow.metrics.Flagstat.timeMinutes">Somatic.sampleWorkflow.metrics.Flagstat.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputBam,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.meanQualityByCycle"><a href="#Somatic.sampleWorkflow.metrics.meanQualityByCycle">Somatic.sampleWorkflow.metrics.meanQualityByCycle</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Equivalent to the `PROGRAM=MeanQualityByCycle` argument in Picard.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.collectBaseDistributionByCycle"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.collectBaseDistributionByCycle">Somatic.sampleWorkflow.metrics.picardMetrics.collectBaseDistributionByCycle</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Equivalent to the `PROGRAM=CollectBaseDistributionByCycle` argument.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.collectGcBiasMetrics"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.collectGcBiasMetrics">Somatic.sampleWorkflow.metrics.picardMetrics.collectGcBiasMetrics</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Equivalent to the `PROGRAM=CollectGcBiasMetrics` argument.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.collectInsertSizeMetrics"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.collectInsertSizeMetrics">Somatic.sampleWorkflow.metrics.picardMetrics.collectInsertSizeMetrics</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Equivalent to the `PROGRAM=CollectInsertSizeMetrics` argument.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.collectQualityYieldMetrics"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.collectQualityYieldMetrics">Somatic.sampleWorkflow.metrics.picardMetrics.collectQualityYieldMetrics</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Equivalent to the `PROGRAM=CollectQualityYieldMetrics` argument.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.collectSequencingArtifactMetrics"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.collectSequencingArtifactMetrics">Somatic.sampleWorkflow.metrics.picardMetrics.collectSequencingArtifactMetrics</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Equivalent to the `PROGRAM=CollectSequencingArtifactMetrics` argument.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.javaXmxMb"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.javaXmxMb">Somatic.sampleWorkflow.metrics.picardMetrics.javaXmxMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>3072</code><br />
+    The maximum memory available to the program in megabytes. Should be lower than `memoryMb` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.memoryMb"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.memoryMb">Somatic.sampleWorkflow.metrics.picardMetrics.memoryMb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>javaXmxMb + 512</code><br />
+    The amount of memory this job will use in megabytes.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.qualityScoreDistribution"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.qualityScoreDistribution">Somatic.sampleWorkflow.metrics.picardMetrics.qualityScoreDistribution</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Equivalent to the `PROGRAM=QualityScoreDistribution` argument.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.picardMetrics.timeMinutes"><a href="#Somatic.sampleWorkflow.metrics.picardMetrics.timeMinutes">Somatic.sampleWorkflow.metrics.picardMetrics.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(referenceFasta,"G") * 3 * 2)) + ceil((size(inputBam,"G") * 6))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.rnaSeqMetrics.javaXmx"><a href="#Somatic.sampleWorkflow.metrics.rnaSeqMetrics.javaXmx">Somatic.sampleWorkflow.metrics.rnaSeqMetrics.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.rnaSeqMetrics.memory"><a href="#Somatic.sampleWorkflow.metrics.rnaSeqMetrics.memory">Somatic.sampleWorkflow.metrics.rnaSeqMetrics.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"9G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.rnaSeqMetrics.timeMinutes"><a href="#Somatic.sampleWorkflow.metrics.rnaSeqMetrics.timeMinutes">Somatic.sampleWorkflow.metrics.rnaSeqMetrics.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"G") * 12))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.targetIntervalsLists.javaXmx"><a href="#Somatic.sampleWorkflow.metrics.targetIntervalsLists.javaXmx">Somatic.sampleWorkflow.metrics.targetIntervalsLists.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.targetIntervalsLists.memory"><a href="#Somatic.sampleWorkflow.metrics.targetIntervalsLists.memory">Somatic.sampleWorkflow.metrics.targetIntervalsLists.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.targetIntervalsLists.timeMinutes"><a href="#Somatic.sampleWorkflow.metrics.targetIntervalsLists.timeMinutes">Somatic.sampleWorkflow.metrics.targetIntervalsLists.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>5</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.targetMetrics.javaXmx"><a href="#Somatic.sampleWorkflow.metrics.targetMetrics.javaXmx">Somatic.sampleWorkflow.metrics.targetMetrics.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"3G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.targetMetrics.memory"><a href="#Somatic.sampleWorkflow.metrics.targetMetrics.memory">Somatic.sampleWorkflow.metrics.targetMetrics.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.metrics.targetMetrics.timeMinutes"><a href="#Somatic.sampleWorkflow.metrics.targetMetrics.timeMinutes">Somatic.sampleWorkflow.metrics.targetMetrics.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"G") * 6))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.bwa"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.bwa">Somatic.sampleWorkflow.QC.Cutadapt.bwa</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --bwa flag.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.colorspace"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.colorspace">Somatic.sampleWorkflow.QC.Cutadapt.colorspace</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --colorspace flag.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.compressionLevel"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.compressionLevel">Somatic.sampleWorkflow.QC.Cutadapt.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level if gzipped output is used.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.cores"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.cores">Somatic.sampleWorkflow.QC.Cutadapt.cores</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
+    The number of cores to use.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.cut"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.cut">Somatic.sampleWorkflow.QC.Cutadapt.cut</a></dt>
+<dd>
+    <i>Int? </i><br />
+    Equivalent to cutadapt's --cut option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.discardTrimmed"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.discardTrimmed">Somatic.sampleWorkflow.QC.Cutadapt.discardTrimmed</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --quality-cutoff option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.discardUntrimmed"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.discardUntrimmed">Somatic.sampleWorkflow.QC.Cutadapt.discardUntrimmed</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --discard-untrimmed option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.doubleEncode"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.doubleEncode">Somatic.sampleWorkflow.QC.Cutadapt.doubleEncode</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --double-encode flag.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.errorRate"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.errorRate">Somatic.sampleWorkflow.QC.Cutadapt.errorRate</a></dt>
+<dd>
+    <i>Float? </i><br />
+    Equivalent to cutadapt's --error-rate option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.front"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.front">Somatic.sampleWorkflow.QC.Cutadapt.front</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    A list of 5' ligated adapter sequences to be cut from the given first or single end fastq file.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.frontRead2"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.frontRead2">Somatic.sampleWorkflow.QC.Cutadapt.frontRead2</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    A list of 5' ligated adapter sequences to be cut from the given second end fastq file.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.infoFilePath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.infoFilePath">Somatic.sampleWorkflow.QC.Cutadapt.infoFilePath</a></dt>
+<dd>
+    <i>String? </i><br />
+    Equivalent to cutadapt's --info-file option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.interleaved"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.interleaved">Somatic.sampleWorkflow.QC.Cutadapt.interleaved</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --interleaved flag.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.length"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.length">Somatic.sampleWorkflow.QC.Cutadapt.length</a></dt>
+<dd>
+    <i>Int? </i><br />
+    Equivalent to cutadapt's --length option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.lengthTag"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.lengthTag">Somatic.sampleWorkflow.QC.Cutadapt.lengthTag</a></dt>
+<dd>
+    <i>String? </i><br />
+    Equivalent to cutadapt's --length-tag option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.maq"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.maq">Somatic.sampleWorkflow.QC.Cutadapt.maq</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --maq flag.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.maskAdapter"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.maskAdapter">Somatic.sampleWorkflow.QC.Cutadapt.maskAdapter</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --mask-adapter flag.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.matchReadWildcards"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.matchReadWildcards">Somatic.sampleWorkflow.QC.Cutadapt.matchReadWildcards</a></dt>
+<dd>
+    <i>Boolean? </i><br />
+    Equivalent to cutadapt's --match-read-wildcards flag.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.maximumLength"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.maximumLength">Somatic.sampleWorkflow.QC.Cutadapt.maximumLength</a></dt>
+<dd>
+    <i>Int? </i><br />
+    Equivalent to cutadapt's --maximum-length option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.maxN"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.maxN">Somatic.sampleWorkflow.QC.Cutadapt.maxN</a></dt>
+<dd>
+    <i>Int? </i><br />
+    Equivalent to cutadapt's --max-n option.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.memory"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.memory">Somatic.sampleWorkflow.QC.Cutadapt.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"~{300 + 100 * cores}M"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.minimumLength"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.minimumLength">Somatic.sampleWorkflow.QC.Cutadapt.minimumLength</a></dt>
 <dd>
     <i>Int? </i><i>&mdash; Default:</i> <code>2</code><br />
     Equivalent to cutadapt's --minimum-length option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.nextseqTrim"><a href="#Somatic.sample.qc.Cutadapt.nextseqTrim">Somatic.sample.qc.Cutadapt.nextseqTrim</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.nextseqTrim"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.nextseqTrim">Somatic.sampleWorkflow.QC.Cutadapt.nextseqTrim</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --nextseq-trim option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.noIndels"><a href="#Somatic.sample.qc.Cutadapt.noIndels">Somatic.sample.qc.Cutadapt.noIndels</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.noIndels"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.noIndels">Somatic.sampleWorkflow.QC.Cutadapt.noIndels</a></dt>
 <dd>
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --no-indels flag.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.noMatchAdapterWildcards"><a href="#Somatic.sample.qc.Cutadapt.noMatchAdapterWildcards">Somatic.sample.qc.Cutadapt.noMatchAdapterWildcards</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.noMatchAdapterWildcards"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.noMatchAdapterWildcards">Somatic.sampleWorkflow.QC.Cutadapt.noMatchAdapterWildcards</a></dt>
 <dd>
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --no-match-adapter-wildcards flag.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.noTrim"><a href="#Somatic.sample.qc.Cutadapt.noTrim">Somatic.sample.qc.Cutadapt.noTrim</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.noTrim"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.noTrim">Somatic.sampleWorkflow.QC.Cutadapt.noTrim</a></dt>
 <dd>
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --no-trim flag.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.noZeroCap"><a href="#Somatic.sample.qc.Cutadapt.noZeroCap">Somatic.sample.qc.Cutadapt.noZeroCap</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.noZeroCap"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.noZeroCap">Somatic.sampleWorkflow.QC.Cutadapt.noZeroCap</a></dt>
 <dd>
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --no-zero-cap flag.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.overlap"><a href="#Somatic.sample.qc.Cutadapt.overlap">Somatic.sample.qc.Cutadapt.overlap</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.overlap"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.overlap">Somatic.sampleWorkflow.QC.Cutadapt.overlap</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to cutadapt's --overlap option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.pairFilter"><a href="#Somatic.sample.qc.Cutadapt.pairFilter">Somatic.sample.qc.Cutadapt.pairFilter</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.pairFilter"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.pairFilter">Somatic.sampleWorkflow.QC.Cutadapt.pairFilter</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --pair-filter option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.prefix"><a href="#Somatic.sample.qc.Cutadapt.prefix">Somatic.sample.qc.Cutadapt.prefix</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.prefix"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.prefix">Somatic.sampleWorkflow.QC.Cutadapt.prefix</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --prefix option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.qualityBase"><a href="#Somatic.sample.qc.Cutadapt.qualityBase">Somatic.sample.qc.Cutadapt.qualityBase</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.qualityBase"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.qualityBase">Somatic.sampleWorkflow.QC.Cutadapt.qualityBase</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to cutadapt's --quality-base option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.qualityCutoff"><a href="#Somatic.sample.qc.Cutadapt.qualityCutoff">Somatic.sample.qc.Cutadapt.qualityCutoff</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.qualityCutoff"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.qualityCutoff">Somatic.sampleWorkflow.QC.Cutadapt.qualityCutoff</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --quality-cutoff option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.restFilePath"><a href="#Somatic.sample.qc.Cutadapt.restFilePath">Somatic.sample.qc.Cutadapt.restFilePath</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.restFilePath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.restFilePath">Somatic.sampleWorkflow.QC.Cutadapt.restFilePath</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --rest-file option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.stripF3"><a href="#Somatic.sample.qc.Cutadapt.stripF3">Somatic.sample.qc.Cutadapt.stripF3</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.stripF3"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.stripF3">Somatic.sampleWorkflow.QC.Cutadapt.stripF3</a></dt>
 <dd>
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --strip-f3 flag.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.stripSuffix"><a href="#Somatic.sample.qc.Cutadapt.stripSuffix">Somatic.sample.qc.Cutadapt.stripSuffix</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.stripSuffix"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.stripSuffix">Somatic.sampleWorkflow.QC.Cutadapt.stripSuffix</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --strip-suffix option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.suffix"><a href="#Somatic.sample.qc.Cutadapt.suffix">Somatic.sample.qc.Cutadapt.suffix</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.suffix"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.suffix">Somatic.sampleWorkflow.QC.Cutadapt.suffix</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --suffix option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.times"><a href="#Somatic.sample.qc.Cutadapt.times">Somatic.sample.qc.Cutadapt.times</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.timeMinutes"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.timeMinutes">Somatic.sampleWorkflow.QC.Cutadapt.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size([read1, read2],"G") * 12.0 / cores))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.times"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.times">Somatic.sampleWorkflow.QC.Cutadapt.times</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to cutadapt's --times option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.tooLongOutputPath"><a href="#Somatic.sample.qc.Cutadapt.tooLongOutputPath">Somatic.sample.qc.Cutadapt.tooLongOutputPath</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.tooLongOutputPath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.tooLongOutputPath">Somatic.sampleWorkflow.QC.Cutadapt.tooLongOutputPath</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --too-long-output option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.tooLongPairedOutputPath"><a href="#Somatic.sample.qc.Cutadapt.tooLongPairedOutputPath">Somatic.sample.qc.Cutadapt.tooLongPairedOutputPath</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.tooLongPairedOutputPath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.tooLongPairedOutputPath">Somatic.sampleWorkflow.QC.Cutadapt.tooLongPairedOutputPath</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --too-long-paired-output option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.tooShortOutputPath"><a href="#Somatic.sample.qc.Cutadapt.tooShortOutputPath">Somatic.sample.qc.Cutadapt.tooShortOutputPath</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.tooShortOutputPath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.tooShortOutputPath">Somatic.sampleWorkflow.QC.Cutadapt.tooShortOutputPath</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --too-short-output option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.tooShortPairedOutputPath"><a href="#Somatic.sample.qc.Cutadapt.tooShortPairedOutputPath">Somatic.sample.qc.Cutadapt.tooShortPairedOutputPath</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.tooShortPairedOutputPath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.tooShortPairedOutputPath">Somatic.sampleWorkflow.QC.Cutadapt.tooShortPairedOutputPath</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --too-short-paired-output option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.trimN"><a href="#Somatic.sample.qc.Cutadapt.trimN">Somatic.sample.qc.Cutadapt.trimN</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.trimN"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.trimN">Somatic.sampleWorkflow.QC.Cutadapt.trimN</a></dt>
 <dd>
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --trim-n flag.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.untrimmedOutputPath"><a href="#Somatic.sample.qc.Cutadapt.untrimmedOutputPath">Somatic.sample.qc.Cutadapt.untrimmedOutputPath</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.untrimmedOutputPath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.untrimmedOutputPath">Somatic.sampleWorkflow.QC.Cutadapt.untrimmedOutputPath</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --untrimmed-output option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.untrimmedPairedOutputPath"><a href="#Somatic.sample.qc.Cutadapt.untrimmedPairedOutputPath">Somatic.sample.qc.Cutadapt.untrimmedPairedOutputPath</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.untrimmedPairedOutputPath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.untrimmedPairedOutputPath">Somatic.sampleWorkflow.QC.Cutadapt.untrimmedPairedOutputPath</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --untrimmed-paired-output option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.wildcardFilePath"><a href="#Somatic.sample.qc.Cutadapt.wildcardFilePath">Somatic.sample.qc.Cutadapt.wildcardFilePath</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.wildcardFilePath"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.wildcardFilePath">Somatic.sampleWorkflow.QC.Cutadapt.wildcardFilePath</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to cutadapt's --wildcard-file option.
 </dd>
-<dt id="Somatic.sample.qc.Cutadapt.Z"><a href="#Somatic.sample.qc.Cutadapt.Z">Somatic.sample.qc.Cutadapt.Z</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
-    Equivalent to cutadapt's -Z flag.
-</dd>
-<dt id="Somatic.sample.qc.Cutadapt.zeroCap"><a href="#Somatic.sample.qc.Cutadapt.zeroCap">Somatic.sample.qc.Cutadapt.zeroCap</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.Cutadapt.zeroCap"><a href="#Somatic.sampleWorkflow.QC.Cutadapt.zeroCap">Somatic.sampleWorkflow.QC.Cutadapt.zeroCap</a></dt>
 <dd>
     <i>Boolean? </i><br />
     Equivalent to cutadapt's --zero-cap flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.adapters"><a href="#Somatic.sample.qc.FastqcRead1.adapters">Somatic.sample.qc.FastqcRead1.adapters</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.extractFastqcZip"><a href="#Somatic.sampleWorkflow.QC.extractFastqcZip">Somatic.sampleWorkflow.QC.extractFastqcZip</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether to extract Fastqc's report zip files
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.adapters"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.adapters">Somatic.sampleWorkflow.QC.FastqcRead1.adapters</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --adapters option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.casava"><a href="#Somatic.sample.qc.FastqcRead1.casava">Somatic.sample.qc.FastqcRead1.casava</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.casava"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.casava">Somatic.sampleWorkflow.QC.FastqcRead1.casava</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --casava flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.contaminants"><a href="#Somatic.sample.qc.FastqcRead1.contaminants">Somatic.sample.qc.FastqcRead1.contaminants</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.contaminants"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.contaminants">Somatic.sampleWorkflow.QC.FastqcRead1.contaminants</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --contaminants option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.dir"><a href="#Somatic.sample.qc.FastqcRead1.dir">Somatic.sample.qc.FastqcRead1.dir</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.dir"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.dir">Somatic.sampleWorkflow.QC.FastqcRead1.dir</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to fastqc's --dir option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.extract"><a href="#Somatic.sample.qc.FastqcRead1.extract">Somatic.sample.qc.FastqcRead1.extract</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Equivalent to fastqc's --extract flag.
-</dd>
-<dt id="Somatic.sample.qc.FastqcRead1.format"><a href="#Somatic.sample.qc.FastqcRead1.format">Somatic.sample.qc.FastqcRead1.format</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.format"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.format">Somatic.sampleWorkflow.QC.FastqcRead1.format</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to fastqc's --format option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.kmers"><a href="#Somatic.sample.qc.FastqcRead1.kmers">Somatic.sample.qc.FastqcRead1.kmers</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.javaXmx"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.javaXmx">Somatic.sampleWorkflow.QC.FastqcRead1.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"1750M"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.kmers"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.kmers">Somatic.sampleWorkflow.QC.FastqcRead1.kmers</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to fastqc's --kmers option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.limits"><a href="#Somatic.sample.qc.FastqcRead1.limits">Somatic.sample.qc.FastqcRead1.limits</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.limits"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.limits">Somatic.sampleWorkflow.QC.FastqcRead1.limits</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.minLength"><a href="#Somatic.sample.qc.FastqcRead1.minLength">Somatic.sample.qc.FastqcRead1.minLength</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.memory"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.memory">Somatic.sampleWorkflow.QC.FastqcRead1.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.minLength"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.minLength">Somatic.sampleWorkflow.QC.FastqcRead1.minLength</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to fastqc's --min_length option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.nano"><a href="#Somatic.sample.qc.FastqcRead1.nano">Somatic.sample.qc.FastqcRead1.nano</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.nano"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.nano">Somatic.sampleWorkflow.QC.FastqcRead1.nano</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nano flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.noFilter"><a href="#Somatic.sample.qc.FastqcRead1.noFilter">Somatic.sample.qc.FastqcRead1.noFilter</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.noFilter"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.noFilter">Somatic.sampleWorkflow.QC.FastqcRead1.noFilter</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nofilter flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.nogroup"><a href="#Somatic.sample.qc.FastqcRead1.nogroup">Somatic.sample.qc.FastqcRead1.nogroup</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.nogroup"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.nogroup">Somatic.sampleWorkflow.QC.FastqcRead1.nogroup</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nogroup flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1.threads"><a href="#Somatic.sample.qc.FastqcRead1.threads">Somatic.sample.qc.FastqcRead1.threads</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.threads"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.threads">Somatic.sampleWorkflow.QC.FastqcRead1.threads</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of cores to use.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.adapters"><a href="#Somatic.sample.qc.FastqcRead1After.adapters">Somatic.sample.qc.FastqcRead1After.adapters</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1.timeMinutes"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1.timeMinutes">Somatic.sampleWorkflow.QC.FastqcRead1.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(seqFile,"G")) * 4</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.adapters"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.adapters">Somatic.sampleWorkflow.QC.FastqcRead1After.adapters</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --adapters option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.casava"><a href="#Somatic.sample.qc.FastqcRead1After.casava">Somatic.sample.qc.FastqcRead1After.casava</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.casava"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.casava">Somatic.sampleWorkflow.QC.FastqcRead1After.casava</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --casava flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.contaminants"><a href="#Somatic.sample.qc.FastqcRead1After.contaminants">Somatic.sample.qc.FastqcRead1After.contaminants</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.contaminants"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.contaminants">Somatic.sampleWorkflow.QC.FastqcRead1After.contaminants</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --contaminants option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.dir"><a href="#Somatic.sample.qc.FastqcRead1After.dir">Somatic.sample.qc.FastqcRead1After.dir</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.dir"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.dir">Somatic.sampleWorkflow.QC.FastqcRead1After.dir</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to fastqc's --dir option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.extract"><a href="#Somatic.sample.qc.FastqcRead1After.extract">Somatic.sample.qc.FastqcRead1After.extract</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Equivalent to fastqc's --extract flag.
-</dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.format"><a href="#Somatic.sample.qc.FastqcRead1After.format">Somatic.sample.qc.FastqcRead1After.format</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.format"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.format">Somatic.sampleWorkflow.QC.FastqcRead1After.format</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to fastqc's --format option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.kmers"><a href="#Somatic.sample.qc.FastqcRead1After.kmers">Somatic.sample.qc.FastqcRead1After.kmers</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.javaXmx"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.javaXmx">Somatic.sampleWorkflow.QC.FastqcRead1After.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"1750M"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.kmers"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.kmers">Somatic.sampleWorkflow.QC.FastqcRead1After.kmers</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to fastqc's --kmers option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.limits"><a href="#Somatic.sample.qc.FastqcRead1After.limits">Somatic.sample.qc.FastqcRead1After.limits</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.limits"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.limits">Somatic.sampleWorkflow.QC.FastqcRead1After.limits</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.minLength"><a href="#Somatic.sample.qc.FastqcRead1After.minLength">Somatic.sample.qc.FastqcRead1After.minLength</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.memory"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.memory">Somatic.sampleWorkflow.QC.FastqcRead1After.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.minLength"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.minLength">Somatic.sampleWorkflow.QC.FastqcRead1After.minLength</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to fastqc's --min_length option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.nano"><a href="#Somatic.sample.qc.FastqcRead1After.nano">Somatic.sample.qc.FastqcRead1After.nano</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.nano"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.nano">Somatic.sampleWorkflow.QC.FastqcRead1After.nano</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nano flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.noFilter"><a href="#Somatic.sample.qc.FastqcRead1After.noFilter">Somatic.sample.qc.FastqcRead1After.noFilter</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.noFilter"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.noFilter">Somatic.sampleWorkflow.QC.FastqcRead1After.noFilter</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nofilter flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.nogroup"><a href="#Somatic.sample.qc.FastqcRead1After.nogroup">Somatic.sample.qc.FastqcRead1After.nogroup</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.nogroup"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.nogroup">Somatic.sampleWorkflow.QC.FastqcRead1After.nogroup</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nogroup flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead1After.threads"><a href="#Somatic.sample.qc.FastqcRead1After.threads">Somatic.sample.qc.FastqcRead1After.threads</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.threads"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.threads">Somatic.sampleWorkflow.QC.FastqcRead1After.threads</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of cores to use.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.adapters"><a href="#Somatic.sample.qc.FastqcRead2.adapters">Somatic.sample.qc.FastqcRead2.adapters</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead1After.timeMinutes"><a href="#Somatic.sampleWorkflow.QC.FastqcRead1After.timeMinutes">Somatic.sampleWorkflow.QC.FastqcRead1After.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(seqFile,"G")) * 4</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.adapters"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.adapters">Somatic.sampleWorkflow.QC.FastqcRead2.adapters</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --adapters option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.casava"><a href="#Somatic.sample.qc.FastqcRead2.casava">Somatic.sample.qc.FastqcRead2.casava</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.casava"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.casava">Somatic.sampleWorkflow.QC.FastqcRead2.casava</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --casava flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.contaminants"><a href="#Somatic.sample.qc.FastqcRead2.contaminants">Somatic.sample.qc.FastqcRead2.contaminants</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.contaminants"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.contaminants">Somatic.sampleWorkflow.QC.FastqcRead2.contaminants</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --contaminants option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.dir"><a href="#Somatic.sample.qc.FastqcRead2.dir">Somatic.sample.qc.FastqcRead2.dir</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.dir"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.dir">Somatic.sampleWorkflow.QC.FastqcRead2.dir</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to fastqc's --dir option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.extract"><a href="#Somatic.sample.qc.FastqcRead2.extract">Somatic.sample.qc.FastqcRead2.extract</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Equivalent to fastqc's --extract flag.
-</dd>
-<dt id="Somatic.sample.qc.FastqcRead2.format"><a href="#Somatic.sample.qc.FastqcRead2.format">Somatic.sample.qc.FastqcRead2.format</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.format"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.format">Somatic.sampleWorkflow.QC.FastqcRead2.format</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to fastqc's --format option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.kmers"><a href="#Somatic.sample.qc.FastqcRead2.kmers">Somatic.sample.qc.FastqcRead2.kmers</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.javaXmx"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.javaXmx">Somatic.sampleWorkflow.QC.FastqcRead2.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"1750M"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.kmers"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.kmers">Somatic.sampleWorkflow.QC.FastqcRead2.kmers</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to fastqc's --kmers option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.limits"><a href="#Somatic.sample.qc.FastqcRead2.limits">Somatic.sample.qc.FastqcRead2.limits</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.limits"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.limits">Somatic.sampleWorkflow.QC.FastqcRead2.limits</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.minLength"><a href="#Somatic.sample.qc.FastqcRead2.minLength">Somatic.sample.qc.FastqcRead2.minLength</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.memory"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.memory">Somatic.sampleWorkflow.QC.FastqcRead2.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.minLength"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.minLength">Somatic.sampleWorkflow.QC.FastqcRead2.minLength</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to fastqc's --min_length option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.nano"><a href="#Somatic.sample.qc.FastqcRead2.nano">Somatic.sample.qc.FastqcRead2.nano</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.nano"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.nano">Somatic.sampleWorkflow.QC.FastqcRead2.nano</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nano flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.noFilter"><a href="#Somatic.sample.qc.FastqcRead2.noFilter">Somatic.sample.qc.FastqcRead2.noFilter</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.noFilter"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.noFilter">Somatic.sampleWorkflow.QC.FastqcRead2.noFilter</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nofilter flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.nogroup"><a href="#Somatic.sample.qc.FastqcRead2.nogroup">Somatic.sample.qc.FastqcRead2.nogroup</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.nogroup"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.nogroup">Somatic.sampleWorkflow.QC.FastqcRead2.nogroup</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nogroup flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2.threads"><a href="#Somatic.sample.qc.FastqcRead2.threads">Somatic.sample.qc.FastqcRead2.threads</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.threads"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.threads">Somatic.sampleWorkflow.QC.FastqcRead2.threads</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of cores to use.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.adapters"><a href="#Somatic.sample.qc.FastqcRead2After.adapters">Somatic.sample.qc.FastqcRead2After.adapters</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2.timeMinutes"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2.timeMinutes">Somatic.sampleWorkflow.QC.FastqcRead2.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(seqFile,"G")) * 4</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.adapters"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.adapters">Somatic.sampleWorkflow.QC.FastqcRead2After.adapters</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --adapters option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.casava"><a href="#Somatic.sample.qc.FastqcRead2After.casava">Somatic.sample.qc.FastqcRead2After.casava</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.casava"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.casava">Somatic.sampleWorkflow.QC.FastqcRead2After.casava</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --casava flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.contaminants"><a href="#Somatic.sample.qc.FastqcRead2After.contaminants">Somatic.sample.qc.FastqcRead2After.contaminants</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.contaminants"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.contaminants">Somatic.sampleWorkflow.QC.FastqcRead2After.contaminants</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --contaminants option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.dir"><a href="#Somatic.sample.qc.FastqcRead2After.dir">Somatic.sample.qc.FastqcRead2After.dir</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.dir"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.dir">Somatic.sampleWorkflow.QC.FastqcRead2After.dir</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to fastqc's --dir option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.extract"><a href="#Somatic.sample.qc.FastqcRead2After.extract">Somatic.sample.qc.FastqcRead2After.extract</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Equivalent to fastqc's --extract flag.
-</dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.format"><a href="#Somatic.sample.qc.FastqcRead2After.format">Somatic.sample.qc.FastqcRead2After.format</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.format"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.format">Somatic.sampleWorkflow.QC.FastqcRead2After.format</a></dt>
 <dd>
     <i>String? </i><br />
     Equivalent to fastqc's --format option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.kmers"><a href="#Somatic.sample.qc.FastqcRead2After.kmers">Somatic.sample.qc.FastqcRead2After.kmers</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.javaXmx"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.javaXmx">Somatic.sampleWorkflow.QC.FastqcRead2After.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"1750M"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.kmers"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.kmers">Somatic.sampleWorkflow.QC.FastqcRead2After.kmers</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to fastqc's --kmers option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.limits"><a href="#Somatic.sample.qc.FastqcRead2After.limits">Somatic.sample.qc.FastqcRead2After.limits</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.limits"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.limits">Somatic.sampleWorkflow.QC.FastqcRead2After.limits</a></dt>
 <dd>
     <i>File? </i><br />
     Equivalent to fastqc's --limits option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.minLength"><a href="#Somatic.sample.qc.FastqcRead2After.minLength">Somatic.sample.qc.FastqcRead2After.minLength</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.memory"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.memory">Somatic.sampleWorkflow.QC.FastqcRead2After.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.minLength"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.minLength">Somatic.sampleWorkflow.QC.FastqcRead2After.minLength</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to fastqc's --min_length option.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.nano"><a href="#Somatic.sample.qc.FastqcRead2After.nano">Somatic.sample.qc.FastqcRead2After.nano</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.nano"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.nano">Somatic.sampleWorkflow.QC.FastqcRead2After.nano</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nano flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.noFilter"><a href="#Somatic.sample.qc.FastqcRead2After.noFilter">Somatic.sample.qc.FastqcRead2After.noFilter</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.noFilter"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.noFilter">Somatic.sampleWorkflow.QC.FastqcRead2After.noFilter</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nofilter flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.nogroup"><a href="#Somatic.sample.qc.FastqcRead2After.nogroup">Somatic.sample.qc.FastqcRead2After.nogroup</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.nogroup"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.nogroup">Somatic.sampleWorkflow.QC.FastqcRead2After.nogroup</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to fastqc's --nogroup flag.
 </dd>
-<dt id="Somatic.sample.qc.FastqcRead2After.threads"><a href="#Somatic.sample.qc.FastqcRead2After.threads">Somatic.sample.qc.FastqcRead2After.threads</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.threads"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.threads">Somatic.sampleWorkflow.QC.FastqcRead2After.threads</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of cores to use.
 </dd>
-<dt id="Somatic.sample.qc.runAdapterClipping"><a href="#Somatic.sample.qc.runAdapterClipping">Somatic.sample.qc.runAdapterClipping</a></dt>
+<dt id="Somatic.sampleWorkflow.QC.FastqcRead2After.timeMinutes"><a href="#Somatic.sampleWorkflow.QC.FastqcRead2After.timeMinutes">Somatic.sampleWorkflow.QC.FastqcRead2After.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(seqFile,"G")) * 4</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.sampleWorkflow.QC.runAdapterClipping"><a href="#Somatic.sampleWorkflow.QC.runAdapterClipping">Somatic.sampleWorkflow.QC.runAdapterClipping</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>defined(adapterForward) || defined(adapterReverse) || length(select_first([contaminations, []])) > 0</code><br />
     Whether or not adapters should be removed from the reads.
 </dd>
-<dt id="Somatic.sample.useBwaKit"><a href="#Somatic.sample.useBwaKit">Somatic.sample.useBwaKit</a></dt>
+<dt id="Somatic.scatterList.memory"><a href="#Somatic.scatterList.memory">Somatic.scatterList.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Somatic.scatterList.prefix"><a href="#Somatic.scatterList.prefix">Somatic.scatterList.prefix</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"scatters/scatter-"</code><br />
+    The prefix of the ouput files. Output will be named like: <PREFIX><N>.bed, in which N is an incrementing number. Default 'scatter-'.
+</dd>
+<dt id="Somatic.scatterList.splitContigs"><a href="#Somatic.scatterList.splitContigs">Somatic.scatterList.splitContigs</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Whether or not BWA kit should be used. If false BWA mem will be used.
+    If set, contigs are allowed to be split up over multiple files.
+</dd>
+<dt id="Somatic.scatterList.timeMinutes"><a href="#Somatic.scatterList.timeMinutes">Somatic.scatterList.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.scatterSize"><a href="#Somatic.scatterSize">Somatic.scatterSize</a></dt>
+<dd>
+    <i>Int? </i><br />
+    The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+</dd>
+<dt id="Somatic.scatterSizeMillions"><a href="#Somatic.scatterSizeMillions">Somatic.scatterSizeMillions</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.
 </dd>
 <dt id="Somatic.somaticVariantcalling.combineVariants.dockerImage"><a href="#Somatic.somaticVariantcalling.combineVariants.dockerImage">Somatic.somaticVariantcalling.combineVariants.dockerImage</a></dt>
 <dd>
@@ -1403,8 +1648,18 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.combineVariants.memory"><a href="#Somatic.somaticVariantcalling.combineVariants.memory">Somatic.somaticVariantcalling.combineVariants.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.combineVariants.timeMinutes"><a href="#Somatic.somaticVariantcalling.combineVariants.timeMinutes">Somatic.somaticVariantcalling.combineVariants.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>180</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.indelIndex.timeMinutes"><a href="#Somatic.somaticVariantcalling.indelIndex.timeMinutes">Somatic.somaticVariantcalling.indelIndex.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.calculateContamination.javaXmx"><a href="#Somatic.somaticVariantcalling.mutect2.calculateContamination.javaXmx">Somatic.somaticVariantcalling.mutect2.calculateContamination.javaXmx</a></dt>
 <dd>
@@ -1413,8 +1668,13 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.calculateContamination.memory"><a href="#Somatic.somaticVariantcalling.mutect2.calculateContamination.memory">Somatic.somaticVariantcalling.mutect2.calculateContamination.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.calculateContamination.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.calculateContamination.timeMinutes">Somatic.somaticVariantcalling.mutect2.calculateContamination.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>180</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.filterMutectCalls.javaXmx"><a href="#Somatic.somaticVariantcalling.mutect2.filterMutectCalls.javaXmx">Somatic.somaticVariantcalling.mutect2.filterMutectCalls.javaXmx</a></dt>
 <dd>
@@ -1423,23 +1683,48 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.filterMutectCalls.memory"><a href="#Somatic.somaticVariantcalling.mutect2.filterMutectCalls.memory">Somatic.somaticVariantcalling.mutect2.filterMutectCalls.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.filterMutectCalls.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.filterMutectCalls.timeMinutes">Somatic.somaticVariantcalling.mutect2.filterMutectCalls.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>60</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.filterMutectCalls.uniqueAltReadCount"><a href="#Somatic.somaticVariantcalling.mutect2.filterMutectCalls.uniqueAltReadCount">Somatic.somaticVariantcalling.mutect2.filterMutectCalls.uniqueAltReadCount</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     Equivalent to FilterMutectCalls' `--unique-alt-read-count` option.
 </dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.gatherVcfs.compressionLevel"><a href="#Somatic.somaticVariantcalling.mutect2.gatherVcfs.compressionLevel">Somatic.somaticVariantcalling.mutect2.gatherVcfs.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level at which the BAM files are written
+</dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.gatherVcfs.javaXmx"><a href="#Somatic.somaticVariantcalling.mutect2.gatherVcfs.javaXmx">Somatic.somaticVariantcalling.mutect2.gatherVcfs.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.gatherVcfs.memory"><a href="#Somatic.somaticVariantcalling.mutect2.gatherVcfs.memory">Somatic.somaticVariantcalling.mutect2.gatherVcfs.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.gatherVcfs.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.gatherVcfs.timeMinutes">Somatic.somaticVariantcalling.mutect2.gatherVcfs.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputVCFs,"G")) * 2</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.gatherVcfs.useJdkDeflater"><a href="#Somatic.somaticVariantcalling.mutect2.gatherVcfs.useJdkDeflater">Somatic.somaticVariantcalling.mutect2.gatherVcfs.useJdkDeflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java deflator to compress the BAM files. False uses the optimized intel deflater.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.gatherVcfs.useJdkInflater"><a href="#Somatic.somaticVariantcalling.mutect2.gatherVcfs.useJdkInflater">Somatic.somaticVariantcalling.mutect2.gatherVcfs.useJdkInflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java inflater. False, uses the optimized intel inflater.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.javaXmx"><a href="#Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.javaXmx">Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.javaXmx</a></dt>
 <dd>
@@ -1448,8 +1733,13 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.memory"><a href="#Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.memory">Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.timeMinutes">Somatic.somaticVariantcalling.mutect2.getPileupSummariesNormal.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>120</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.javaXmx"><a href="#Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.javaXmx">Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.javaXmx</a></dt>
 <dd>
@@ -1458,8 +1748,13 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.memory"><a href="#Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.memory">Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.timeMinutes">Somatic.somaticVariantcalling.mutect2.getPileupSummariesTumor.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>120</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.javaXmx"><a href="#Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.javaXmx">Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.javaXmx</a></dt>
 <dd>
@@ -1468,8 +1763,13 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.memory"><a href="#Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.memory">Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.timeMinutes">Somatic.somaticVariantcalling.mutect2.learnReadOrientationModel.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>120</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.mergeStats.javaXmx"><a href="#Somatic.somaticVariantcalling.mutect2.mergeStats.javaXmx">Somatic.somaticVariantcalling.mutect2.mergeStats.javaXmx</a></dt>
 <dd>
@@ -1478,8 +1778,13 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.mergeStats.memory"><a href="#Somatic.somaticVariantcalling.mutect2.mergeStats.memory">Somatic.somaticVariantcalling.mutect2.mergeStats.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"28G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"15G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.mergeStats.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.mergeStats.timeMinutes">Somatic.somaticVariantcalling.mutect2.mergeStats.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>30</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.mutect2.f1r2TarGz"><a href="#Somatic.somaticVariantcalling.mutect2.mutect2.f1r2TarGz">Somatic.somaticVariantcalling.mutect2.mutect2.f1r2TarGz</a></dt>
 <dd>
@@ -1503,7 +1808,7 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.mutect2.memory"><a href="#Somatic.somaticVariantcalling.mutect2.mutect2.memory">Somatic.somaticVariantcalling.mutect2.mutect2.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"16G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.mutect2.outputStats"><a href="#Somatic.somaticVariantcalling.mutect2.mutect2.outputStats">Somatic.somaticVariantcalling.mutect2.mutect2.outputStats</a></dt>
@@ -1521,30 +1826,35 @@ Somatic.
     <i>File? </i><br />
     The index for the panel of normals.
 </dd>
-<dt id="Somatic.somaticVariantcalling.mutect2.scatterList.bamFile"><a href="#Somatic.somaticVariantcalling.mutect2.scatterList.bamFile">Somatic.somaticVariantcalling.mutect2.scatterList.bamFile</a></dt>
+<dt id="Somatic.somaticVariantcalling.mutect2.mutect2.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.mutect2.timeMinutes">Somatic.somaticVariantcalling.mutect2.mutect2.timeMinutes</a></dt>
 <dd>
-    <i>File? </i><br />
-    Equivalent to biopet scatterregions' `--bamfile` option.
-</dd>
-<dt id="Somatic.somaticVariantcalling.mutect2.scatterList.bamIndex"><a href="#Somatic.somaticVariantcalling.mutect2.scatterList.bamIndex">Somatic.somaticVariantcalling.mutect2.scatterList.bamIndex</a></dt>
-<dd>
-    <i>File? </i><br />
-    The index for the bamfile given through bamFile.
-</dd>
-<dt id="Somatic.somaticVariantcalling.mutect2.scatterList.javaXmx"><a href="#Somatic.somaticVariantcalling.mutect2.scatterList.javaXmx">Somatic.somaticVariantcalling.mutect2.scatterList.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+    <i>Int </i><i>&mdash; Default:</i> <code>240</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.scatterList.memory"><a href="#Somatic.somaticVariantcalling.mutect2.scatterList.memory">Somatic.somaticVariantcalling.mutect2.scatterList.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.scatterList.prefix"><a href="#Somatic.somaticVariantcalling.mutect2.scatterList.prefix">Somatic.somaticVariantcalling.mutect2.scatterList.prefix</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"scatters/scatter-"</code><br />
+    The prefix of the ouput files. Output will be named like: <PREFIX><N>.bed, in which N is an incrementing number. Default 'scatter-'.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.scatterList.timeMinutes"><a href="#Somatic.somaticVariantcalling.mutect2.scatterList.timeMinutes">Somatic.somaticVariantcalling.mutect2.scatterList.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.mutect2.scatterSize"><a href="#Somatic.somaticVariantcalling.mutect2.scatterSize">Somatic.somaticVariantcalling.mutect2.scatterSize</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1000000000</code><br />
-    The size of the scattered regions in bases. Scattering is used to speed up certain processes. The genome will be sseperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+    <i>Int? </i><br />
+    The size of the scattered regions in bases. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+</dd>
+<dt id="Somatic.somaticVariantcalling.mutect2.scatterSizeMillions"><a href="#Somatic.somaticVariantcalling.mutect2.scatterSizeMillions">Somatic.somaticVariantcalling.mutect2.scatterSizeMillions</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily
 </dd>
 <dt id="Somatic.somaticVariantcalling.pairedSomaticSeq.jsmVCF"><a href="#Somatic.somaticVariantcalling.pairedSomaticSeq.jsmVCF">Somatic.somaticVariantcalling.pairedSomaticSeq.jsmVCF</a></dt>
 <dd>
@@ -1581,6 +1891,11 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of threads to use.
 </dd>
+<dt id="Somatic.somaticVariantcalling.pairedSomaticSeq.timeMinutes"><a href="#Somatic.somaticVariantcalling.pairedSomaticSeq.timeMinutes">Somatic.somaticVariantcalling.pairedSomaticSeq.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>60</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.somaticVariantcalling.pairedSomaticSeq.varscanIndel"><a href="#Somatic.somaticVariantcalling.pairedSomaticSeq.varscanIndel">Somatic.somaticVariantcalling.pairedSomaticSeq.varscanIndel</a></dt>
 <dd>
     <i>File? </i><br />
@@ -1596,10 +1911,10 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of threads to use.
 </dd>
-<dt id="Somatic.somaticVariantcalling.runCombineVariants"><a href="#Somatic.somaticVariantcalling.runCombineVariants">Somatic.somaticVariantcalling.runCombineVariants</a></dt>
+<dt id="Somatic.somaticVariantcalling.pairedTraining.timeMinutes"><a href="#Somatic.somaticVariantcalling.pairedTraining.timeMinutes">Somatic.somaticVariantcalling.pairedTraining.timeMinutes</a></dt>
 <dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Whether or not to combine the variant calling results into one VCF file.
+    <i>Int </i><i>&mdash; Default:</i> <code>240</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.singleSomaticSeq.lofreqVCF"><a href="#Somatic.somaticVariantcalling.singleSomaticSeq.lofreqVCF">Somatic.somaticVariantcalling.singleSomaticSeq.lofreqVCF</a></dt>
 <dd>
@@ -1616,6 +1931,11 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of threads to use.
 </dd>
+<dt id="Somatic.somaticVariantcalling.singleSomaticSeq.timeMinutes"><a href="#Somatic.somaticVariantcalling.singleSomaticSeq.timeMinutes">Somatic.somaticVariantcalling.singleSomaticSeq.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>60</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.somaticVariantcalling.singleSomaticSeq.varscanVCF"><a href="#Somatic.somaticVariantcalling.singleSomaticSeq.varscanVCF">Somatic.somaticVariantcalling.singleSomaticSeq.varscanVCF</a></dt>
 <dd>
     <i>File? </i><br />
@@ -1625,6 +1945,11 @@ Somatic.
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of threads to use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.singleTraining.timeMinutes"><a href="#Somatic.somaticVariantcalling.singleTraining.timeMinutes">Somatic.somaticVariantcalling.singleTraining.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>240</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.sitesForContamination"><a href="#Somatic.somaticVariantcalling.sitesForContamination">Somatic.somaticVariantcalling.sitesForContamination</a></dt>
 <dd>
@@ -1636,20 +1961,45 @@ Somatic.
     <i>File? </i><br />
     The index for the vcf file provided to sitesForContamination.
 </dd>
+<dt id="Somatic.somaticVariantcalling.snvIndex.timeMinutes"><a href="#Somatic.somaticVariantcalling.snvIndex.timeMinutes">Somatic.somaticVariantcalling.snvIndex.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.somaticVariantcalling.strelka.addGTFieldIndels.outputVCFName"><a href="#Somatic.somaticVariantcalling.strelka.addGTFieldIndels.outputVCFName">Somatic.somaticVariantcalling.strelka.addGTFieldIndels.outputVCFName</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>basename(strelkaVCF,".gz")</code><br />
     The location the output VCF file should be written to.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.addGTFieldIndels.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.addGTFieldIndels.timeMinutes">Somatic.somaticVariantcalling.strelka.addGTFieldIndels.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>20</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.addGTFieldSVs.outputVCFName"><a href="#Somatic.somaticVariantcalling.strelka.addGTFieldSVs.outputVCFName">Somatic.somaticVariantcalling.strelka.addGTFieldSVs.outputVCFName</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>basename(strelkaVCF,".gz")</code><br />
     The location the output VCF file should be written to.
 </dd>
+<dt id="Somatic.somaticVariantcalling.strelka.addGTFieldSVs.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.addGTFieldSVs.timeMinutes">Somatic.somaticVariantcalling.strelka.addGTFieldSVs.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>20</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.somaticVariantcalling.strelka.addGTFieldVariants.outputVCFName"><a href="#Somatic.somaticVariantcalling.strelka.addGTFieldVariants.outputVCFName">Somatic.somaticVariantcalling.strelka.addGTFieldVariants.outputVCFName</a></dt>
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>basename(strelkaVCF,".gz")</code><br />
     The location the output VCF file should be written to.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.addGTFieldVariants.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.addGTFieldVariants.timeMinutes">Somatic.somaticVariantcalling.strelka.addGTFieldVariants.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>20</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.bedPrepare.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.bedPrepare.timeMinutes">Somatic.somaticVariantcalling.strelka.bedPrepare.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.combineVariants.dockerImage"><a href="#Somatic.somaticVariantcalling.strelka.combineVariants.dockerImage">Somatic.somaticVariantcalling.strelka.combineVariants.dockerImage</a></dt>
 <dd>
@@ -1673,38 +2023,108 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.combineVariants.memory"><a href="#Somatic.somaticVariantcalling.strelka.combineVariants.memory">Somatic.somaticVariantcalling.strelka.combineVariants.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"13G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.combineVariants.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.combineVariants.timeMinutes">Somatic.somaticVariantcalling.strelka.combineVariants.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>180</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherIndels.compressionLevel"><a href="#Somatic.somaticVariantcalling.strelka.gatherIndels.compressionLevel">Somatic.somaticVariantcalling.strelka.gatherIndels.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level at which the BAM files are written
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.gatherIndels.javaXmx"><a href="#Somatic.somaticVariantcalling.strelka.gatherIndels.javaXmx">Somatic.somaticVariantcalling.strelka.gatherIndels.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.gatherIndels.memory"><a href="#Somatic.somaticVariantcalling.strelka.gatherIndels.memory">Somatic.somaticVariantcalling.strelka.gatherIndels.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherIndels.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.gatherIndels.timeMinutes">Somatic.somaticVariantcalling.strelka.gatherIndels.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputVCFs,"G")) * 2</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherIndels.useJdkDeflater"><a href="#Somatic.somaticVariantcalling.strelka.gatherIndels.useJdkDeflater">Somatic.somaticVariantcalling.strelka.gatherIndels.useJdkDeflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java deflator to compress the BAM files. False uses the optimized intel deflater.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherIndels.useJdkInflater"><a href="#Somatic.somaticVariantcalling.strelka.gatherIndels.useJdkInflater">Somatic.somaticVariantcalling.strelka.gatherIndels.useJdkInflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java inflater. False, uses the optimized intel inflater.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherSVs.compressionLevel"><a href="#Somatic.somaticVariantcalling.strelka.gatherSVs.compressionLevel">Somatic.somaticVariantcalling.strelka.gatherSVs.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level at which the BAM files are written
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.gatherSVs.javaXmx"><a href="#Somatic.somaticVariantcalling.strelka.gatherSVs.javaXmx">Somatic.somaticVariantcalling.strelka.gatherSVs.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.gatherSVs.memory"><a href="#Somatic.somaticVariantcalling.strelka.gatherSVs.memory">Somatic.somaticVariantcalling.strelka.gatherSVs.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherSVs.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.gatherSVs.timeMinutes">Somatic.somaticVariantcalling.strelka.gatherSVs.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputVCFs,"G")) * 2</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherSVs.useJdkDeflater"><a href="#Somatic.somaticVariantcalling.strelka.gatherSVs.useJdkDeflater">Somatic.somaticVariantcalling.strelka.gatherSVs.useJdkDeflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java deflator to compress the BAM files. False uses the optimized intel deflater.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherSVs.useJdkInflater"><a href="#Somatic.somaticVariantcalling.strelka.gatherSVs.useJdkInflater">Somatic.somaticVariantcalling.strelka.gatherSVs.useJdkInflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java inflater. False, uses the optimized intel inflater.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherVariants.compressionLevel"><a href="#Somatic.somaticVariantcalling.strelka.gatherVariants.compressionLevel">Somatic.somaticVariantcalling.strelka.gatherVariants.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level at which the BAM files are written
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.gatherVariants.javaXmx"><a href="#Somatic.somaticVariantcalling.strelka.gatherVariants.javaXmx">Somatic.somaticVariantcalling.strelka.gatherVariants.javaXmx</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
     The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.gatherVariants.memory"><a href="#Somatic.somaticVariantcalling.strelka.gatherVariants.memory">Somatic.somaticVariantcalling.strelka.gatherVariants.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherVariants.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.gatherVariants.timeMinutes">Somatic.somaticVariantcalling.strelka.gatherVariants.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputVCFs,"G")) * 2</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherVariants.useJdkDeflater"><a href="#Somatic.somaticVariantcalling.strelka.gatherVariants.useJdkDeflater">Somatic.somaticVariantcalling.strelka.gatherVariants.useJdkDeflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java deflator to compress the BAM files. False uses the optimized intel deflater.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.gatherVariants.useJdkInflater"><a href="#Somatic.somaticVariantcalling.strelka.gatherVariants.useJdkInflater">Somatic.somaticVariantcalling.strelka.gatherVariants.useJdkInflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java inflater. False, uses the optimized intel inflater.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.indelsIndex.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.indelsIndex.timeMinutes">Somatic.somaticVariantcalling.strelka.indelsIndex.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.mantaSomatic.cores"><a href="#Somatic.somaticVariantcalling.strelka.mantaSomatic.cores">Somatic.somaticVariantcalling.strelka.mantaSomatic.cores</a></dt>
 <dd>
@@ -1716,30 +2136,35 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The amount of memory this job will use in Gigabytes.
 </dd>
-<dt id="Somatic.somaticVariantcalling.strelka.scatterList.bamFile"><a href="#Somatic.somaticVariantcalling.strelka.scatterList.bamFile">Somatic.somaticVariantcalling.strelka.scatterList.bamFile</a></dt>
+<dt id="Somatic.somaticVariantcalling.strelka.mantaSomatic.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.mantaSomatic.timeMinutes">Somatic.somaticVariantcalling.strelka.mantaSomatic.timeMinutes</a></dt>
 <dd>
-    <i>File? </i><br />
-    Equivalent to biopet scatterregions' `--bamfile` option.
-</dd>
-<dt id="Somatic.somaticVariantcalling.strelka.scatterList.bamIndex"><a href="#Somatic.somaticVariantcalling.strelka.scatterList.bamIndex">Somatic.somaticVariantcalling.strelka.scatterList.bamIndex</a></dt>
-<dd>
-    <i>File? </i><br />
-    The index for the bamfile given through bamFile.
-</dd>
-<dt id="Somatic.somaticVariantcalling.strelka.scatterList.javaXmx"><a href="#Somatic.somaticVariantcalling.strelka.scatterList.javaXmx">Somatic.somaticVariantcalling.strelka.scatterList.javaXmx</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
-    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+    <i>Int </i><i>&mdash; Default:</i> <code>60</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.scatterList.memory"><a href="#Somatic.somaticVariantcalling.strelka.scatterList.memory">Somatic.somaticVariantcalling.strelka.scatterList.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.scatterList.prefix"><a href="#Somatic.somaticVariantcalling.strelka.scatterList.prefix">Somatic.somaticVariantcalling.strelka.scatterList.prefix</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"scatters/scatter-"</code><br />
+    The prefix of the ouput files. Output will be named like: <PREFIX><N>.bed, in which N is an incrementing number. Default 'scatter-'.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.scatterList.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.scatterList.timeMinutes">Somatic.somaticVariantcalling.strelka.scatterList.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.scatterSize"><a href="#Somatic.somaticVariantcalling.strelka.scatterSize">Somatic.somaticVariantcalling.strelka.scatterSize</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1000000000</code><br />
-    The size of the scattered regions in bases. Scattering is used to speed up certain processes. The genome will be sseperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+    <i>Int? </i><br />
+    The size of the scattered regions in bases. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.scatterSizeMillions"><a href="#Somatic.somaticVariantcalling.strelka.scatterSizeMillions">Somatic.somaticVariantcalling.strelka.scatterSizeMillions</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1000</code><br />
+    Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily
 </dd>
 <dt id="Somatic.somaticVariantcalling.strelka.strelkaGermline.cores"><a href="#Somatic.somaticVariantcalling.strelka.strelkaGermline.cores">Somatic.somaticVariantcalling.strelka.strelkaGermline.cores</a></dt>
 <dd>
@@ -1751,6 +2176,11 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The amount of memory this job will use in Gigabytes.
 </dd>
+<dt id="Somatic.somaticVariantcalling.strelka.strelkaGermline.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.strelkaGermline.timeMinutes">Somatic.somaticVariantcalling.strelka.strelkaGermline.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>90</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.somaticVariantcalling.strelka.strelkaSomatic.cores"><a href="#Somatic.somaticVariantcalling.strelka.strelkaSomatic.cores">Somatic.somaticVariantcalling.strelka.strelkaSomatic.cores</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
@@ -1760,6 +2190,21 @@ Somatic.
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
     The amount of memory this job will use in Gigabytes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.strelkaSomatic.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.strelkaSomatic.timeMinutes">Somatic.somaticVariantcalling.strelka.strelkaSomatic.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>90</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.svsIndex.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.svsIndex.timeMinutes">Somatic.somaticVariantcalling.strelka.svsIndex.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Somatic.somaticVariantcalling.strelka.variantsIndex.timeMinutes"><a href="#Somatic.somaticVariantcalling.strelka.variantsIndex.timeMinutes">Somatic.somaticVariantcalling.strelka.variantsIndex.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.trainingSet"><a href="#Somatic.somaticVariantcalling.trainingSet">Somatic.somaticVariantcalling.trainingSet</a></dt>
 <dd>
@@ -1801,9 +2246,14 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of threads to use.
 </dd>
+<dt id="Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.timeMinutes"><a href="#Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.timeMinutes">Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inFile,"G") * 5))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.uncompressedBamOutput"><a href="#Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.uncompressedBamOutput">Somatic.somaticVariantcalling.vardict.filterSupplementaryControl.uncompressedBamOutput</a></dt>
 <dd>
-    <i>Boolean? </i><br />
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to samtools view's `-u` flag.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.excludeSpecificFilter"><a href="#Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.excludeSpecificFilter">Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.excludeSpecificFilter</a></dt>
@@ -1836,9 +2286,14 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of threads to use.
 </dd>
+<dt id="Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.timeMinutes"><a href="#Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.timeMinutes">Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inFile,"G") * 5))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.uncompressedBamOutput"><a href="#Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.uncompressedBamOutput">Somatic.somaticVariantcalling.vardict.filterSupplementaryTumor.uncompressedBamOutput</a></dt>
 <dd>
-    <i>Boolean? </i><br />
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Equivalent to samtools view's `-u` flag.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.gatherVcfs.javaXmx"><a href="#Somatic.somaticVariantcalling.vardict.gatherVcfs.javaXmx">Somatic.somaticVariantcalling.vardict.gatherVcfs.javaXmx</a></dt>
@@ -1848,18 +2303,23 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.gatherVcfs.memory"><a href="#Somatic.somaticVariantcalling.vardict.gatherVcfs.memory">Somatic.somaticVariantcalling.vardict.gatherVcfs.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"9G"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Somatic.somaticVariantcalling.vardict.gatherVcfs.timeMinutes"><a href="#Somatic.somaticVariantcalling.vardict.gatherVcfs.timeMinutes">Somatic.somaticVariantcalling.vardict.gatherVcfs.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(vcfFiles,"G") * 5))</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.scatterList.chunkSize"><a href="#Somatic.somaticVariantcalling.vardict.scatterList.chunkSize">Somatic.somaticVariantcalling.vardict.scatterList.chunkSize</a></dt>
 <dd>
     <i>Int? </i><br />
     Equivalent to chunked-scatter's `-c` option.
 </dd>
-<dt id="Somatic.somaticVariantcalling.vardict.scatterList.dockerImage"><a href="#Somatic.somaticVariantcalling.vardict.scatterList.dockerImage">Somatic.somaticVariantcalling.vardict.scatterList.dockerImage</a></dt>
+<dt id="Somatic.somaticVariantcalling.vardict.scatterList.memory"><a href="#Somatic.somaticVariantcalling.vardict.scatterList.memory">Somatic.somaticVariantcalling.vardict.scatterList.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"quay.io/biocontainers/chunked-scatter:0.1.0--py_0"</code><br />
-    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    The amount of memory this job will use.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.scatterList.minimumBasesPerFile"><a href="#Somatic.somaticVariantcalling.vardict.scatterList.minimumBasesPerFile">Somatic.somaticVariantcalling.vardict.scatterList.minimumBasesPerFile</a></dt>
 <dd>
@@ -1875,6 +2335,11 @@ Somatic.
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>"./scatter"</code><br />
     The prefix for the output files.
+</dd>
+<dt id="Somatic.somaticVariantcalling.vardict.scatterList.timeMinutes"><a href="#Somatic.somaticVariantcalling.vardict.scatterList.timeMinutes">Somatic.somaticVariantcalling.vardict.scatterList.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
+    The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.varDict.chromosomeColumn"><a href="#Somatic.somaticVariantcalling.vardict.varDict.chromosomeColumn">Somatic.somaticVariantcalling.vardict.varDict.chromosomeColumn</a></dt>
 <dd>
@@ -1903,7 +2368,7 @@ Somatic.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.varDict.memory"><a href="#Somatic.somaticVariantcalling.vardict.varDict.memory">Somatic.somaticVariantcalling.vardict.varDict.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"40G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"18G"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Somatic.somaticVariantcalling.vardict.varDict.minimumAlleleFrequency"><a href="#Somatic.somaticVariantcalling.vardict.varDict.minimumAlleleFrequency">Somatic.somaticVariantcalling.vardict.varDict.minimumAlleleFrequency</a></dt>
@@ -1941,6 +2406,11 @@ Somatic.
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The number of threads to use.
 </dd>
+<dt id="Somatic.somaticVariantcalling.vardict.varDict.timeMinutes"><a href="#Somatic.somaticVariantcalling.vardict.varDict.timeMinutes">Somatic.somaticVariantcalling.vardict.varDict.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>300</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Somatic.somaticVariantcalling.variantsForContamination"><a href="#Somatic.somaticVariantcalling.variantsForContamination">Somatic.somaticVariantcalling.variantsForContamination</a></dt>
 <dd>
     <i>File? </i><br />
@@ -1951,22 +2421,15 @@ Somatic.
     <i>File? </i><br />
     The index of the common variants VCF file.
 </dd>
-</dl>
-</details>
-
-
-
-## Other inputs
-<details>
-<summary> Show/Hide </summary>
-<dl>
-<dt id="Somatic.cnvPanelOfNormals"><a href="#Somatic.cnvPanelOfNormals">Somatic.cnvPanelOfNormals</a></dt>
+<dt id="Somatic.useBwaKit"><a href="#Somatic.useBwaKit">Somatic.useBwaKit</a></dt>
 <dd>
-    <i>File? </i><br />
-    ???
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether or not BWA kit should be used. If false BWA mem will be used.
 </dd>
 </dl>
 </details>
+
+
 
 
 
@@ -1974,14 +2437,14 @@ Somatic.
 The following inputs should ***not*** be set, even though womtool may
 show them as being available inputs.
 
-* Somatic.sample.qc.FastqcRead1.NoneFile
-* Somatic.sample.qc.FastqcRead1.NoneArray
-* Somatic.sample.qc.FastqcRead2.NoneFile
-* Somatic.sample.qc.FastqcRead2.NoneArray
-* Somatic.sample.qc.FastqcRead1After.NoneFile
-* Somatic.sample.qc.FastqcRead1After.NoneArray
-* Somatic.sample.qc.FastqcRead2After.NoneFile
-* Somatic.sample.qc.FastqcRead2After.NoneArray
+* Somatic.sampleWorkflow.QC.FastqcRead1.NoneFile
+* Somatic.sampleWorkflow.QC.FastqcRead1.NoneArray
+* Somatic.sampleWorkflow.QC.FastqcRead2.NoneFile
+* Somatic.sampleWorkflow.QC.FastqcRead2.NoneArray
+* Somatic.sampleWorkflow.QC.FastqcRead1After.NoneFile
+* Somatic.sampleWorkflow.QC.FastqcRead1After.NoneArray
+* Somatic.sampleWorkflow.QC.FastqcRead2After.NoneFile
+* Somatic.sampleWorkflow.QC.FastqcRead2After.NoneArray
 * Somatic.somaticVariantcalling.DONOTDEFINETHIS
 * Somatic.somaticVariantcalling.indelIndex.type
 * Somatic.somaticVariantcalling.snvIndex.type
