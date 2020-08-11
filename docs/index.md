@@ -70,6 +70,17 @@ Replace `<pipeline>` with either `Germline` or `Somatic`.
 }
 ```
 
+Alternatively you can specify an index for bwa-mem2. When you do so, bwa-mem2
+will be used for alignment.
+
+```json
+{
+  "<pipeline>.bwaMem2Index": {
+    "fastaFile": "A path to the fasta file from the bwa index",
+    "indexFiles": "A list containing the other bwa index files"
+  }
+}
+```
 Specific inputs for the germline pipeline are:
 
 ```json
