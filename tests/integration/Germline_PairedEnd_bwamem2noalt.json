@@ -1,0 +1,23 @@
+{
+  "Germline.sampleConfigFile": "tests/samplesheets/PairedEnd.csv",
+  "Germline.dockerImagesFile": "dockerImages.yml",
+  "Germline.referenceFasta": "tests/data/reference/reference.fasta",
+  "Germline.referenceFastaFai": "tests/data/reference/reference.fasta.fai",
+  "Germline.referenceFastaDict": "tests/data/reference/reference.dict",
+  "Germline.bwaMem2Index": {
+    "fastaFile": "tests/data/reference/bwa-mem2/reference.fasta",
+    "indexFiles": [
+      "tests/data/reference/bwa-mem2/reference.fasta.0123",
+      "tests/data/reference/bwa-mem2/reference.fasta.amb",
+      "tests/data/reference/bwa-mem2/reference.fasta.ann",
+      "tests/data/reference/bwa-mem2/reference.fasta.bwt.2bit.64",
+      "tests/data/reference/bwa-mem2/reference.fasta.bwt.8bit.32",
+      "tests/data/reference/bwa-mem2/reference.fasta.pac"
+    ]
+  },
+  "Germline.dbsnpVCF": "tests/data/wgs2.vcf.gz",
+  "Germline.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
+  "Germline.bwaThreads": 1,
+  "Germline.jointgenotyping": false,
+  "Germline.runSVcalling": false
+}

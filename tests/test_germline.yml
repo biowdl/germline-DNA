@@ -110,6 +110,64 @@
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.flagstats"
     - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.flagstats"
 
+- name: Germline_PairedEnd_bwamem2alt
+  tags:
+    - integration
+    - germline
+    - bwakit
+    - bwamem2
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/Germline_PairedEnd_bwamem2alt.json germline.wdl
+  files:
+    - path: "test-output/multisample.vcf.gz"
+      should_exist: false
+    - path: "test-output/multisample.vcf.gz.tbi"
+      should_exist: false
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bai"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.vcf.gz"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.vcf.gz.tbi"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.vcf.gz"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.vcf.gz.tbi"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.flagstats"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.flagstats"
+
+- name: Germline_PairedEnd_bwamem2noalt
+  tags:
+    - integration
+    - germline
+    - bwakit
+    - bwamem2
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/Germline_PairedEnd_bwamem2noalt.json germline.wdl
+  files:
+    - path: "test-output/multisample.vcf.gz"
+      should_exist: false
+    - path: "test-output/multisample.vcf.gz.tbi"
+      should_exist: false
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bai"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.vcf.gz"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.vcf.gz.tbi"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.vcf.gz"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.vcf.gz.tbi"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.flagstats"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.flagstats"
+
 - name: Germline_GenderAware
   tags:
     - integration

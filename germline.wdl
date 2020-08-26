@@ -38,7 +38,8 @@ workflow Germline {
         File referenceFasta
         File referenceFastaFai
         File referenceFastaDict
-        BwaIndex bwaIndex
+        BwaIndex? bwaIndex
+        BwaIndex? bwaMem2Index
         File dockerImagesFile
         File dbsnpVCF
         File dbsnpVCFIndex
@@ -108,6 +109,7 @@ workflow Germline {
                 referenceFastaFai = referenceFastaFai,
                 referenceFastaDict = referenceFastaDict,
                 bwaIndex = bwaIndex,
+                bwaMem2Index = bwaMem2Index,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 adapterForward = adapterForward,
@@ -141,7 +143,7 @@ workflow Germline {
         }
 
 
-        if (runSVcalling) {
+        if (runSVcalling && defined(bwaIndex)) {
             call structuralVariantCalling.SVcalling as svCalling {
                 input:
                     bamFile = sampleWorkflow.markdupBam,
@@ -149,7 +151,7 @@ workflow Germline {
                     referenceFasta = referenceFasta,
                     referenceFastaFai = referenceFastaFai,
                     referenceFastaDict = referenceFastaDict,
-                    bwaIndex = bwaIndex,
+                    bwaIndex = select_first([bwaIndex]),
                     sample = sample.id,
                     outputDir = sampleDir,
                     dockerImages = dockerImages
@@ -219,7 +221,8 @@ workflow Germline {
         referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
         dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
         dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
-        bwaIndex: {description: "The BWA index files.", category: "required"}
+        bwaIndex: {description: "The BWA index files. When these are provided BWA will be used.", category: "common"}
+        bwaMem2Index: {description: "The bwa-mem2 index files. When these are provided bwa-mem2 will be used.", category: "common"}
         dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
                            category: "advanced"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}

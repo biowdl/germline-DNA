@@ -9,6 +9,11 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
+version 4.1.0-dev
+-----------------
+
++ Add bwa-mem2 capability.
+
 version 4.0.0
 -----------------
 + Updated default versions for several tools to the newest version. Pin the 
