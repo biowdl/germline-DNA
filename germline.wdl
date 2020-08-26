@@ -209,7 +209,7 @@ workflow Germline {
         Array[File?] mantaVCFs = svCalling.mantaVcf
         Array[File?] dellyVCFs = svCalling.dellyVcf
         Array[File?] survivorVCFs = svCalling.survivorVcf
-        Array[Array[File]?] modifiedVCFs = svCalling.modifiedVcfs
+        Array[Array[File]?] renamedVCFs = svCalling.renamedVcfs
     }
 
     parameter_meta {
