@@ -17,7 +17,7 @@ bwamem2+kit+samtools: "quay.io/biocontainers/mulled-v2-6a15c99309c82b345497d2448
 chunked-scatter: "quay.io/biocontainers/chunked-scatter:1.0.0--py_0"
 clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
 cutadapt: "quay.io/biocontainers/cutadapt:2.10--py37hf01694f_1"
-delly: "quay.io/biocontainers/delly:0.8.1--h4037b6b_1"
+delly: "quay.io/biocontainers/delly:0.8.5--hf3ca161_0"
 fastqc: "quay.io/biocontainers/fastqc:0.11.9--0"
 gatk4: "quay.io/biocontainers/gatk4:4.1.8.0--py38h37ae868_0"
 gatk-broad: "broadinstitute/gatk:4.1.8.0"
