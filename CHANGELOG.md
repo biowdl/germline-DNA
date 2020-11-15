@@ -16,6 +16,7 @@ version 4.1.0-dev
 
 version 4.0.0
 -----------------
++ Add griddss docker image.
 + Update Delly docker image.
 + Updated default versions for several tools to the newest version. Pin the 
   volatile python container to a specific hash digest.
