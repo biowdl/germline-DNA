@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 version 4.1.0-dev
 ---------------------------
++ `renamedVCFs` was changed to `modifiedVcfs`.
++ Add the dockerImages to the output section.
 + Add bwa-mem2 capability.
 
 version 4.0.0

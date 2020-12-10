@@ -25,7 +25,6 @@ import "gatk-CNVcalling/CNV-PON.wdl" as cnvPon
 import "sample.wdl" as sampleWorkflow
 import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
 import "structs.wdl" as structs
-import "tasks/biopet/biopet.wdl" as biopet
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
