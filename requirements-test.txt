@@ -6,7 +6,7 @@
 # This file can be installed with "conda install --file requirements-test.txt".
 
 cromwell
-pytest-workflow
+pytest-workflow >=1.4.0
 miniwdl
 wdl-aid
 rtg-tools
