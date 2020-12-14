@@ -55,7 +55,10 @@ jobs:
       - name: Install requirements.
         run: conda install -n test --file requirements-test.txt
       - name: Run test.
-        run: pytest --keep-workflow-wd-on-fail --tag ${{ matrix.test }} tests/
+        # Use --symlink to limit disk usage.
+        run: >- 
+          pytest --keep-workflow-wd-on-fail --tag ${{ matrix.test }} 
+          --symlink tests/ 
       - name: Check logs in case of failure.
         if: ${{ failure() }}
         # Get the last 1000 lines of the cromwell log to catch the error.
