@@ -28,7 +28,6 @@ import "tasks/bwa-mem2.wdl" as bwamem2
 import "tasks/sambamba.wdl" as sambamba
 import "QC/QC.wdl" as qc
 
-
 workflow SampleWorkflow {
     input {
         Sample sample
@@ -36,24 +35,26 @@ workflow SampleWorkflow {
         File referenceFasta
         File referenceFastaFai
         File referenceFastaDict
-        BwaIndex? bwaIndex
-        BwaIndex? bwaMem2Index
         File dbsnpVCF
         File dbsnpVCFIndex
-        Map[String, String] dockerImages
         String platform = "illumina"
         Boolean useBwaKit = false
         Array[File] scatters
-        Int bwaThreads = 4
+
+        BwaIndex? bwaIndex
+        BwaIndex? bwaMem2Index
         String? adapterForward
         String? adapterReverse
+
+        Int bwaThreads = 4
+        Map[String, String] dockerImages
     }
+
     meta {allowNestedInputs: true}
 
     scatter (readgroup in sample.readgroups) {
         String readgroupDir = sampleDir + "/lib_" + readgroup.lib_id + "--rg_" + readgroup.id
-
-        call qc.QC as QC {
+        call qc.QC as qualityControl {
             input:
                 outputDir = readgroupDir,
                 read1 = readgroup.R1,
@@ -66,8 +67,8 @@ workflow SampleWorkflow {
         if (defined(bwaMem2Index)) {
             call bwamem2.Mem as bwamem2Mem {
                 input:
-                    read1 = QC.qcRead1,
-                    read2 = QC.qcRead2,
+                    read1 = qualityControl.qcRead1,
+                    read2 = qualityControl.qcRead2,
                     outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = select_first([bwaMem2Index]),
@@ -76,12 +77,14 @@ workflow SampleWorkflow {
                     dockerImage = dockerImages["bwamem2+kit+samtools"]
             }
         }
-        # We assume bwaIndex present if bwamem2index is not present. If not, we create a crash.
+
+        # We assume bwaIndex present if bwamem2index is not present.
+        # If not, we create a crash.
         if (!defined(bwaMem2Index)) {
             call bwa.Mem as bwaMem {
                 input:
-                    read1 = QC.qcRead1,
-                    read2 = QC.qcRead2,
+                    read1 = qualityControl.qcRead1,
+                    read2 = qualityControl.qcRead2,
                     outputPrefix = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id,
                     readgroup = "@RG\\tID:~{sample.id}-~{readgroup.lib_id}-~{readgroup.id}\\tLB:~{readgroup.lib_id}\\tSM:~{sample.id}\\tPL:~{platform}",
                     bwaIndex = select_first([bwaIndex]),
@@ -95,7 +98,7 @@ workflow SampleWorkflow {
     call sambamba.Markdup as markdup {
         input:
             inputBams = if defined(bwaMem2Index) 
-                        then select_all(bwamem2Mem.outputBam) 
+                        then select_all(bwamem2Mem.outputBam)
                         else select_all(bwaMem.outputBam),
             outputPath = sampleDir + "/" + sample.id + ".markdup.bam",
             dockerImage = dockerImages["sambamba"]
@@ -132,28 +135,36 @@ workflow SampleWorkflow {
         File markdupBamIndex = markdup.outputBamIndex
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
-        Array[File] reports = flatten([flatten(QC.reports), 
+        Array[File] reports = flatten([flatten(qualityControl.reports),
                                        metrics.reports,
                                        [bqsr.BQSRreport]
                                        ])
     }
 
     parameter_meta {
+        # inputs
         sample: {description: "The sample information: sample id, readgroups, etc.", category: "required"}
         sampleDir: {description: "The directory the output should be written to.", category: "required"}
-        bwaIndex: {description: "The BWA index files. These or the bwaMem2Index should be provided.", category: "common"}
-        bwaMem2Index: {description: "The bwa-mem2 index files. These or the bwaIndex should be provided.", category: "common"}
-        referenceFasta: { description: "The reference fasta file", category: "required" }
-        referenceFastaFai: { description: "Fasta index (.fai) file of the reference", category: "required" }
-        referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
-        dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
-        dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
-        dockerImages: {description: "The docker images used.", category: "required"}
+        referenceFasta: {description: "The reference fasta file.", category: "required"}
+        referenceFastaFai: {description: "Fasta index (.fai) file of the reference.", category: "required"}
+        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "required"}
+        dbsnpVCF: {description: "dbsnp VCF file used for checking known sites.", category: "required"}
+        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF.", category: "required"}
         platform: {description: "The platform used for sequencing.", category: "advanced"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
+        scatters: {description: "List of bed files to be used for scattering.", category: "advanced"}
+        bwaIndex: {description: "The BWA index files. These or the bwaMem2Index should be provided.", category: "common"}
+        bwaMem2Index: {description: "The bwa-mem2 index files. These or the bwaIndex should be provided.", category: "common"}
         adapterForward: {description: "The adapter to be removed from the reads first or single end reads.", category: "common"}
         adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
-        scatters: {description: "List of bed files to be used for scattering", category: "advanced"}
-        bwaThreads: {description: "The amount of threads for the alignment process", category: "advanced"}
+        bwaThreads: {description: "The amount of threads for the alignment process.", category: "advanced"}
+        dockerImages: {description: "The docker images used.", category: "required"}
+
+        # outputs
+        markdupBam: {description: ""}
+        markdupBamIndex: {description: ""}
+        recalibratedBam: {description: ""}
+        recalibratedBamIndex: {description: ""}
+        reports: {description: ""}
     }
 }

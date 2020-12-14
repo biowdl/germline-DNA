@@ -1,4 +1,23 @@
----
+# Copyright (c) 2018 Leiden University Medical Center
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 # This file contains the docker images used in the pipeline.
 # The containers used by default are biocontainers uploaded on quay.io.
 # https://quay.io/organization/biocontainers
@@ -7,12 +26,13 @@
 # command.
 
 # Tools are sorted alphabetically for ease of use.
+
 bcftools: "quay.io/biocontainers/bcftools:1.10.2--h4f4756c_2"
 bedtools: "quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3"
 biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_0"
-# Contains bwa 0.7.17 bwakit 0.7.17.dev1 and samtools 1.10
+# Contains bwa 0.7.17 bwakit 0.7.17.dev1 and samtools 1.10.
 bwakit+samtools: "quay.io/biocontainers/mulled-v2-ad317f19f5881324e963f6a6d464d696a2825ab6:c59b7a73c87a9fe81737d5d628e10a3b5807f453-0"
-# Contains bwa-mem2 bwakit 0.7.17.dev1 and samtools 1.10
+# Contains bwa-mem2 bwakit 0.7.17.dev1 and samtools 1.10.
 bwamem2+kit+samtools: "quay.io/biocontainers/mulled-v2-6a15c99309c82b345497d24489bee67bbb76c2f6:1c9c3227b9bf825a8dc9726a25701aa23c0b1f12-0"
 chunked-scatter: "quay.io/biocontainers/chunked-scatter:1.0.0--py_0"
 clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
@@ -21,10 +41,11 @@ delly: "quay.io/biocontainers/delly:0.8.1--h4037b6b_1"
 fastqc: "quay.io/biocontainers/fastqc:0.11.9--0"
 gatk4: "quay.io/biocontainers/gatk4:4.1.8.0--py38h37ae868_0"
 gatk-broad: "broadinstitute/gatk:4.1.8.0"
+gridss: "quay.io/biocontainers/gridss:2.9.4--0"
 manta: "quay.io/biocontainers/manta:1.4.0--py27_1"
 multiqc: "quay.io/biocontainers/multiqc:1.9--pyh9f0ad1d_0"
 picard: "quay.io/biocontainers/picard:2.23.2--0"
-# Python 3.7-slim on buster
+# Python 3.7-slim on buster.
 python: "python@sha256:e0f6a4df17d5707637fa3557ab266f44dddc46ebfc82b0f1dbe725103961da4e"
 sambamba: "quay.io/biocontainers/sambamba:0.7.1--h148d290_2"
 samtools: "quay.io/biocontainers/samtools:1.10--h9402c20_2"

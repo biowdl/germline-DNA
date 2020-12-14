@@ -38,43 +38,47 @@ workflow Germline {
         File referenceFasta
         File referenceFastaFai
         File referenceFastaDict
-        BwaIndex? bwaIndex
-        BwaIndex? bwaMem2Index
-        File dockerImagesFile
         File dbsnpVCF
         File dbsnpVCFIndex
-        File? regions
-        File? XNonParRegions
-        File? YNonParRegions
         Boolean jointgenotyping = true
         Boolean singleSampleGvcf = false
-        String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter
-        String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter
         String platform = "illumina"
         Boolean useBwaKit = false
         Int scatterSizeMillions = 1000
-        Int? scatterSize
-        Int bwaThreads = 4
-        # Only run multiQC if the user specified an outputDir
         Boolean runSVcalling = false
+
+        BwaIndex? bwaIndex
+        BwaIndex? bwaMem2Index
+        File? regions
+        File? XNonParRegions
+        File? YNonParRegions
+        String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter.
+        String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter.
+        Int? scatterSize
+
+        Int bwaThreads = 4
+        File dockerImagesFile
     }
+
     meta {allowNestedInputs: true}
 
     Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
-    # Parse docker Tags configuration and sample sheet
-    call common.YamlToJson as ConvertDockerImagesFile {
+    # Parse docker Tags configuration and sample sheet.
+    call common.YamlToJson as convertDockerImagesFile {
         input:
             yaml = dockerImagesFile
     }
-    Map[String, String] dockerImages = read_json(ConvertDockerImagesFile.json)
 
-    call biowdl.InputConverter as ConvertSampleConfig {
+    Map[String, String] dockerImages = read_json(convertDockerImagesFile.json)
+
+    call biowdl.InputConverter as convertSampleConfig {
         input:
             samplesheet = sampleConfigFile,
             dockerImage = dockerImages["biowdl-input-converter"]
     }
-    SampleConfig sampleConfig = read_json(ConvertSampleConfig.json)
+
+    SampleConfig sampleConfig = read_json(convertSampleConfig.json)
 
     call calcRegions.CalculateRegions as calculateRegions {
         input:
@@ -97,7 +101,7 @@ workflow Germline {
             dockerImage = dockerImages["chunked-scatter"]
     }
 
-    # Running sample subworkflow
+    # Running sample subworkflow.
     scatter (sample in sampleConfig.samples) {
         String sampleIds = sample.id
         String sampleDir = outputDir + "/samples/" + sample.id + "/"
@@ -120,8 +124,8 @@ workflow Germline {
                 bwaThreads = bwaThreads,
                 platform = platform
         }
-        
-        call variantCallingWorkflow.SingleSampleCalling as SingleSampleCalling {
+
+        call variantCallingWorkflow.SingleSampleCalling as singleSampleCalling {
             input:
                 bam = sampleWorkflow.recalibratedBam,
                 bamIndex = sampleWorkflow.recalibratedBamIndex,
@@ -139,9 +143,8 @@ workflow Germline {
                 autosomalRegionScatters = calculateRegions.autosomalRegionScatters,
                 gvcf = jointgenotyping,
                 mergeVcf = mergeVcfs,
-                dockerImages = dockerImages                    
+                dockerImages = dockerImages
         }
-
 
         if (runSVcalling && defined(bwaIndex)) {
             call structuralVariantCalling.SVcalling as svCalling {
@@ -162,8 +165,8 @@ workflow Germline {
     if (jointgenotyping) {
         call jgwf.JointGenotyping as JointGenotyping {
             input:
-                gvcfFiles = flatten(SingleSampleCalling.vcfScatters),
-                gvcfFilesIndex = flatten(SingleSampleCalling.vcfIndexScatters),
+                gvcfFiles = flatten(singleSampleCalling.vcfScatters),
+                gvcfFilesIndex = flatten(singleSampleCalling.vcfIndexScatters),
                 outputDir = outputDir,
                 vcfBasename = "multisample",
                 referenceFasta = referenceFasta,
@@ -179,8 +182,9 @@ workflow Germline {
     }
 
     Array[File] allReports = flatten([
-        flatten(sampleWorkflow.reports), flatten(SingleSampleCalling.reports), select_first([JointGenotyping.reports, []])
-        ])
+        flatten(sampleWorkflow.reports), flatten(singleSampleCalling.reports),
+        select_first([JointGenotyping.reports, []])
+    ])
 
     call multiqc.MultiQC as multiqcTask {
         input:
@@ -190,16 +194,17 @@ workflow Germline {
     }
 
     output {
+        File dockerImagesList = convertDockerImagesFile.json
         File multiqcReport = multiqcTask.multiqcReport
         Array[File] reports = allReports
         File? multiSampleVcf = JointGenotyping.multisampleVcf
         File? multisampleVcfIndex = JointGenotyping.multisampleVcfIndex
         File? multisampleGVcf = JointGenotyping.multisampleGVcf
         File? multisampleGVcfIndex = JointGenotyping.multisampleGVcfIndex
-        Array[File] singleSampleVcfs = if jointgenotyping then [] else select_all(SingleSampleCalling.outputVcf)
-        Array[File] singleSampleVcfsIndex = if jointgenotyping then [] else select_all(SingleSampleCalling.outputVcfIndex)
-        Array[File] singleSampleGvcfs = if jointgenotyping then select_all(SingleSampleCalling.outputVcf) else []
-        Array[File] singleSampleGvcfsIndex = if jointgenotyping then select_all(SingleSampleCalling.outputVcfIndex) else []
+        Array[File] singleSampleVcfs = if jointgenotyping then [] else select_all(singleSampleCalling.outputVcf)
+        Array[File] singleSampleVcfsIndex = if jointgenotyping then [] else select_all(singleSampleCalling.outputVcfIndex)
+        Array[File] singleSampleGvcfs = if jointgenotyping then select_all(singleSampleCalling.outputVcf) else []
+        Array[File] singleSampleGvcfsIndex = if jointgenotyping then select_all(singleSampleCalling.outputVcfIndex) else []
         Array[File] recalibratedBams = sampleWorkflow.recalibratedBam
         Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
         Array[File] markdupBams = sampleWorkflow.markdupBam
@@ -209,38 +214,56 @@ workflow Germline {
         Array[File?] mantaVCFs = svCalling.mantaVcf
         Array[File?] dellyVCFs = svCalling.dellyVcf
         Array[File?] survivorVCFs = svCalling.survivorVcf
-        Array[Array[File]?] renamedVCFs = svCalling.renamedVcfs
+        Array[Array[File]?] modifiedVcfs = svCalling.modifiedVcfs
     }
 
     parameter_meta {
-        sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.",
-                           category: "required"}
+        # inputs
+        sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.", category: "required"}
         outputDir: {description: "The directory the output should be written to.", category: "common"}
-        referenceFasta: { description: "The reference fasta file", category: "required" }
-        referenceFastaFai: { description: "Fasta index (.fai) file of the reference", category: "required" }
-        referenceFastaDict: { description: "Sequence dictionary (.dict) file of the reference", category: "required" }
-        dbsnpVCF: { description: "dbsnp VCF file used for checking known sites", category: "required"}
-        dbsnpVCFIndex: { description: "Index (.tbi) file for the dbsnp VCF", category: "required"}
+        referenceFasta: {description: "The reference fasta file.", category: "required" }
+        referenceFastaFai: {description: "Fasta index (.fai) file of the reference.", category: "required" }
+        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "required" }
+        dbsnpVCF: {description: "dbsnp VCF file used for checking known sites.", category: "required"}
+        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF.", category: "required"}
+        jointgenotyping: {description: "Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not.", category: "common"}
+        singleSampleGvcf: {description: "Whether to output single-sample gvcfs.", category: "common"}
+        platform: {description: "The platform used for sequencing.", category: "advanced"}
+        useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
+        scatterSizeMillions:{description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.", category: "advanced"}
+        runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
         bwaIndex: {description: "The BWA index files. When these are provided BWA will be used.", category: "common"}
         bwaMem2Index: {description: "The bwa-mem2 index files. When these are provided bwa-mem2 will be used.", category: "common"}
-        dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.",
-                           category: "advanced"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
-        runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
-        runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}
         YNonParRegions: {description: "Bed file with the non-PAR regions of Y.", category: "common"}
-        useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
         adapterForward: {description: "The adapter to be removed from the reads first or single end reads.", category: "common"}
         adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
-        platform: {description: "The platform used for sequencing.", category: "advanced"}
-        scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.",
-              category: "advanced"}
-        scatterSizeMillions:{ description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.",
-                              category: "advanced"}
-        jointgenotyping: {description: "Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not",
-                  category: "common"}
-        singleSampleGvcf: {description: "Whether to output single-sample gvcfs", category: "common"}
-        bwaThreads: {description: "The amount of threads for the alignment process", category: "advanced"}
+        scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.", category: "advanced"}
+        bwaThreads: {description: "The amount of threads for the alignment process.", category: "advanced"}
+        dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.", category: "advanced"}
+
+        # outputs
+        dockerImagesList: {description: "Json file describing the docker images used by the pipeline."}
+        multiqcReport: {description: ""}
+        reports: {description: ""}
+        multiSampleVcf: {description: ""}
+        multisampleVcfIndex: {description: ""}
+        multisampleGVcf: {description: ""}
+        multisampleGVcfIndex: {description: ""}
+        singleSampleVcfs: {description: ""}
+        singleSampleVcfsIndex: {description: ""}
+        singleSampleGvcfs: {description: ""}
+        singleSampleGvcfsIndex: {description: ""}
+        recalibratedBams: {description: ""}
+        recalibratedBamIndexes: {description: ""}
+        markdupBams: {description: ""}
+        markdupBamIndexes: {description: ""}
+        cleverVCFs: {description: ""}
+        matecleverVCFs: {description: ""}
+        mantaVCFs: {description: ""}
+        dellyVCFs: {description: ""}
+        survivorVCFs: {description: ""}
+        modifiedVcfs: {description: ""}
     }
 }
