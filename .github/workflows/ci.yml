@@ -59,7 +59,13 @@ jobs:
         run: >- 
           pytest --keep-workflow-wd-on-fail --tag ${{ matrix.test }} 
           --symlink tests/ 
-      - name: Check logs in case of failure.
+      - name: Check cromwell log in case of failure.
         if: ${{ failure() }}
         # Get the last 1000 lines of the cromwell log to catch the error.
         run: bash -c 'tail -n 1000 /tmp/pytest_workflow_*/*/log.out'
+      - name: Check job error messages in case of failure
+        if: ${{ failure() }}
+        run: >- 
+          bash -c '
+          for file in $(find /tmp -name stderr); 
+          do echo $file; cat $file; done'
