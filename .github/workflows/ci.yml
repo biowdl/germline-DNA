@@ -63,9 +63,15 @@ jobs:
         if: ${{ failure() }}
         # Get the last 1000 lines of the cromwell log to catch the error.
         run: bash -c 'tail -n 1000 /tmp/pytest_workflow_*/*/log.out'
-      - name: Check job error messages in case of failure
+      - name: Check job stderr messages in case of failure
         if: ${{ failure() }}
         run: >- 
           bash -c '
           for file in $(find /tmp -name stderr); 
+          do echo $file; cat $file; done'
+      - name: Check job stdout messages in case of failure
+        if: ${{ failure() }}
+        run: >- 
+          bash -c '
+          for file in $(find /tmp -name stdout); 
           do echo $file; cat $file; done'
