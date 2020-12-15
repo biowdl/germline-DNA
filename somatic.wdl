@@ -67,7 +67,8 @@ workflow Somatic {
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {
         input:
-            yaml = dockerImagesFile
+            yaml = dockerImagesFile,
+            outputJson = "dockerImages.json"
     }
 
     Map[String, String] dockerImages = read_json(convertDockerImagesFile.json)

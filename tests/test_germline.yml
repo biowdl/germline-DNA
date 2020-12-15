@@ -46,6 +46,7 @@
       should_exist: false
     - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
       should_exist: false
+    - path: "test-output/dockerImages.json"
 
 - name: Germline_PairedEnd
   tags:
