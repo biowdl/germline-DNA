@@ -57,6 +57,7 @@ workflow Germline {
         Int bwaThreads = 4
         # Only run multiQC if the user specified an outputDir
         Boolean runSVcalling = false
+        Boolean runSNPcalling = true
     }
     meta {allowNestedInputs: true}
 
@@ -120,7 +121,7 @@ workflow Germline {
                 bwaThreads = bwaThreads,
                 platform = platform
         }
-        
+
         call variantCallingWorkflow.SingleSampleCalling as SingleSampleCalling {
             input:
                 bam = sampleWorkflow.recalibratedBam,
@@ -139,7 +140,7 @@ workflow Germline {
                 autosomalRegionScatters = calculateRegions.autosomalRegionScatters,
                 gvcf = jointgenotyping,
                 mergeVcf = mergeVcfs,
-                dockerImages = dockerImages                    
+                dockerImages = dockerImages
         }
 
 
@@ -158,23 +159,24 @@ workflow Germline {
             }
         }
     }
-
-    if (jointgenotyping) {
-        call jgwf.JointGenotyping as JointGenotyping {
-            input:
-                gvcfFiles = flatten(SingleSampleCalling.vcfScatters),
-                gvcfFilesIndex = flatten(SingleSampleCalling.vcfIndexScatters),
-                outputDir = outputDir,
-                vcfBasename = "multisample",
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
-                sampleIds = sampleIds,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFIndex = dbsnpVCFIndex,
-                regions = regions,
-                scatterSize = scatterSize,
-                dockerImages = dockerImages
+    if (runSNPcalling) {
+        if (jointgenotyping) {
+            call jgwf.JointGenotyping as JointGenotyping {
+                input:
+                    gvcfFiles = flatten(SingleSampleCalling.vcfScatters),
+                    gvcfFilesIndex = flatten(SingleSampleCalling.vcfIndexScatters),
+                    outputDir = outputDir,
+                    vcfBasename = "multisample",
+                    referenceFasta = referenceFasta,
+                    referenceFastaFai = referenceFastaFai,
+                    referenceFastaDict = referenceFastaDict,
+                    sampleIds = sampleIds,
+                    dbsnpVCF = dbsnpVCF,
+                    dbsnpVCFIndex = dbsnpVCFIndex,
+                    regions = regions,
+                    scatterSize = scatterSize,
+                    dockerImages = dockerImages
+            }
         }
     }
 
@@ -227,6 +229,7 @@ workflow Germline {
                            category: "advanced"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
+        runSNPcalling: {description: "Whether or not SNP-calling should be run.", category: "advanced"}
         runMultiQC: {description: "Whether or not MultiQC should be run.", category: "advanced"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}
         YNonParRegions: {description: "Bed file with the non-PAR regions of Y.", category: "common"}
