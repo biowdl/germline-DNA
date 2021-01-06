@@ -7,7 +7,7 @@
 # command.
 
 # Tools are sorted alphabetically for ease of use.
-bcftools: "quay.io/biocontainers/bcftools:1.10.2--h4f4756c_2"
+bcftools: "quay.io/biocontainers/bcftools:1.9--h68d8f2e_9"
 bedtools: "quay.io/biocontainers/bedtools:2.23.0--hdbcaa40_3"
 biowdl-input-converter: "quay.io/biocontainers/biowdl-input-converter:0.2.1--py_0"
 # Contains bwa 0.7.17 bwakit 0.7.17.dev1 and samtools 1.10
