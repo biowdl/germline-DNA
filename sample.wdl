@@ -40,9 +40,9 @@ workflow SampleWorkflow {
         File dbsnpVCF
         File dbsnpVCFIndex
 		Boolean umiDeduplication
-		Boolean collectUmiStats
         String platform = "illumina"
         Boolean useBwaKit = false
+		Boolean collectUmiStats = false
         Array[File] scatters
 
         BwaIndex? bwaIndex
