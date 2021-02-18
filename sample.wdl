@@ -26,6 +26,7 @@ import "structs.wdl" as structs
 import "tasks/bwa.wdl" as bwa
 import "tasks/bwa-mem2.wdl" as bwamem2
 import "tasks/sambamba.wdl" as sambamba
+import "tasks/picard.wdl" as picard
 import "QC/QC.wdl" as qc
 import "tasks/umi-tools.wdl" as umiTools
 
@@ -116,9 +117,9 @@ workflow SampleWorkflow {
             input:
                 inputBam = markdup.outputBam,
                 inputBamIndex = markdup.outputBamIndex,
-                outputBamPath = outputDir + "/" + sample.id + ".dedup.bam",
+                outputBamPath = sampleDir + "/" + sample.id + ".dedup.bam",
                 statsPrefix = if collectUmiStats
-                    then outputDir + "/" + sample.id
+                    then sampleDir + "/" + sample.id
                     else DONOTDEFINE,
                 # Assumes that if one readgroup is paired, all are.
                 paired = paired[0],
@@ -128,8 +129,8 @@ workflow SampleWorkflow {
         call picard.MarkDuplicates as postUmiDedupMarkDuplicates {
             input:
                 inputBams = [umiDedup.deduppedBam],
-                outputBamPath = outputDir + "/" + sample.id + ".dedup.markdup.bam",
-                metricsPath = outputDir + "/" + sample.id + ".dedup.markdup.metrics",
+                outputBamPath = sampleDir + "/" + sample.id + ".dedup.markdup.bam",
+                metricsPath = sampleDir + "/" + sample.id + ".dedup.markdup.metrics",
                 dockerImage = dockerImages["picard"]
         }
     }
