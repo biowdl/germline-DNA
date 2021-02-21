@@ -11,6 +11,7 @@ that users understand how the changes affect the new version.
 
 version 4.1.0-dev
 ---------------------------
++ Add duphold docker image.
 + Replace travis with github CI.
 + `renamedVCFs` was changed to `modifiedVcfs`.
 + Add the dockerImages to the output section.
