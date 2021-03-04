@@ -118,6 +118,7 @@ workflow SampleWorkflow {
                 inputBam = markdup.outputBam,
                 inputBamIndex = markdup.outputBamIndex,
                 outputBamPath = sampleDir + "/" + sample.id + ".dedup.bam",
+                tmpDir = sampleDir + "/" + sample.id + "_tmp",
                 statsPrefix = if collectUmiStats
                     then sampleDir + "/" + sample.id
                     else DONOTDEFINE,
