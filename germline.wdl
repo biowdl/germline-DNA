@@ -46,8 +46,8 @@ workflow Germline {
         Boolean useBwaKit = false
         Int scatterSizeMillions = 1000
         Boolean runSVcalling = false
-		Boolean umiDeduplication = false
-		Boolean collectUmiStats = false
+	Boolean umiDeduplication = false
+	Boolean collectUmiStats = false
 
         BwaIndex? bwaIndex
         BwaIndex? bwaMem2Index
