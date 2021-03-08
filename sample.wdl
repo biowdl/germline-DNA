@@ -99,8 +99,7 @@ workflow SampleWorkflow {
                     dockerImage = dockerImages["bwakit+samtools"]
             }
         }
-		
-		Boolean paired = defined(readgroup.R2)
+        Boolean paired = defined(readgroup.R2)
     }
 
     call sambamba.Markdup as markdup {
