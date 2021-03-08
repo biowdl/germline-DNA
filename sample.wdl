@@ -196,7 +196,7 @@ workflow SampleWorkflow {
         adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
         bwaThreads: {description: "The amount of threads for the alignment process.", category: "advanced"}
         dockerImages: {description: "The docker images used.", category: "required"}
-		umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
+        umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
 
         # outputs
         markdupBam: {description: ""}
