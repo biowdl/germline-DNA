@@ -56,7 +56,12 @@ workflow SampleWorkflow {
         String? DONOTDEFINE
     }
 
-    meta {allowNestedInputs: true}
+    meta {
+        WDL_AID: {
+            exclude: ["DONOTDEFINE"]
+        }
+        allowNestedInputs: true
+    }
 
     scatter (readgroup in sample.readgroups) {
         String readgroupDir = sampleDir + "/lib_" + readgroup.lib_id + "--rg_" + readgroup.id
@@ -196,6 +201,7 @@ workflow SampleWorkflow {
         bwaThreads: {description: "The amount of threads for the alignment process.", category: "advanced"}
         dockerImages: {description: "The docker images used.", category: "required"}
         umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
+        collectUmiStats: {description: "Whether or not UMI stats collection should be performed.", category: "common"}
 
         # outputs
         markdupBam: {description: ""}
