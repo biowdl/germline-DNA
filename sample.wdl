@@ -39,8 +39,8 @@ workflow SampleWorkflow {
         File referenceFastaDict
         File dbsnpVCF
         File dbsnpVCFIndex
-		Boolean umiDeduplication
-		Boolean collectUmiStats
+        Boolean umiDeduplication
+        Boolean collectUmiStats
         String platform = "illumina"
         Boolean useBwaKit = false
         Array[File] scatters
