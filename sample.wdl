@@ -166,7 +166,7 @@ workflow SampleWorkflow {
         File markdupBamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex])
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
-		File? umiEditDistance = umiDedup.editDistance
+        File? umiEditDistance = umiDedup.editDistance
         File? umiStats = umiDedup.umiStats
         File? umiPositionStats = umiDedup.positionStats
         Array[File] umiReports = select_all([umiStats, umiPositionStats])
