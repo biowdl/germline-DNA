@@ -152,8 +152,8 @@ workflow SampleWorkflow {
 
     call bammetrics.BamMetrics as metrics {
         input:
-            bam = select_first([postUmiDedupMarkDuplicates.outputBam,markdup.outputBam]),
-            bamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex,markdup.outputBamIndex]),
+            bam = select_first([postUmiDedupMarkDuplicates.outputBam, markdup.outputBam]),
+            bamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex]),
             outputDir = sampleDir,
             referenceFasta = referenceFasta,
             referenceFastaFai = referenceFastaFai,
