@@ -119,8 +119,8 @@ workflow SampleWorkflow {
                 outputBamPath = sampleDir + "/" + sample.id + ".dedup.bam",
                 tmpDir = sampleDir + "/" + sample.id + "_tmp",
                 statsPrefix = if collectUmiStats
-                    then sampleDir + "/" + sample.id
-                    else DONOTDEFINE,
+                              then sampleDir + "/" + sample.id
+                              else DONOTDEFINE,
                 # Assumes that if one readgroup is paired, all are.
                 paired = paired[0],
                 dockerImage = dockerImages["umi-tools"]
