@@ -172,7 +172,7 @@ workflow SampleWorkflow {
         Array[File] umiReports = select_all([umiStats, umiPositionStats])
         Array[File] reports = flatten([flatten(qualityControl.reports),
                                        metrics.reports,
-						               umiReports,
+                                      umiReports,
                                        [bqsr.BQSRreport]
                                        ])
     }
