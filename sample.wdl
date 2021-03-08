@@ -137,8 +137,8 @@ workflow SampleWorkflow {
 
     call preprocess.GatkPreprocess as bqsr {
         input:
-            bam = select_first([postUmiDedupMarkDuplicates.outputBam,markdup.outputBam]),
-            bamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex,markdup.outputBamIndex]),
+            bam = select_first([postUmiDedupMarkDuplicates.outputBam, markdup.outputBam]),
+            bamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex]),
             outputDir = sampleDir,
             bamName =  sample.id + ".bqsr",
             referenceFasta = referenceFasta,
