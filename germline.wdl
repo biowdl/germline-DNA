@@ -126,8 +126,8 @@ workflow Germline {
                 scatters = scatterList.scatters,
                 bwaThreads = bwaThreads,
                 platform = platform,
-				umiDeduplication = umiDeduplication,
-				collectUmiStats = collectUmiStats
+                umiDeduplication = umiDeduplication,
+                collectUmiStats = collectUmiStats
         }
 
         call variantCallingWorkflow.SingleSampleCalling as singleSampleCalling {
