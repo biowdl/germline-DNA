@@ -53,7 +53,7 @@ workflow SampleWorkflow {
         Int bwaThreads = 4
         Map[String, String] dockerImages
 		
-		String? DONOTDEFINE
+        String? DONOTDEFINE
     }
 
     meta {allowNestedInputs: true}
