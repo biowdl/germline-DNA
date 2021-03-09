@@ -89,6 +89,7 @@
   tags:
     - integration
     - germline
+    - umi
   command: >-
     cromwell run -o tests/cromwell_options.json
     -i tests/integration/Germline_PairedEnd_umi.json germline.wdl
