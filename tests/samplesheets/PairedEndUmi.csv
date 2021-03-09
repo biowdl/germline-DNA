@@ -1,0 +1,4 @@
+"sample","library","readgroup","control","R1","R1_md5","R2","R2_md5"
+"wgs1-paired-end","lib1","rg1",,"tests/data/wgs1/R1_umi.fq.gz","f8e6060ee2162739ea49330d71295b29","tests/data/wgs1/R2_umi.fq.gz","4949e7979755497dc24ec6f8adc53bf2"
+"wgs2-paired-end","lib1","rg1","wgs1-paired-end","tests/data/wgs2/wgs2-lib1_R1_umi.fq.gz","6d50f1c5537291ac0a07dcb54f098625","tests/data/wgs2/wgs2-lib1_R2_umi.fq.gz","44eaaa6fb49004f900f7baa8b9ea7011"
+"wgs2-paired-end","lib1","rg2",,"tests/data/wgs2/wgs2-lib2_R1_umi.fq.gz","0f2e4a6b1318e534ff262b42b6e0aec6","tests/data/wgs2/wgs2-lib2_R2_umi.fq.gz","f88c5a0a36a9334ec503fd00e23c389e"

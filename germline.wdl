@@ -46,6 +46,8 @@ workflow Germline {
         Boolean useBwaKit = false
         Int scatterSizeMillions = 1000
         Boolean runSVcalling = false
+        Boolean umiDeduplication = false
+        Boolean collectUmiStats = false
 
         BwaIndex? bwaIndex
         BwaIndex? bwaMem2Index
@@ -60,7 +62,12 @@ workflow Germline {
         File dockerImagesFile
     }
 
-    meta {allowNestedInputs: true}
+    meta {
+        WDL_AID: {
+            exclude: ["DONOTDEFINE"]
+        }
+        allowNestedInputs: true
+    }
 
     Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
@@ -123,7 +130,9 @@ workflow Germline {
                 dockerImages = dockerImages,
                 scatters = scatterList.scatters,
                 bwaThreads = bwaThreads,
-                platform = platform
+                platform = platform,
+                umiDeduplication = umiDeduplication,
+                collectUmiStats = collectUmiStats
         }
 
         call variantCallingWorkflow.SingleSampleCalling as singleSampleCalling {
@@ -243,6 +252,8 @@ workflow Germline {
         scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.", category: "advanced"}
         bwaThreads: {description: "The amount of threads for the alignment process.", category: "advanced"}
         dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.", category: "advanced"}
+        umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
+        collectUmiStats: {description: "Whether or not UMI deduplication stats should be collected. This will potentially cause a massive increase in memory usage of the deduplication step.", category: "advanced"}
 
         # outputs
         dockerImagesList: {description: "Json file describing the docker images used by the pipeline."}

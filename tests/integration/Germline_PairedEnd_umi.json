@@ -1,0 +1,24 @@
+{
+  "Germline.sampleConfigFile": "tests/samplesheets/PairedEndUmi.csv",
+  "Germline.dockerImagesFile": "dockerImages.yml",
+  "Germline.referenceFasta": "tests/data/reference/reference.fasta",
+  "Germline.referenceFastaFai": "tests/data/reference/reference.fasta.fai",
+  "Germline.referenceFastaDict": "tests/data/reference/reference.dict",
+  "Germline.bwaIndex": {
+    "fastaFile": "tests/data/reference/bwa/reference.fasta",
+    "indexFiles": [
+      "tests/data/reference/bwa/reference.fasta.amb",
+      "tests/data/reference/bwa/reference.fasta.ann",
+      "tests/data/reference/bwa/reference.fasta.bwt",
+      "tests/data/reference/bwa/reference.fasta.pac",
+      "tests/data/reference/bwa/reference.fasta.sa"
+    ]
+  },
+  "Germline.scatterSize": 10000,
+  "Germline.dbsnpVCF": "tests/data/wgs2.vcf.gz",
+  "Germline.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
+  "Germline.bwaThreads": 1,
+  "Germline.runSVcalling": true,
+  "Germline.umiDeduplication": true,
+  "Germline.svCalling.gridss.jvmHeapSizeGb": 1
+}

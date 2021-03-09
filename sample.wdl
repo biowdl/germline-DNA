@@ -26,7 +26,9 @@ import "structs.wdl" as structs
 import "tasks/bwa.wdl" as bwa
 import "tasks/bwa-mem2.wdl" as bwamem2
 import "tasks/sambamba.wdl" as sambamba
+import "tasks/picard.wdl" as picard
 import "QC/QC.wdl" as qc
+import "tasks/umi-tools.wdl" as umiTools
 
 workflow SampleWorkflow {
     input {
@@ -37,6 +39,8 @@ workflow SampleWorkflow {
         File referenceFastaDict
         File dbsnpVCF
         File dbsnpVCFIndex
+        Boolean umiDeduplication
+        Boolean collectUmiStats
         String platform = "illumina"
         Boolean useBwaKit = false
         Array[File] scatters
@@ -48,9 +52,16 @@ workflow SampleWorkflow {
 
         Int bwaThreads = 4
         Map[String, String] dockerImages
+		
+        String? DONOTDEFINE
     }
 
-    meta {allowNestedInputs: true}
+    meta {
+        WDL_AID: {
+            exclude: ["DONOTDEFINE"]
+        }
+        allowNestedInputs: true
+    }
 
     scatter (readgroup in sample.readgroups) {
         String readgroupDir = sampleDir + "/lib_" + readgroup.lib_id + "--rg_" + readgroup.id
@@ -93,6 +104,7 @@ workflow SampleWorkflow {
                     dockerImage = dockerImages["bwakit+samtools"]
             }
         }
+        Boolean paired = defined(readgroup.R2)
     }
 
     call sambamba.Markdup as markdup {
@@ -103,11 +115,35 @@ workflow SampleWorkflow {
             outputPath = sampleDir + "/" + sample.id + ".markdup.bam",
             dockerImage = dockerImages["sambamba"]
     }
+	
+    if (umiDeduplication) {
+        call umiTools.Dedup as umiDedup {
+            input:
+                inputBam = markdup.outputBam,
+                inputBamIndex = markdup.outputBamIndex,
+                outputBamPath = sampleDir + "/" + sample.id + ".dedup.bam",
+                tmpDir = sampleDir + "/" + sample.id + "_tmp",
+                statsPrefix = if collectUmiStats
+                              then sampleDir + "/" + sample.id
+                              else DONOTDEFINE,
+                # Assumes that if one readgroup is paired, all are.
+                paired = paired[0],
+                dockerImage = dockerImages["umi-tools"]
+        }
+
+        call picard.MarkDuplicates as postUmiDedupMarkDuplicates {
+            input:
+                inputBams = [umiDedup.deduppedBam],
+                outputBamPath = sampleDir + "/" + sample.id + ".dedup.markdup.bam",
+                metricsPath = sampleDir + "/" + sample.id + ".dedup.markdup.metrics",
+                dockerImage = dockerImages["picard"]
+        }
+    }
 
     call preprocess.GatkPreprocess as bqsr {
         input:
-            bam = markdup.outputBam,
-            bamIndex = markdup.outputBamIndex,
+            bam = select_first([postUmiDedupMarkDuplicates.outputBam, markdup.outputBam]),
+            bamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex]),
             outputDir = sampleDir,
             bamName =  sample.id + ".bqsr",
             referenceFasta = referenceFasta,
@@ -121,8 +157,8 @@ workflow SampleWorkflow {
 
     call bammetrics.BamMetrics as metrics {
         input:
-            bam = markdup.outputBam,
-            bamIndex = markdup.outputBamIndex,
+            bam = select_first([postUmiDedupMarkDuplicates.outputBam, markdup.outputBam]),
+            bamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex]),
             outputDir = sampleDir,
             referenceFasta = referenceFasta,
             referenceFastaFai = referenceFastaFai,
@@ -131,12 +167,17 @@ workflow SampleWorkflow {
     }
 
     output {
-        File markdupBam = markdup.outputBam
-        File markdupBamIndex = markdup.outputBamIndex
+        File markdupBam = select_first([postUmiDedupMarkDuplicates.outputBam, markdup.outputBam])
+        File markdupBamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex])
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
+        File? umiEditDistance = umiDedup.editDistance
+        File? umiStats = umiDedup.umiStats
+        File? umiPositionStats = umiDedup.positionStats
+        Array[File] umiReports = select_all([umiStats, umiPositionStats])
         Array[File] reports = flatten([flatten(qualityControl.reports),
                                        metrics.reports,
+                                      umiReports,
                                        [bqsr.BQSRreport]
                                        ])
     }
@@ -159,6 +200,8 @@ workflow SampleWorkflow {
         adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
         bwaThreads: {description: "The amount of threads for the alignment process.", category: "advanced"}
         dockerImages: {description: "The docker images used.", category: "required"}
+        umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
+        collectUmiStats: {description: "Whether or not UMI stats collection should be performed.", category: "common"}
 
         # outputs
         markdupBam: {description: ""}
@@ -166,5 +209,9 @@ workflow SampleWorkflow {
         recalibratedBam: {description: ""}
         recalibratedBamIndex: {description: ""}
         reports: {description: ""}
+        umiEditDistance: {description: ""}
+        umiStats: {description: ""}
+        umiPositionStats: {description: ""}
+        umiReports: {description: ""}
     }
 }
