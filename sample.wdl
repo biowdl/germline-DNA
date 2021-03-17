@@ -130,20 +130,12 @@ workflow SampleWorkflow {
                 paired = paired[0],
                 dockerImage = dockerImages["umi-tools"]
         }
-
-        call picard.MarkDuplicates as postUmiDedupMarkDuplicates {
-            input:
-                inputBams = [umiDedup.deduppedBam],
-                outputBamPath = sampleDir + "/" + sample.id + ".dedup.markdup.bam",
-                metricsPath = sampleDir + "/" + sample.id + ".dedup.markdup.metrics",
-                dockerImage = dockerImages["picard"]
-        }
     }
 
     call preprocess.GatkPreprocess as bqsr {
         input:
-            bam = select_first([postUmiDedupMarkDuplicates.outputBam, markdup.outputBam]),
-            bamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex]),
+            bam = select_first([umiDedup.deduppedBam, markdup.outputBam]),
+            bamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex]),
             outputDir = sampleDir,
             bamName =  sample.id + ".bqsr",
             referenceFasta = referenceFasta,
@@ -157,8 +149,8 @@ workflow SampleWorkflow {
 
     call bammetrics.BamMetrics as metrics {
         input:
-            bam = select_first([postUmiDedupMarkDuplicates.outputBam, markdup.outputBam]),
-            bamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex]),
+            bam = select_first([umiDedup.deduppedBam, markdup.outputBam]),
+            bamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex]),
             outputDir = sampleDir,
             referenceFasta = referenceFasta,
             referenceFastaFai = referenceFastaFai,
@@ -167,8 +159,8 @@ workflow SampleWorkflow {
     }
 
     output {
-        File markdupBam = select_first([postUmiDedupMarkDuplicates.outputBam, markdup.outputBam])
-        File markdupBamIndex = select_first([postUmiDedupMarkDuplicates.outputBamIndex, markdup.outputBamIndex])
+        File markdupBam = select_first([umiDedup.deduppedBam, markdup.outputBam])
+        File markdupBamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex])
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
         File? umiEditDistance = umiDedup.editDistance
