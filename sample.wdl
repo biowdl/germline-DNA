@@ -29,6 +29,7 @@ import "tasks/sambamba.wdl" as sambamba
 import "tasks/picard.wdl" as picard
 import "QC/QC.wdl" as qc
 import "tasks/umi-tools.wdl" as umiTools
+import "tasks/samtools.wdl" as samtools
 
 workflow SampleWorkflow {
     input {
