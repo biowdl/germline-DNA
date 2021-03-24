@@ -12,7 +12,7 @@ that users understand how the changes affect the new version.
 version 4.1.0-dev
 ---------------------------
 + sample.wdl: Remove postUmiDedupMarkDuplicates.
-+ dockerImages.yml: Update umitools (v1.1.1) image (include samtools for indexing)
++ dockerImages.yml: Update umitools (v1.1.1) image (include samtools for indexing).
 + Replace travis with github CI.
 + `renamedVCFs` was changed to `modifiedVcfs`.
 + Add the dockerImages to the output section.
