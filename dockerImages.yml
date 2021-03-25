@@ -55,5 +55,5 @@ smoove: quay.io/biocontainers/smoove:0.2.5--0
 somaticseq: "lethalfang/somaticseq:3.1.0"
 survivor: "quay.io/biocontainers/survivor:1.0.6--h6bb024c_0"
 tabix: "quay.io/biocontainers/tabix:0.2.6--ha92aebf_0"
-umi-tools: "quay.io/biocontainers/umi_tools:1.1.1--py38h0213d0e_1"
+umi-tools: "quay.io/biocontainers/mulled-v2-509311a44630c01d9cb7d2ac5727725f51ea43af:3067b520386698317fd507c413baf7f901666fd4-0"
 vardict-java: "quay.io/biocontainers/vardict-java:1.5.8--1"
