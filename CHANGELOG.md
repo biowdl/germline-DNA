@@ -9,7 +9,7 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
-version 4.1.0-dev
+version 4.1.0
 ---------------------------
 + sample.wdl: Remove postUmiDedupMarkDuplicates.
 + dockerImages.yml: Update umitools (v1.1.1) image (include samtools for indexing).
