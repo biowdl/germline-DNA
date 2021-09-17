@@ -219,12 +219,10 @@ workflow Germline {
         Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
         Array[File] markdupBams = sampleWorkflow.markdupBam
         Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
-        Array[File?] cleverVCFs = svCalling.cleverVcf
-        Array[File?] matecleverVCFs = svCalling.cleverVcf
-        Array[File?] mantaVCFs = svCalling.mantaVcf
-        Array[File?] dellyVCFs = svCalling.dellyVcf
-        Array[File?] survivorVCFs = svCalling.survivorVcf
-        Array[Array[File]?] modifiedVcfs = svCalling.modifiedVcfs
+        Array[Array[File]?] rawSVCallerVcfs = svCalling.rawVcfs
+        Array[Array[Array[File]]?] modifiedSVCallerVcfs = svCalling.modifiedVcfs
+        Array[Array[File]?] survivorUnionVcfs = svCalling.unionVCFs
+        Array[Array[File]?] survivorIsecVcfs = svCalling.isecVCFs
     }
 
     parameter_meta {
@@ -271,11 +269,10 @@ workflow Germline {
         recalibratedBamIndexes: {description: ""}
         markdupBams: {description: ""}
         markdupBamIndexes: {description: ""}
-        cleverVCFs: {description: ""}
-        matecleverVCFs: {description: ""}
-        mantaVCFs: {description: ""}
-        dellyVCFs: {description: ""}
-        survivorVCFs: {description: ""}
-        modifiedVcfs: {description: ""}
+        survivorUnionVcfs: {description: ""}
+        survivorIsecVcfs: {description: ""}
+        modifiedSVCallerVcfs: {description: ""}
+        rawSVCallerVcfs: {description: ""}
+
     }
 }
