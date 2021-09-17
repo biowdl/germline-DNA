@@ -35,7 +35,7 @@ bwakit+samtools: "quay.io/biocontainers/mulled-v2-ad317f19f5881324e963f6a6d464d6
 # Contains bwa-mem2 bwakit 0.7.17.dev1 and samtools 1.10.
 bwamem2+kit+samtools: "quay.io/biocontainers/mulled-v2-6a15c99309c82b345497d24489bee67bbb76c2f6:1c9c3227b9bf825a8dc9726a25701aa23c0b1f12-0"
 chunked-scatter: "quay.io/biocontainers/chunked-scatter:1.0.0--py_0"
-clever: "quay.io/biocontainers/clever-toolkit:2.4--py36hcfe0e84_6"
+clever: "biowdl/clever-toolkit:latest"
 cutadapt: "quay.io/biocontainers/cutadapt:2.10--py37hf01694f_1"
 delly: "quay.io/biocontainers/delly:0.8.1--h4037b6b_1"
 duphold: "quay.io/biocontainers/duphold:0.2.1--h516909a_1"

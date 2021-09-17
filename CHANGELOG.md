@@ -11,6 +11,9 @@ that users understand how the changes affect the new version.
 
 version 4.1.0-dev
 ---------------------------
++ dockerImages.yml (clever): Update dockerimage.
++ samples.wdl: Option to remove secondary & supplementary allignments from markdup BAM
+  before running umitools deduplication. 
 + sample.wdl: Remove postUmiDedupMarkDuplicates.
 + dockerImages.yml: Update umitools (v1.1.1) image (include samtools for indexing).
 + Replace travis with github CI.

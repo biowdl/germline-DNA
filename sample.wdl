@@ -26,6 +26,7 @@ import "structs.wdl" as structs
 import "tasks/bwa.wdl" as bwa
 import "tasks/bwa-mem2.wdl" as bwamem2
 import "tasks/sambamba.wdl" as sambamba
+import "tasks/samtools.wdl" as samtools
 import "tasks/picard.wdl" as picard
 import "QC/QC.wdl" as qc
 import "tasks/umi-tools.wdl" as umiTools
@@ -116,11 +117,20 @@ workflow SampleWorkflow {
             dockerImage = dockerImages["sambamba"]
     }
 	
+    call samtools.View as primaryAlignments {
+        input:
+            inFile = markdup.outputBam,
+            inFileIndex = markdup.outputBamIndex,
+            outputFileName = sampleDir + "/" + sample.id + ".primary.bam",
+            excludeFilter = "2304",
+            dockerImage = dockerImages["samtools"]
+    }
+
     if (umiDeduplication) {
         call umiTools.Dedup as umiDedup {
             input:
-                inputBam = markdup.outputBam,
-                inputBamIndex = markdup.outputBamIndex,
+                inputBam = primaryAlignments.outputBam,
+                inputBamIndex = primaryAlignments.outputBamIndex,
                 outputBamPath = sampleDir + "/" + sample.id + ".dedup.bam",
                 tmpDir = sampleDir + "/" + sample.id + "_tmp",
                 statsPrefix = if collectUmiStats
@@ -134,8 +144,8 @@ workflow SampleWorkflow {
 
     call preprocess.GatkPreprocess as bqsr {
         input:
-            bam = select_first([umiDedup.deduppedBam, markdup.outputBam]),
-            bamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex]),
+            bam = select_first([umiDedup.deduppedBam, primaryAlignments.outputBam, markdup.outputBam]),
+            bamIndex = select_first([umiDedup.deduppedBamIndex, primaryAlignments.outputBamIndex, markdup.outputBamIndex]),
             outputDir = sampleDir,
             bamName =  sample.id + ".bqsr",
             referenceFasta = referenceFasta,
@@ -149,8 +159,8 @@ workflow SampleWorkflow {
 
     call bammetrics.BamMetrics as metrics {
         input:
-            bam = select_first([umiDedup.deduppedBam, markdup.outputBam]),
-            bamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex]),
+            bam = select_first([umiDedup.deduppedBam, primaryAlignments.outputBam, markdup.outputBam]),
+            bamIndex = select_first([umiDedup.deduppedBamIndex, primaryAlignments.outputBamIndex, markdup.outputBamIndex]),
             outputDir = sampleDir,
             referenceFasta = referenceFasta,
             referenceFastaFai = referenceFastaFai,
@@ -159,8 +169,8 @@ workflow SampleWorkflow {
     }
 
     output {
-        File markdupBam = select_first([umiDedup.deduppedBam, markdup.outputBam])
-        File markdupBamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex])
+        File markdupBam = select_first([umiDedup.deduppedBam, primaryAlignments.outputBam, markdup.outputBam])
+        File markdupBamIndex = select_first([umiDedup.deduppedBamIndex, primaryAlignments.outputBamIndex, markdup.outputBamIndex])
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
         File? umiEditDistance = umiDedup.editDistance
