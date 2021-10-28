@@ -13,7 +13,7 @@ development
 ---------------------------
 + Added the `commonVariantSites` and `commonVariantSitesIndex` inputs to the
   somatic worklow. This allows for a separate known variant list to be
-  specified for use in CNV calling, instead of the usual sbSNP.
+  specified for use in CNV calling, instead of the usual dbSNP.
 
 version 4.1.0
 ---------------------------
