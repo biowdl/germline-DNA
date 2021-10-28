@@ -9,6 +9,12 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
+development
+---------------------------
++ Added the `commonVariantSites` and `commonVariantSitesIndex` inputs to the
+  somatic worklow. This allows for a separate known variant list to be
+  specified for use in CNV calling, instead of the usual sbSNP.
+
 version 4.1.0
 ---------------------------
 + sample.wdl: Remove postUmiDedupMarkDuplicates.
