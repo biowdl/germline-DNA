@@ -219,10 +219,13 @@ workflow Germline {
         Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
         Array[File] markdupBams = sampleWorkflow.markdupBam
         Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
-        Array[Array[File]?] rawSVCallerVcfs = svCalling.rawVcfs
-        Array[Array[Array[File]]?] modifiedSVCallerVcfs = svCalling.modifiedVcfs
-        Array[Array[File]?] survivorUnionVcfs = svCalling.unionVCFs
-        Array[Array[File]?] survivorIsecVcfs = svCalling.isecVCFs
+        Array[File?] cleverVCFs = svCalling.cleverVcf
+        Array[File?] matecleverVCFs = svCalling.mateCleverVcf
+        Array[File?] mantaVCFs = svCalling.mantaVcf
+        Array[File?] dellyVCFs = svCalling.dellyVcf
+        Array[Array[File]?] survivorUnionVCFs = svCalling.unionVCFs
+        Array[Array[File]?] survivorIsecVCFs = svCalling.isecVCFs
+        Array[Array[Array[File]]?] modifiedVcfs = svCalling.modifiedVcfs
     }
 
     parameter_meta {
