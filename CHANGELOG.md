@@ -9,7 +9,13 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
-version 4.1.0-dev
+development
+---------------------------
++ Added the `commonVariantSites` and `commonVariantSitesIndex` inputs to the
+  somatic worklow. This allows for a separate known variant list to be
+  specified for use in CNV calling, instead of the usual dbSNP.
+
+version 4.1.0
 ---------------------------
 + dockerImages.yml (clever): Update dockerimage.
 + samples.wdl: Option to remove secondary & supplementary allignments from markdup BAM

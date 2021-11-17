@@ -59,6 +59,8 @@ workflow Somatic {
         String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter.
         Int? cnvMinimumContigLength
         Int? scatterSize
+        File? commonVariantSites
+        File? commonVariantSitesIndex
 
         Int bwaThreads = 4
         File dockerImagesFile
@@ -183,8 +185,8 @@ workflow Somatic {
                         PON = select_first([cnvPanelOfNormals, generateCnvPanelOfNormals.PON]),
                         preprocessedIntervals = select_first([preprocessedIntervals,
                         generateCnvPanelOfNormals.preprocessedIntervals]),
-                        commonVariantSites = dbsnpVCF,
-                        commonVariantSitesIndex = dbsnpVCFIndex,
+                        commonVariantSites = select_first([commonVariantSites, dbsnpVCF]),
+                        commonVariantSitesIndex = select_first([commonVariantSitesIndex, dbsnpVCFIndex]),
                         outputDir = outputDir + "/samples/" + sample.id + "/CNVcalling/",
                         referenceFasta = referenceFasta,
                         referenceFastaFai = referenceFastaFai,
@@ -292,6 +294,8 @@ workflow Somatic {
         dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.", category: "advanced"}
         umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
         collectUmiStats: {description: "Whether or not UMI deduplication stats should be collected. This will potentially cause a massive increase in memory usage of the deduplication step.", category: "advanced"}
+        commonVariantSites: {description: "Alternative to dnSNP for specifying common variant sites used for allelic counts collection in CNV detection. Can be a picard-style interval list or a VCf.", category: "advanced"}
+        commonVariantSitesIndex: {description: "The index for the commonVariantSitesIndex VCF.", category: "advanced"}
         
         # outputs
         dockerImagesList: {description: "Json file describing the docker images used by the pipeline."}
