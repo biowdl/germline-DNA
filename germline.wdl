@@ -220,7 +220,7 @@ workflow Germline {
         Array[File] markdupBams = sampleWorkflow.markdupBam
         Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
         Array[File?] cleverVCFs = svCalling.cleverVcf
-        Array[File?] matecleverVCFs = svCalling.cleverVcf
+        Array[File?] matecleverVCFs = svCalling.mateCleverVcf
         Array[File?] mantaVCFs = svCalling.mantaVcf
         Array[File?] dellyVCFs = svCalling.dellyVcf
         Array[File?] survivorVCFs = svCalling.survivorVcf
