@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 development
 ---------------------------
++ Remove duplicate clever output
++ Added survivor union and intersection outputs
 + Added the `commonVariantSites` and `commonVariantSitesIndex` inputs to the
   somatic worklow. This allows for a separate known variant list to be
   specified for use in CNV calling, instead of the usual dbSNP.
