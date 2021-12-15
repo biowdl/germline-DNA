@@ -27,6 +27,7 @@ import "tasks/bwa.wdl" as bwa
 import "tasks/bwa-mem2.wdl" as bwamem2
 import "tasks/sambamba.wdl" as sambamba
 import "tasks/picard.wdl" as picard
+import "tasks/fgbio.wdl" as fgbio
 import "QC/QC.wdl" as qc
 import "tasks/umi-tools.wdl" as umiTools
 
@@ -117,19 +118,22 @@ workflow SampleWorkflow {
     }
 	
     if (umiDeduplication) {
-        call umiTools.Dedup as umiDedup {
+        call fgbio.AnnotateBamWithUmis as annotateBamWihUmis {
             input:
                 inputBam = markdup.outputBam,
-                inputBamIndex = markdup.outputBamIndex,
-                outputBamPath = sampleDir + "/" + sample.id + ".dedup.bam",
-                tmpDir = sampleDir + "/" + sample.id + "_tmp",
-                statsPrefix = if collectUmiStats
-                              then sampleDir + "/" + sample.id
-                              else DONOTDEFINE,
-                # Assumes that if one readgroup is paired, all are.
-                paired = paired[0],
-                dockerImage = dockerImages["umi-tools"]
+                inputUmi = fastqUmi,
+                outputPath = sampleDir + "/" + sample.id + ".umi-annotated.bam"
         }
+
+        call picard.UmiAwareMarkDuplicatesWithMateCigar as umiDedup {
+            input:
+                inputBam = annotateBamWihUmis.outputBam,
+                outputPathBam = sampleDir + "/" + sample.id + ".umi-dedup.bam",
+                outputPathMetrics = sampleDir + "/" + sample.id + ".dedup.metrics.txt",
+                outputPathUmiMetrics = sampleDir + "/" + sample.id + ".dedup.umi-metrics.txt",
+                tempdir = sampleDir + "/" + sample.id
+        }
+
     }
 
     call preprocess.GatkPreprocess as bqsr {
