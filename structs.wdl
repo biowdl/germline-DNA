@@ -27,6 +27,7 @@ struct Readgroup {
     String lib_id
     File R1
     File? R2
+    File? umi
 }
 
 struct Sample {

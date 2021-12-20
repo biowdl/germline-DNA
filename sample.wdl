@@ -105,41 +105,46 @@ workflow SampleWorkflow {
                     dockerImage = dockerImages["bwakit+samtools"]
             }
         }
-        Boolean paired = defined(readgroup.R2)
-    }
 
-    call sambamba.Markdup as markdup {
-        input:
-            inputBams = if defined(bwaMem2Index) 
-                        then select_all(bwamem2Mem.outputBam)
-                        else select_all(bwaMem.outputBam),
-            outputPath = sampleDir + "/" + sample.id + ".markdup.bam",
-            dockerImage = dockerImages["sambamba"]
-    }
-	
-    if (umiDeduplication) {
-        call fgbio.AnnotateBamWithUmis as annotateBamWihUmis {
-            input:
-                inputBam = markdup.outputBam,
-                inputUmi = fastqUmi,
-                outputPath = sampleDir + "/" + sample.id + ".umi-annotated.bam"
+        Boolean paired = defined(readgroup.R2)
+        File readgroupBam = select_first([bwamem2Mem.outputBam, bwaMem.outputBam]
+
+        if (umiDeduplication) {
+            call fgbio.AnnotateBamWithUmis as annotateBamWihUmis {
+                input:
+                    inputBam = readgroupBam,
+                    inputUmi = readgroup.umi,
+                    outputPath = sampleDir + "/" + sample.id + ".umi-annotated.bam"
+            }
         }
 
+    }
+
+    if (!umiDeduplication) {
+        call sambamba.Markdup as markdup {
+            input:
+                inputBams = readgroupBam,
+                outputPath = sampleDir + "/" + sample.id + ".markdup.bam",
+                dockerImage = dockerImages["sambamba"]
+        }
+    }
+
+    if (umiDeduplication) {
         call picard.UmiAwareMarkDuplicatesWithMateCigar as umiDedup {
             input:
-                inputBam = annotateBamWihUmis.outputBam,
+                inputBam =select_all(annotateBamWihUmis.outputBam),
                 outputPathBam = sampleDir + "/" + sample.id + ".umi-dedup.bam",
-                outputPathMetrics = sampleDir + "/" + sample.id + ".dedup.metrics.txt",
-                outputPathUmiMetrics = sampleDir + "/" + sample.id + ".dedup.umi-metrics.txt",
                 tempdir = sampleDir + "/" + sample.id
         }
-
     }
+
+    File sampleBam = select_first([markdup.outputBam, umiDedup.outputBam])
+    File sampleBamIndex = select_first([markdup.outputBamIndex, umiDedup.outputBamIndex])
 
     call preprocess.GatkPreprocess as bqsr {
         input:
-            bam = select_first([umiDedup.deduppedBam, markdup.outputBam]),
-            bamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex]),
+            bam = sampleBam,
+            bamIndex = sampleBamIndex,
             outputDir = sampleDir,
             bamName =  sample.id + ".bqsr",
             referenceFasta = referenceFasta,
@@ -153,8 +158,8 @@ workflow SampleWorkflow {
 
     call bammetrics.BamMetrics as metrics {
         input:
-            bam = select_first([umiDedup.deduppedBam, markdup.outputBam]),
-            bamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex]),
+            bam = sampleBam,
+            bamIndex = sampleBamIndex,
             outputDir = sampleDir,
             referenceFasta = referenceFasta,
             referenceFastaFai = referenceFastaFai,
@@ -163,8 +168,8 @@ workflow SampleWorkflow {
     }
 
     output {
-        File markdupBam = select_first([umiDedup.deduppedBam, markdup.outputBam])
-        File markdupBamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex])
+        File markdupBam = sampleBam
+        File markdupBamIndex = sampleBamIndex
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
         File? umiEditDistance = umiDedup.editDistance
