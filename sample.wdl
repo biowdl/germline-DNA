@@ -107,7 +107,7 @@ workflow SampleWorkflow {
         }
 
         Boolean paired = defined(readgroup.R2)
-        File readgroupBam = select_first([bwamem2Mem.outputBam, bwaMem.outputBam]
+        File readgroupBam = select_first([bwamem2Mem.outputBam, bwaMem.outputBam])
 
         if (umiDeduplication) {
             call fgbio.AnnotateBamWithUmis as annotateBamWihUmis {
@@ -132,7 +132,7 @@ workflow SampleWorkflow {
     if (umiDeduplication) {
         call picard.UmiAwareMarkDuplicatesWithMateCigar as umiDedup {
             input:
-                inputBam =select_all(annotateBamWihUmis.outputBam),
+                inputBams =select_all(annotateBamWihUmis.outputBam),
                 outputPathBam = sampleDir + "/" + sample.id + ".umi-dedup.bam",
                 tempdir = sampleDir + "/" + sample.id
         }
@@ -172,10 +172,9 @@ workflow SampleWorkflow {
         File markdupBamIndex = sampleBamIndex
         File recalibratedBam = bqsr.recalibratedBam
         File recalibratedBamIndex = bqsr.recalibratedBamIndex
-        File? umiEditDistance = umiDedup.editDistance
-        File? umiStats = umiDedup.umiStats
-        File? umiPositionStats = umiDedup.positionStats
-        Array[File] umiReports = select_all([umiStats, umiPositionStats])
+        File? duplicationMetrics = umiDedup.outputMetrics
+        File? umiMetrics = umiDedup.outputUmiMetrics
+        Array[File] umiReports = select_all([umiMetrics, duplicationMetrics])
         Array[File] reports = flatten([flatten(qualityControl.reports),
                                        metrics.reports,
                                       umiReports,
@@ -211,8 +210,8 @@ workflow SampleWorkflow {
         recalibratedBamIndex: {description: ""}
         reports: {description: ""}
         umiEditDistance: {description: ""}
-        umiStats: {description: ""}
-        umiPositionStats: {description: ""}
+        duplicationMetrics: {description: ""}
+        umiMetrics: {description: ""}
         umiReports: {description: ""}
     }
 }
