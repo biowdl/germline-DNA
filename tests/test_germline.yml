@@ -123,6 +123,45 @@
     - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
     - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
 
+- name: Germline_PairedEnd_picard_umi
+  tags:
+    - integration
+    - germline
+    - umi
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/Germline_PairedEnd_picard_umi.json germline.wdl
+  files:
+    - path: "test-output/multisample.vcf.gz"
+    - path: "test-output/multisample.vcf.gz.tbi"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.dedup.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.dedup.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.dedup.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.dedup.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.umi-annotated.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bam"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
+    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.dedup.flagstats"
+    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.dedup.flagstats"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/delly/wgs1-paired-end.delly.vcf"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/delly/wgs2-paired-end.delly.vcf"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/mateclever/deletions.vcf"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/mateclever/deletions.vcf"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.clever.duphold.vcf"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.clever.duphold.vcf"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.delly.duphold.vcf"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.delly.duphold.vcf"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.manta.duphold.vcf"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.manta.duphold.vcf"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.smoove.duphold.vcf"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.smoove.duphold.vcf"
+    - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
+
 - name: Germline_PairedEnd_bwakit
   tags:
     - integration
