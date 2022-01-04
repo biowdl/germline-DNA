@@ -113,7 +113,7 @@ workflow SampleWorkflow {
             call fgbio.AnnotateBamWithUmis as annotateBamWihUmis {
                 input:
                     inputBam = readgroupBam,
-                    inputUmi = readgroup.umi,
+                    inputUmi = select_first([readgroup.umi]),
                     outputPath = sampleDir + "/" + sample.id + ".umi-annotated.bam"
             }
         }
@@ -133,7 +133,7 @@ workflow SampleWorkflow {
         call picard.UmiAwareMarkDuplicatesWithMateCigar as umiDedup {
             input:
                 inputBams =select_all(annotateBamWihUmis.outputBam),
-                outputPathBam = sampleDir + "/" + sample.id + ".umi-dedup.bam",
+                outputPath = sampleDir + "/" + sample.id + ".umi-dedup.bam",
                 tempdir = sampleDir + "/" + sample.id
         }
     }
