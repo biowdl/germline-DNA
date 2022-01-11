@@ -30,6 +30,7 @@ import "tasks/picard.wdl" as picard
 import "tasks/fgbio.wdl" as fgbio
 import "QC/QC.wdl" as qc
 import "tasks/umi-tools.wdl" as umiTools
+import "tasks/umi.wdl" as umiTasks
 
 workflow SampleWorkflow {
     input {
@@ -110,14 +111,13 @@ workflow SampleWorkflow {
         File readgroupBam = select_first([bwamem2Mem.outputBam, bwaMem.outputBam])
 
         if (umiDeduplication) {
-            call fgbio.AnnotateBamWithUmis as annotateBamWihUmis {
+            call umiTasks.BamReadNameToUmiTag as tagUmi {
                 input:
                     inputBam = readgroupBam,
-                    inputUmi = select_first([readgroup.umi]),
-                    outputPath = sampleDir + "/" + sample.id + ".umi-annotated.bam"
+                    outputPath = sampleDir + "/" + sample.id + ".umi-annotated.bam",
+                    umiTag="RX"  # Default of Picard
             }
         }
-
     }
 
     if (!umiDeduplication) {
@@ -132,7 +132,7 @@ workflow SampleWorkflow {
     if (umiDeduplication) {
         call picard.UmiAwareMarkDuplicatesWithMateCigar as umiDedup {
             input:
-                inputBams =select_all(annotateBamWihUmis.outputBam),
+                inputBams =select_all(tagUmi.outputBam),
                 outputPath = sampleDir + "/" + sample.id + ".umi-dedup.bam",
                 tempdir = sampleDir + "/" + sample.id
         }
