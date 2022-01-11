@@ -133,7 +133,7 @@ workflow SampleWorkflow {
         call picard.UmiAwareMarkDuplicatesWithMateCigar as umiDedup {
             input:
                 inputBams =select_all(tagUmi.outputBam),
-                outputPath = sampleDir + "/" + sample.id + ".umi-dedup.bam",
+                outputPath = sampleDir + "/" + sample.id + ".dedup.bam",
                 tempdir = sampleDir + "/" + sample.id
         }
     }
