@@ -134,7 +134,8 @@ workflow SampleWorkflow {
             input:
                 inputBams =select_all(tagUmi.outputBam),
                 outputPath = sampleDir + "/" + sample.id + ".dedup.bam",
-                tempdir = sampleDir + "/" + sample.id
+                tempdir = sampleDir + "/" + sample.id,
+                assumeSortOrder = "coordinate"  # File was sorted at alignment step.
         }
     }
 
