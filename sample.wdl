@@ -114,7 +114,7 @@ workflow SampleWorkflow {
             call umiTasks.BamReadNameToUmiTag as tagUmi {
                 input:
                     inputBam = readgroupBam,
-                    outputPath = sampleDir + "/" + sample.id + ".umi-annotated.bam",
+                    outputPath = readgroupDir + "/" + sample.id + "-" + readgroup.lib_id + "-" + readgroup.id + ".umi-annotated.bam",
                     umiTag="RX"  # Default of Picard
             }
         }
