@@ -225,8 +225,9 @@ workflow Germline {
         Array[File?] dellyVcfs = svCalling.dellyVcf
         Array[File?] gridssVcfs = svCalling.gridssVcf
         Array[File?] gridssVcfIndexes = svCalling.gridssVcfIndex
-        Array[File?] survivorVcfs = svCalling.survivorVcf
-        Array[Array[File]?] modifiedVcfs = svCalling.modifiedVcfs
+        Array[Array[File]?] SVunionVcfs = svCalling.unionVCFs
+        Array[Array[File]?] SVisecVcfs = svCalling.isecVCFs
+        Array[Array[Array[File]]?] SVmodifiedVcfs = svCalling.modifiedVcfs
     }
 
     parameter_meta {
@@ -279,7 +280,8 @@ workflow Germline {
         dellyVcfs: {description: ""}
         survivorVcfs: {description: ""}
         gridssVcfIndexes: {description: ""}
-        survivorVcfs: {description: ""}
-        modifiedVcfs: {description: ""}
+        SVunionVcfs: {description: ""}
+        SVisecVcfs: {description: ""}
+        SVmodifiedVcfs: {description: ""}
     }
 }
