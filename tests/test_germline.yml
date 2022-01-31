@@ -46,6 +46,8 @@
       should_exist: false
     - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
       should_exist: false
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/gridss/sample.gridss.vcf.gz"
+      should_exist: false
     - path: "test-output/dockerImages.json"
 
 - name: Germline_PairedEnd
@@ -84,6 +86,7 @@
     - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.smoove.duphold.vcf"
     - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
     - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
+    - path: "test-output/samples/wgs2-paired-end/structural-variants/gridss/sample.gridss.vcf.gz"
 
 - name: Germline_PairedEnd_umi
   tags:
