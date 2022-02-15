@@ -1,0 +1,10 @@
+[
+  "Germline_SingleEnd",
+  "Germline_PairedEnd",
+  "Germline_PairedEnd_bwakit",
+  "Somatic_SingleEnd",
+  "Somatic_SingleEnd_CNV",
+  "Somativ_PairedEnd",
+  "Somatic_PairedEnd_bwakit",
+  "Germline_GenderAware"
+]
