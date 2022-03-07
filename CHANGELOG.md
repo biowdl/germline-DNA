@@ -14,7 +14,7 @@ development
 + Adapters should be set by the user from now on. The default adapter 
   `AGATCGGAAGAG` (illumina universal adapter short version) actually appears 
   several times in the human genome. It is recommended to use the full adapter
-  sequence in stead: 
+  sequence instead: 
   + forward reads: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
   + reverse reads: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT 
 + UMI deduplication is now performed using Picard 
