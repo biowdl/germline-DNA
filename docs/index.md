@@ -135,6 +135,13 @@ Some additional inputs which may be of interest are:
   "<workflow>.useBwaKit": "Whether bwakit should be used instead of plain BWA mem, this will required an '.alt' file to be present in the index."
 }
 ```
+#### UMI
+
+In case UMI deduplication needs to be performed `"<workflow>.umiDeduplication": true`
+needs to be set in the inputs JSON file. 
+The FASTQ files need to be processed such that the UMI is appended to the 
+read ID. [umi-tools extract](https://umi-tools.readthedocs.io/en/latest/reference/extract.html) 
+can be used to perform this task.
 
 #### Sample configuration
 ##### Verification
