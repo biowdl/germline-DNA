@@ -219,12 +219,15 @@ workflow Germline {
         Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
         Array[File] markdupBams = sampleWorkflow.markdupBam
         Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
-        Array[File?] cleverVCFs = svCalling.cleverVcf
-        Array[File?] matecleverVCFs = svCalling.cleverVcf
-        Array[File?] mantaVCFs = svCalling.mantaVcf
-        Array[File?] dellyVCFs = svCalling.dellyVcf
-        Array[File?] survivorVCFs = svCalling.survivorVcf
-        Array[Array[File]?] modifiedVcfs = svCalling.modifiedVcfs
+        Array[File?] cleverVcfs = svCalling.cleverVcf
+        Array[File?] matecleverVcfs = svCalling.cleverVcf
+        Array[File?] mantaVcfs = svCalling.mantaVcf
+        Array[File?] dellyVcfs = svCalling.dellyVcf
+        Array[File?] gridssVcfs = svCalling.gridssVcf
+        Array[File?] gridssVcfIndexes = svCalling.gridssVcfIndex
+        Array[Array[File]?] SVunionVcfs = svCalling.unionVCFs
+        Array[Array[File]?] SVisecVcfs = svCalling.isecVCFs
+        Array[Array[Array[File]]?] SVmodifiedVcfs = svCalling.modifiedVcfs
     }
 
     parameter_meta {
@@ -271,11 +274,14 @@ workflow Germline {
         recalibratedBamIndexes: {description: ""}
         markdupBams: {description: ""}
         markdupBamIndexes: {description: ""}
-        cleverVCFs: {description: ""}
-        matecleverVCFs: {description: ""}
-        mantaVCFs: {description: ""}
-        dellyVCFs: {description: ""}
-        survivorVCFs: {description: ""}
-        modifiedVcfs: {description: ""}
+        cleverVcfs: {description: ""}
+        matecleverVcfs: {description: ""}
+        mantaVcfs: {description: ""}
+        dellyVcfs: {description: ""}
+        survivorVcfs: {description: ""}
+        gridssVcfIndexes: {description: ""}
+        SVunionVcfs: {description: ""}
+        SVisecVcfs: {description: ""}
+        SVmodifiedVcfs: {description: ""}
     }
 }
