@@ -132,6 +132,7 @@
     - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
     - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
 
+
 - name: Germline_PairedEnd_bwakit
   tags:
     - integration
