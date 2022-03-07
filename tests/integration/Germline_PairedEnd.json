@@ -18,5 +18,6 @@
   "Germline.dbsnpVCF": "tests/data/wgs2.vcf.gz",
   "Germline.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
   "Germline.bwaThreads": 1,
-  "Germline.runSVcalling": true
+  "Germline.runSVcalling": true,
+  "Germline.svCalling.gridss.jvmHeapSizeGb": 8
 }
