@@ -11,6 +11,14 @@ that users understand how the changes affect the new version.
 
 development
 ---------------------------
+
++ Adapters should be set by the user from now on. The default adapter 
+  `AGATCGGAAGAG` (illumina universal adapter short version) actually appears 
+  several times in the human genome. It is recommended to use the full adapter
+  sequence in stead: 
+  + forward reads: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+  + reverse reads: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT 
+  
 + Added the `commonVariantSites` and `commonVariantSitesIndex` inputs to the
   somatic worklow. This allows for a separate known variant list to be
   specified for use in CNV calling, instead of the usual dbSNP.

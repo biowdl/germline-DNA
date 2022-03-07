@@ -54,8 +54,8 @@ workflow Germline {
         File? regions
         File? XNonParRegions
         File? YNonParRegions
-        String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter.
-        String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter.
+        String? adapterForward
+        String? adapterReverse
         Int? scatterSize
 
         Int bwaThreads = 4
