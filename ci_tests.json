@@ -6,5 +6,6 @@
   "Somatic_SingleEnd_CNV",
   "Somatic_PairedEnd",
   "Somatic_PairedEnd_bwakit",
-  "Germline_GenderAware"
+  "Germline_GenderAware",
+  "Germline_PairedEnd_sv"
 ]
