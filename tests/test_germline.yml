@@ -79,23 +79,55 @@
     - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.flagstats"
     - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.flagstats"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/delly/wgs1-paired-end.delly.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/delly/wgs2-paired-end.delly.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/mateclever/deletions.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/mateclever/deletions.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.clever.duphold.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.clever.duphold.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.delly.duphold.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.delly.duphold.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.manta.duphold.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.manta.duphold.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.smoove.duphold.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.smoove.duphold.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/gridss/sample.gridss.vcf.gz"
+
+- name: Germline_PairedEnd_sv
+  tags:
+    - integration
+    - germline
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/Germline_PairedEnd_sv.json germline.wdl
+  files:
+    - path: "test-output/multisample.vcf.gz"
+    - path: "test-output/multisample.vcf.gz.tbi"
+    - path: "test-output/samples/sv_sample/structural-variants/clever/BND.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/clever/DEL.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/clever/DUP.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/clever/INS.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/clever/INV.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/clever/predictions.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/delly/BND.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/delly/DEL.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/delly/DUP.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/delly/INS.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/delly/INV.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/delly/sv_sample.delly.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/gridss/sv_sample.gridss.vcf.gz"
+    - path: "test-output/samples/sv_sample/structural-variants/gridss/sv_sample.gridss.vcf.gz.tbi"
+    - path: "test-output/samples/sv_sample/structural-variants/manta/BND.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/manta/DEL.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/manta/DUP.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/manta/INS.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/manta/INV.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/manta/results/variants/diploidSV.vcf.gz"
+    - path: "test-output/samples/sv_sample/structural-variants/mateclever/deletions.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/smoove/BND.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/smoove/DEL.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/smoove/DUP.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/smoove/INS.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/smoove/INV.duphold_filtered.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/smoove/sv_sample-smoove.genotyped.vcf.gz"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/BND.isec.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/BND.union.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/DEL.isec.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/DEL.union.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/DUP.isec.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/DUP.union.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/INS.isec.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/INS.union.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/INV.isec.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/INV.union.vcf"
+
 
 - name: Germline_PairedEnd_umi
   tags:
@@ -118,23 +150,6 @@
     - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.dedup.flagstats"
     - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.dedup.flagstats"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/delly/wgs1-paired-end.delly.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/delly/wgs2-paired-end.delly.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/manta/results/variants/diploidSV.vcf.gz"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/mateclever/deletions.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/mateclever/deletions.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.clever.duphold.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.clever.duphold.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.delly.duphold.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.delly.duphold.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.manta.duphold.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.manta.duphold.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/modifiedVCFs/wgs1-paired-end.smoove.duphold.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.smoove.duphold.vcf"
-    - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
-    - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
-
 
 - name: Germline_PairedEnd_bwakit
   tags:

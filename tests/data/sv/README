@@ -1,0 +1,7 @@
+This sample has some "SV"s:
+- A part of chrM was duplicated into chr1,
+- Parts of chr1 AND CHRm were removed
+- Random new sequences were added into chrM
+
+FastQ files were generated with wgsim:
+`wgsim -1 100 -2 100 -N 20000 altered.fasta sv_sample_R1.fastq sv_sample_R2.fastq -e 0.01 -r 0 -R 0 -X 0`

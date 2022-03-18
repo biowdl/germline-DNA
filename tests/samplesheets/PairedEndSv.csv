@@ -1,0 +1,2 @@
+"sample","library","readgroup","control","R1","R1_md5","R2","R2_md5"
+"sv_sample","lib1","rg1",,"tests/data/sv/sv_sample_R1.fastq.gz","f635d55ef9f255da5e1ab12d508b5562","tests/data/sv/sv_sample_R2.fastq.gz","8e4166d9be0005003718fcc1a02de73f"
