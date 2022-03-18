@@ -88,6 +88,26 @@
     - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
     - path: "test-output/samples/wgs2-paired-end/structural-variants/gridss/sample.gridss.vcf.gz"
 
+- name: Germline_PairedEnd_sv
+  tags:
+    - integration
+    - germline
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/Germline_PairedEnd_sv.json germline.wdl
+  files:
+    - path: "test-output/multisample.vcf.gz"
+    - path: "test-output/multisample.vcf.gz.tbi"
+    - path: "test-output/samples/sv_sample/structural-variants/delly/sv_sample.delly.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/manta/results/variants/diploidSV.vcf.gz"
+    - path: "test-output/samples/sv_sample/structural-variants/mateclever/deletions.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/modifiedVCFs/sv_sample.clever.duphold.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/modifiedVCFs/sv_sample.delly.duphold.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/modifiedVCFs/sv_sample.manta.duphold.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/modifiedVCFs/sv_sample.smoove.duphold.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/survivor/sv_sample.merged.vcf"
+    - path: "test-output/samples/sv_sample/structural-variants/gridss/sv_sample.gridss.vcf.gz"
+
 - name: Germline_PairedEnd_umi
   tags:
     - integration

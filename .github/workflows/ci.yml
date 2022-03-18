@@ -48,6 +48,7 @@ jobs:
           - Germline_SingleEnd
           - Germline_PairedEnd
           - Germline_PairedEnd_bwakit
+          - Germline_PairedEnd_umi
           - Somatic_SingleEnd
           - Somatic_SingleEnd_CNV
           - Somatic_PairedEnd
