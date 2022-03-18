@@ -1,0 +1,10 @@
+samples:
+  - id: "wgs1-paired-end"
+    libraries:
+      - id: "lib1"
+        readgroups:
+          - id: rg1
+            umi: tests/data/wgs1/R3.fq.gz
+            reads:
+              R1: tests/data/wgs1/R1.fq.gz
+              R2: tests/data/wgs1/R2.fq.gz

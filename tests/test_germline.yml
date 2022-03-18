@@ -55,9 +55,18 @@
     - integration
     - germline
   command: >-
-    cromwell run -o tests/cromwell_options.json
-    -i tests/integration/Germline_PairedEnd.json germline.wdl
+    bash -c '
+    cromwell -Dconfig.file=tests/cromwell_call_cache.config 
+    run -o tests/cromwell_options.json
+    -i tests/integration/Germline_PairedEnd.json germline.wdl &&
+    cromwell -Dconfig.file=tests/cromwell_call_cache.config 
+    run -o tests/cromwell_options.json
+    -i tests/integration/Germline_PairedEnd.json germline.wdl > call_cached.log
+    '
   files:
+    - path: "call_cached.log"
+      must_not_contain:
+        - "Could not copy a suitable cache hit"
     - path: "test-output/multisample.vcf.gz"
     - path: "test-output/multisample.vcf.gz.tbi"
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
@@ -145,6 +154,7 @@
     - path: "test-output/samples/wgs2-paired-end/structural-variants/modifiedVCFs/wgs2-paired-end.smoove.duphold.vcf"
     - path: "test-output/samples/wgs1-paired-end/structural-variants/survivor/wgs1-paired-end.merged.vcf"
     - path: "test-output/samples/wgs2-paired-end/structural-variants/survivor/wgs2-paired-end.merged.vcf"
+
 
 - name: Germline_PairedEnd_bwakit
   tags:

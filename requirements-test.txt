@@ -10,3 +10,5 @@ pytest-workflow
 miniwdl
 wdl-aid
 rtg-tools
+pysam
+
