@@ -64,6 +64,9 @@ workflow Somatic {
 
         Int bwaThreads = 4
         File dockerImagesFile
+
+        File? DONOTDEFINETHISFILE
+        String? DONOTDEFINETHISSTRING
     }
 
     meta {allowNestedInputs: true}
@@ -138,6 +141,16 @@ workflow Somatic {
     }
 
     scatter (sample in sampleConfig.samples) {
+        call GetSamplePositionInArray as casePosition  {
+            input:
+                sampleIds = sampleIds,
+                sample = sample.id,
+        }
+
+        File tumorBam = sampleWorkflow.recalibratedBam[casePosition.position]
+        File tumorBamIndex = sampleWorkflow.recalibratedBamIndex[casePosition.position]
+        
+
         if (defined(sample.control)) {
             call GetSamplePositionInArray as controlPostition  {
                 input:
@@ -145,55 +158,53 @@ workflow Somatic {
                     sample = select_first([sample.control])
             }
 
-            call GetSamplePositionInArray as casePosition  {
-                input:
-                    sampleIds = sampleIds,
-                    sample = sample.id,
-                    dockerImage = dockerImages["python"]
-            }
+        }
+        Int controlPos = select_first([controlPostition.position, 0])
+        String? controlSample = if (defined(sample.control)) then sampleIds[controlPos] else DONOTDEFINETHISSTRING
+        File? controlBam = if (defined(sample.control)) then sampleWorkflow.recalibratedBam[controlPos] else DONOTDEFINETHISFILE
+        File? controlBamIndex = if (defined(sample.control)) then sampleWorkflow.recalibratedBamIndex[controlPos] else DONOTDEFINETHISFILE
+        
+        call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
+            input:
+                outputDir = outputDir + "/samples/" + sample.id + "/somatic-variantcalling/",
+                referenceFasta = referenceFasta,
+                referenceFastaFai = referenceFastaFai,
+                referenceFastaDict = referenceFastaDict,
+                tumorSample = sample.id,
+                tumorBam = tumorBam,
+                tumorBamIndex = tumorBamIndex,
+                controlSample = controlSample,
+                controlBam = controlBam,
+                controlBamIndex =controlBamIndex,
+                regions = regions,
+                dockerImages = dockerImages,
+                runStrelka = runStrelka,
+                runVardict = runVardict,
+                runMutect2 = runMutect2,
+                runManta = runManta,
+                runCombineVariants = runCombineVariants
+        }
 
-            call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
+        if (performCnvCalling && defined(sample.control)) {
+            call pairedCnvCalling.PairedCnvCalling as CNVs {
                 input:
-                    outputDir = outputDir + "/samples/" + sample.id + "/somatic-variantcalling/",
+                    caseSampleName = sample.id,
+                    caseBam = tumorBam,
+                    caseBamIndex = tumorBamIndex,
+                    controlSampleName = select_first([controlSample]),
+                    controlBam = select_first([controlBam]),
+                    controlBamIndex = select_first([controlBamIndex]),
+                    PON = select_first([cnvPanelOfNormals, generateCnvPanelOfNormals.PON]),
+                    preprocessedIntervals = select_first([preprocessedIntervals,
+                    generateCnvPanelOfNormals.preprocessedIntervals]),
+                    commonVariantSites = select_first([commonVariantSites, dbsnpVCF]),
+                    commonVariantSitesIndex = select_first([commonVariantSitesIndex, dbsnpVCFIndex]),
+                    outputDir = outputDir + "/samples/" + sample.id + "/CNVcalling/",
                     referenceFasta = referenceFasta,
                     referenceFastaFai = referenceFastaFai,
                     referenceFastaDict = referenceFastaDict,
-                    tumorSample = sample.id,
-                    tumorBam = sampleWorkflow.recalibratedBam[casePosition.position],
-                    tumorBamIndex = sampleWorkflow.recalibratedBamIndex[casePosition.position],
-                    controlSample = sampleIds[controlPostition.position],
-                    controlBam = sampleWorkflow.recalibratedBam[controlPostition.position],
-                    controlBamIndex = sampleWorkflow.recalibratedBamIndex[controlPostition.position],
-                    regions = regions,
-                    dockerImages = dockerImages,
-                    runStrelka = runStrelka,
-                    runVardict = runVardict,
-                    runMutect2 = runMutect2,
-                    runManta = runManta,
-                    runCombineVariants = runCombineVariants
-            }
-
-            if (performCnvCalling) {
-                call pairedCnvCalling.PairedCnvCalling as CNVs {
-                    input:
-                        caseSampleName = sample.id,
-                        caseBam = sampleWorkflow.recalibratedBam[casePosition.position],
-                        caseBamIndex = sampleWorkflow.recalibratedBamIndex[casePosition.position],
-                        controlSampleName = sampleIds[controlPostition.position],
-                        controlBam = sampleWorkflow.recalibratedBam[controlPostition.position],
-                        controlBamIndex = sampleWorkflow.recalibratedBamIndex[controlPostition.position],
-                        PON = select_first([cnvPanelOfNormals, generateCnvPanelOfNormals.PON]),
-                        preprocessedIntervals = select_first([preprocessedIntervals,
-                        generateCnvPanelOfNormals.preprocessedIntervals]),
-                        commonVariantSites = select_first([commonVariantSites, dbsnpVCF]),
-                        commonVariantSitesIndex = select_first([commonVariantSitesIndex, dbsnpVCFIndex]),
-                        outputDir = outputDir + "/samples/" + sample.id + "/CNVcalling/",
-                        referenceFasta = referenceFasta,
-                        referenceFastaFai = referenceFastaFai,
-                        referenceFastaDict = referenceFastaDict,
-                        minimumContigLength = cnvMinimumContigLength,
-                        dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
-                }
+                    minimumContigLength = cnvMinimumContigLength,
+                    dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
             }
         }
     }
