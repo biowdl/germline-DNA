@@ -11,6 +11,7 @@ that users understand how the changes affect the new version.
 
 development
 ---------------------------
++ GRIDSS results will now be included in survivor.
 + Adapters should be set by the user from now on. The default adapter 
   `AGATCGGAAGAG` (illumina universal adapter short version) actually appears 
   several times in the human genome. It is recommended to use the full adapter
