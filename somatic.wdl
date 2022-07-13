@@ -69,7 +69,12 @@ workflow Somatic {
         String? DONOTDEFINETHISSTRING
     }
 
-    meta {allowNestedInputs: true}
+    meta {
+        allowNestedInputs: true
+        WDL_AID: {
+            exclude: ["DONOTDEFINETHISFILE", "DONOTDEFINETHISSTRING"]
+        }
+    }
 
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {
