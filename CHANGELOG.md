@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 development
 ---------------------------
++ Tumor only samples (with no control) will now be analysed in the somatic
+  variant calling pipeline.
 + GRIDSS results will now be included in survivor.
 + Adapters should be set by the user from now on. The default adapter 
   `AGATCGGAAGAG` (illumina universal adapter short version) actually appears 
