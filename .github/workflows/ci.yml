@@ -48,7 +48,7 @@ jobs:
         uses: pat-s/always-upload-cache@v2.1.5
         env:
           # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         with:
           path: /usr/share/miniconda/envs/workflow-test
           key:
