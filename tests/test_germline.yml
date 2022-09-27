@@ -55,30 +55,27 @@
     - integration
     - germline
   command: >-
-    bash -c '
-    cromwell -Dconfig.file=tests/cromwell_call_cache.config 
-    run -o tests/cromwell_options.json
-    -i tests/integration/Germline_PairedEnd.json germline.wdl &&
-    cromwell -Dconfig.file=tests/cromwell_call_cache.config 
-    run -o tests/cromwell_options.json
-    -i tests/integration/Germline_PairedEnd.json germline.wdl > call_cached.log
-    '
+    bash -c 'export MINIWDL__CALL_CACHE__DIR=$(pwd)/miniwdl_call_cache;
+    miniwdl run --cfg tests/miniwdl_call_cache.cfg -d test-output/. 
+    -i tests/integration/Germline_PairedEnd.json germline.wdl -v && 
+    miniwdl run --cfg tests/miniwdl_call_cache.cfg
+    -i tests/integration/Germline_PairedEnd.json germline.wdl -v 2> call_cached.log'
   files:
     - path: "call_cached.log"
       must_not_contain:
-        - "Could not copy a suitable cache hit"
-    - path: "test-output/multisample.vcf.gz"
-    - path: "test-output/multisample.vcf.gz.tbi"
-    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
-    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bai"
-    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bam"
-    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.bai"
-    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bam"
-    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bai"
-    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bam"
-    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
-    - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.flagstats"
-    - path: "test-output/samples/wgs2-paired-end/wgs2-paired-end.markdup.flagstats"
+        - "cache miss"
+    - path: "test-output/out/multisample.vcf.gz"
+    - path: "test-output/out/multisample.vcf.gz.tbi"
+    - path: "test-output/out/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
+    - path: "test-output/out/samples/wgs1-paired-end/wgs1-paired-end.markdup.bai"
+    - path: "test-output/out/samples/wgs2-paired-end/wgs2-paired-end.markdup.bam"
+    - path: "test-output/out/samples/wgs2-paired-end/wgs2-paired-end.markdup.bai"
+    - path: "test-output/out/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bam"
+    - path: "test-output/out/samples/wgs1-paired-end/wgs1-paired-end.bqsr.bai"
+    - path: "test-output/out/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bam"
+    - path: "test-output/out/samples/wgs2-paired-end/wgs2-paired-end.bqsr.bai"
+    - path: "test-output/out/samples/wgs1-paired-end/wgs1-paired-end.markdup.flagstats"
+    - path: "test-output/out/samples/wgs2-paired-end/wgs2-paired-end.markdup.flagstats"
 
 - name: Germline_PairedEnd_sv
   tags:
