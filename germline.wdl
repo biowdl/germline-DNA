@@ -36,8 +36,6 @@ workflow Germline {
         File sampleConfigFile
         String outputDir = "."
         File referenceFasta
-        File referenceFastaFai
-        File referenceFastaDict
         File dbsnpVCF
         File dbsnpVCFIndex
         Boolean jointgenotyping = true
@@ -71,6 +69,14 @@ workflow Germline {
 
     Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
+    call biowdl.IndexFastaFile as fidx {
+        input:
+            inputFile = referenceFasta
+    }
+    File refFasta = fidx.outputFasta
+    File refFastaDict = fidx.outputFastaDict 
+    File refFastaFai = fidx.outputFastaFai
+
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {
         input:
@@ -90,9 +96,9 @@ workflow Germline {
 
     call calcRegions.CalculateRegions as calculateRegions {
         input:
-            referenceFasta = referenceFasta,
-            referenceFastaFai = referenceFastaFai,
-            referenceFastaDict = referenceFastaDict,
+            referenceFasta = refFasta,
+            referenceFastaFai = refFastaFai,
+            referenceFastaDict = refFastaDict,
             XNonParRegions = XNonParRegions,
             YNonParRegions = YNonParRegions,
             regions = regions,
@@ -103,7 +109,7 @@ workflow Germline {
 
     call chunkedScatter.ScatterRegions as scatterList {
         input:
-            inputFile = select_first([regions, referenceFastaFai]),
+            inputFile = select_first([regions, refFastaFai]),
             scatterSize = scatterSize,
             scatterSizeMillions = scatterSizeMillions,
             dockerImage = dockerImages["chunked-scatter"]
@@ -117,9 +123,9 @@ workflow Germline {
             input:
                 sampleDir = sampleDir,
                 sample = sample,
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
                 bwaIndex = bwaIndex,
                 bwaMem2Index = bwaMem2Index,
                 dbsnpVCF = dbsnpVCF,
@@ -142,9 +148,9 @@ workflow Germline {
                 gender = select_first([sample.gender, "unknown"]),
                 sampleName = sample.id,
                 outputDir = sampleDir,
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
                 XNonParRegions = calculateRegions.Xregions,
@@ -161,9 +167,9 @@ workflow Germline {
                 input:
                     bamFile = sampleWorkflow.markdupBam,
                     bamIndex = sampleWorkflow.markdupBamIndex,
-                    referenceFasta = referenceFasta,
-                    referenceFastaFai = referenceFastaFai,
-                    referenceFastaDict = referenceFastaDict,
+                    referenceFasta = refFasta,
+                    referenceFastaFai = refFastaFai,
+                    referenceFastaDict = refFastaDict,
                     bwaIndex = select_first([bwaIndex]),
                     sample = sample.id,
                     outputDir = sampleDir,
@@ -179,9 +185,9 @@ workflow Germline {
                 gvcfFilesIndex = flatten(singleSampleCalling.vcfIndexScatters),
                 outputDir = outputDir,
                 vcfBasename = "multisample",
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
                 sampleIds = sampleIds,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
