@@ -30,6 +30,7 @@ import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
 import "tasks/chunked-scatter.wdl" as chunkedScatter
+import "tasks/samtools.wdl" as samtools
 
 workflow Germline {
     input {
@@ -39,7 +40,7 @@ workflow Germline {
         File? referenceFastaFai
         File? referenceFastaDict
         File dbsnpVCF
-        File dbsnpVCFIndex
+        File? dbsnpVCFIndex
         Boolean jointgenotyping = true
         Boolean singleSampleGvcf = false
         String platform = "illumina"
@@ -80,6 +81,16 @@ workflow Germline {
     File refFasta = select_first([fidx.outputFasta, referenceFasta])
     File refFastaDict = select_first([fidx.outputFastaDict, referenceFastaDict])
     File refFastaFai = select_first([fidx.outputFastaFai, referenceFastaFai])
+
+    if (!defined(dbsnpVCFIndex)) {
+        call samtools.Tabix as tabix {
+            input:
+                inputFile = dbsnpVCF,
+                type = "vcf"
+        }
+    }
+    File dbsnpVcf = select_first([tabix.indexedFile, dbsnpVCF])
+    File dbsnpVcfIndex = select_first([tabix.index, dbsnpVCFIndex])
 
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {
@@ -132,8 +143,8 @@ workflow Germline {
                 referenceFastaDict = refFastaDict,
                 bwaIndex = bwaIndex,
                 bwaMem2Index = bwaMem2Index,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFIndex = dbsnpVCFIndex,
+                dbsnpVCF = dbsnpVcf,
+                dbsnpVCFIndex = dbsnpVcfIndex,
                 adapterForward = adapterForward,
                 adapterReverse = adapterReverse,
                 useBwaKit = useBwaKit,
@@ -155,8 +166,8 @@ workflow Germline {
                 referenceFasta = refFasta,
                 referenceFastaFai = refFastaFai,
                 referenceFastaDict = refFastaDict,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFIndex = dbsnpVCFIndex,
+                dbsnpVCF = dbsnpVcf,
+                dbsnpVCFIndex = dbsnpVcfIndex,
                 XNonParRegions = calculateRegions.Xregions,
                 YNonParRegions = calculateRegions.Yregions,
                 statsRegions = regions,
