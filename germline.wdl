@@ -36,6 +36,8 @@ workflow Germline {
         File sampleConfigFile
         String outputDir = "."
         File referenceFasta
+        File? referenceFastaFai
+        File? referenceFastaDict
         File dbsnpVCF
         File dbsnpVCFIndex
         Boolean jointgenotyping = true
@@ -69,13 +71,15 @@ workflow Germline {
 
     Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
-    call biowdl.IndexFastaFile as fidx {
-        input:
-            inputFile = referenceFasta
+    if (!defined(referenceFastaFai) && !defined(referenceFastaDict)) {
+        call biowdl.IndexFastaFile as fidx {
+            input:
+                inputFile = referenceFasta
+        }
     }
-    File refFasta = fidx.outputFasta
-    File refFastaDict = fidx.outputFastaDict 
-    File refFastaFai = fidx.outputFastaFai
+    File refFasta = select_first([fidx.outputFasta, referenceFasta])
+    File refFastaDict = select_first([fidx.outputFastaDict, referenceFastaDict])
+    File refFastaFai = select_first([fidx.outputFastaFai, referenceFastaFai])
 
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {
