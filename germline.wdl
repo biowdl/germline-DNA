@@ -27,6 +27,7 @@ import "gatk-variantcalling/jointgenotyping.wdl" as jgwf
 import "gatk-variantcalling/calculate-regions.wdl" as calcRegions
 import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
+import "tasks/bwa.wdl" as bwa
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
 import "tasks/chunked-scatter.wdl" as chunkedScatter
@@ -92,6 +93,15 @@ workflow Germline {
     File dbsnpVcf = select_first([tabix.indexedFile, dbsnpVCF])
     File dbsnpVcfIndex = select_first([tabix.index, dbsnpVCFIndex])
 
+    if (!defined(bwaIndex) && !defined(bwaMem2Index)) {
+        call bwa.Index as bwaIndexTask {
+            input:
+                fasta = refFasta
+        }
+    }
+
+    BwaIndex bwidx = select_first([bwaIndexTask.index, bwaIndex])
+
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {
         input:
@@ -141,7 +151,7 @@ workflow Germline {
                 referenceFasta = refFasta,
                 referenceFastaFai = refFastaFai,
                 referenceFastaDict = refFastaDict,
-                bwaIndex = bwaIndex,
+                bwaIndex = bwidx,
                 bwaMem2Index = bwaMem2Index,
                 dbsnpVCF = dbsnpVcf,
                 dbsnpVCFIndex = dbsnpVcfIndex,
