@@ -73,7 +73,7 @@ workflow Germline {
 
     Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
-    if (!defined(referenceFastaFai) && !defined(referenceFastaDict)) {
+    if (!defined(referenceFastaFai) || !defined(referenceFastaDict)) {
         call biowdl.IndexFastaFile as fidx {
             input:
                 inputFile = referenceFasta
