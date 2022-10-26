@@ -267,17 +267,17 @@ workflow Germline {
         sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.", category: "required"}
         outputDir: {description: "The directory the output should be written to.", category: "common"}
         referenceFasta: {description: "The reference fasta file.", category: "required" }
-        referenceFastaFai: {description: "Fasta index (.fai) file of the reference.", category: "required" }
-        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "required" }
+        referenceFastaFai: {description: "Fasta index (.fai) file of the reference. Will be created automatically if not present.", category: "common"}
+        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "common"}
         dbsnpVCF: {description: "dbsnp VCF file used for checking known sites.", category: "required"}
-        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF.", category: "required"}
+        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF. Will be created automatically if not present.", category: "common"}
         jointgenotyping: {description: "Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not.", category: "common"}
         singleSampleGvcf: {description: "Whether to output single-sample gvcfs.", category: "common"}
         platform: {description: "The platform used for sequencing.", category: "advanced"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
         scatterSizeMillions:{description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.", category: "advanced"}
         runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
-        bwaIndex: {description: "The BWA index files. When these are provided BWA will be used.", category: "common"}
+        bwaIndex: {description: "The BWA index files. When these are provided BWA will be used. Will be created automatically if both bwaIndex and bwaMem2Index are not present.", category: "common"}
         bwaMem2Index: {description: "The bwa-mem2 index files. When these are provided bwa-mem2 will be used.", category: "common"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}

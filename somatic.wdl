@@ -316,11 +316,11 @@ workflow Somatic {
         sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.", category: "required"}
         outputDir: {description: "The directory the output should be written to.", category: "common"}
         referenceFasta: {description: "The reference fasta file.", category: "required"}
-        referenceFastaFai: {description: "Fasta index (.fai) file of the reference.", category: "required"}
-        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "required"}
-        bwaIndex: {description: "The BWA index files.", category: "required"}
+        referenceFastaFai: {description: "Fasta index (.fai) file of the reference. Will be created automatically if not present.", category: "common"}
+        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "common"}
+        bwaIndex: {description: "The BWA index files. Will be created automatically if not present.", category: "common"}
         dbsnpVCF: {description: "dbsnp VCF file used for checking known sites.", category: "required"}
-        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF.", category: "required"}
+        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF. Will be created automatically if not present.", category: "common"}
         performCnvCalling: {description: "Whether or not CNV calling should be performed.", category: "common"}
         platform: {description: "The platform used for sequencing.", category: "advanced"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
