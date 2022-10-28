@@ -57,8 +57,8 @@ workflow Somatic {
         File? regions
         File? cnvPanelOfNormals
         File? preprocessedIntervals
-        String? adapterForward = "AGATCGGAAGAG"  # Illumina universal adapter.
-        String? adapterReverse = "AGATCGGAAGAG"  # Illumina universal adapter.
+        String? adapterForward
+        String? adapterReverse
         Int? cnvMinimumContigLength
         Int? scatterSize
         File? commonVariantSites
