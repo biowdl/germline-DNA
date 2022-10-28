@@ -79,7 +79,7 @@ workflow Somatic {
     }
 
     if (!defined(referenceFastaFai) || !defined(referenceFastaDict)) {
-        call biowdl.IndexFastaFile as fidx {
+        call samtools.DictAndFaidx as fidx {
             input:
                 inputFile = referenceFasta
         }
