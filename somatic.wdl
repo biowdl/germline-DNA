@@ -26,8 +26,10 @@ import "sample.wdl" as sampleWorkflow
 import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
 import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
+import "tasks/bwa.wdl" as bwa
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
+import "tasks/samtools.wdl" as samtools
 import "tasks/chunked-scatter.wdl" as chunkedScatter
 
 workflow Somatic {
@@ -35,11 +37,11 @@ workflow Somatic {
         File sampleConfigFile
         String outputDir = "."
         File referenceFasta
-        File referenceFastaFai
-        File referenceFastaDict
-        BwaIndex bwaIndex
+        File? referenceFastaFai
+        File? referenceFastaDict
+        BwaIndex? bwaIndex
         File dbsnpVCF
-        File dbsnpVCFIndex
+        File? dbsnpVCFIndex
         Boolean umiDeduplication = false
         Boolean collectUmiStats = false
         Boolean performCnvCalling = false
@@ -76,6 +78,35 @@ workflow Somatic {
         }
     }
 
+    if (!defined(referenceFastaFai) || !defined(referenceFastaDict)) {
+        call samtools.DictAndFaidx as fidx {
+            input:
+                inputFile = referenceFasta
+        }
+    }
+    File refFasta = select_first([fidx.outputFasta, referenceFasta])
+    File refFastaDict = select_first([fidx.outputFastaDict, referenceFastaDict])
+    File refFastaFai = select_first([fidx.outputFastaFai, referenceFastaFai])
+
+    if (!defined(dbsnpVCFIndex)) {
+        call samtools.Tabix as tabix {
+            input:
+                inputFile = dbsnpVCF,
+                type = "vcf"
+        }
+    }
+    File dbsnpVcf = select_first([tabix.indexedFile, dbsnpVCF])
+    File dbsnpVcfIndex = select_first([tabix.index, dbsnpVCFIndex])
+
+    if (!defined(bwaIndex)) {
+        call bwa.Index as bwaIndexTask {
+            input:
+                fasta = refFasta
+        }
+    }
+
+    BwaIndex bwidx = select_first([bwaIndexTask.index, bwaIndex])
+
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {
         input:
@@ -95,7 +126,7 @@ workflow Somatic {
 
     call chunkedScatter.ScatterRegions as scatterList {
         input:
-            inputFile = select_first([regions, referenceFastaFai]),
+            inputFile = select_first([regions, refFastaFai]),
             scatterSize = scatterSize,
             scatterSizeMillions = scatterSizeMillions,
             dockerImage = dockerImages["chunked-scatter"]
@@ -107,12 +138,12 @@ workflow Somatic {
             input:
                 sampleDir = outputDir + "/samples/" + sample.id,
                 sample = sample,
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
-                bwaIndex = bwaIndex,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFIndex = dbsnpVCFIndex,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
+                bwaIndex = bwidx,
+                dbsnpVCF = dbsnpVcf,
+                dbsnpVCFIndex = dbsnpVcfIndex,
                 adapterForward = adapterForward,
                 adapterReverse = adapterReverse,
                 useBwaKit = useBwaKit,
@@ -136,9 +167,9 @@ workflow Somatic {
             input:
                 inputBams = select_all(controlBams),
                 inputBamIndexes = select_all(controlBamIndexes),
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
                 regions = regions,
                 outputDir = outputDir + "/PON/",
                 dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers.
@@ -172,9 +203,9 @@ workflow Somatic {
         call somaticVariantcallingWorkflow.SomaticVariantcalling as somaticVariantcalling {
             input:
                 outputDir = outputDir + "/samples/" + sample.id + "/somatic-variantcalling/",
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
                 tumorSample = sample.id,
                 tumorBam = tumorBam,
                 tumorBamIndex = tumorBamIndex,
@@ -205,9 +236,9 @@ workflow Somatic {
                     commonVariantSites = select_first([commonVariantSites, dbsnpVCF]),
                     commonVariantSitesIndex = select_first([commonVariantSitesIndex, dbsnpVCFIndex]),
                     outputDir = outputDir + "/samples/" + sample.id + "/CNVcalling/",
-                    referenceFasta = referenceFasta,
-                    referenceFastaFai = referenceFastaFai,
-                    referenceFastaDict = referenceFastaDict,
+                    referenceFasta = refFasta,
+                    referenceFastaFai = refFastaFai,
+                    referenceFastaDict = refFastaDict,
                     minimumContigLength = cnvMinimumContigLength,
                     dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
             }
@@ -285,11 +316,11 @@ workflow Somatic {
         sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.", category: "required"}
         outputDir: {description: "The directory the output should be written to.", category: "common"}
         referenceFasta: {description: "The reference fasta file.", category: "required"}
-        referenceFastaFai: {description: "Fasta index (.fai) file of the reference.", category: "required"}
-        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "required"}
-        bwaIndex: {description: "The BWA index files.", category: "required"}
+        referenceFastaFai: {description: "Fasta index (.fai) file of the reference. Will be created automatically if not present.", category: "common"}
+        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "common"}
+        bwaIndex: {description: "The BWA index files. Will be created automatically if not present.", category: "common"}
         dbsnpVCF: {description: "dbsnp VCF file used for checking known sites.", category: "required"}
-        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF.", category: "required"}
+        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF. Will be created automatically if not present.", category: "common"}
         performCnvCalling: {description: "Whether or not CNV calling should be performed.", category: "common"}
         platform: {description: "The platform used for sequencing.", category: "advanced"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
