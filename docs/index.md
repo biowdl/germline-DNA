@@ -59,22 +59,32 @@ For an overview of all available inputs, see the following pages:
 - [germline](./germline-inputs.html)
 - [somatic](./somatic-inputs.html)
 
-Replace `<workflow>` with either `Germline` or `Somatic`.
+Replace `<workflow>` with either `Germline` or `Somatic`. 
 
 ```json
+{
+    "<workflow>.dbsnpVCF": "A path to a dbSNP VCF file.",
+    "<workflow>.sampleConfigFile": "A sample configuration file (see below).",
+    "<workflow>.referenceFasta": "A path to a reference fasta.",
+    "<workflow>.dockerImagesFile": "A file listing the used docker images."
+}
+```
+
+The above omits the index files, which are automatically created if not
+provided. If you want to use a custom BWA index (for instance, using an alt 
+file for use with bwa-kit) you can specify it. Other indexes can also be given
+to omit the indexing tasks:
+
+```json 
 {
     "<workflow>.bwaIndex": {
         "fastaFile": "A path to the fasta file from the bwa index.",
         "indexFiles": "A list containing the other bwa index files."
     },
-    "<workflow>.dbsnpVCF": "A path to a dbSNP VCF file.",
     "<workflow>.dbsnpVCFIndex": "The path to the index (.tbi) file associated with the dbSNP VCF.",
-    "<workflow>.sampleConfigFile": "A sample configuration file (see below).",
-    "<workflow>.referenceFasta": "A path to a reference fasta.",
     "<workflow>.referenceFastaFai": "The path to the index associated with the reference fasta.",
-    "<workflow>.referenceFastaDict": "The path to the dict file associated with the reference fasta.",
-    "<workflow>.dockerImagesFile": "A file listing the used docker images."
-}
+    "<workflow>.referenceFastaDict": "The path to the dict file associated with the reference fasta."
+}    
 ```
 
 Alternatively you can specify an index for bwa-mem2. When you do so, bwa-mem2

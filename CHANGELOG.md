@@ -11,6 +11,9 @@ that users understand how the changes affect the new version.
 
 development
 ---------------------------
++ Automatically create BWA index, faidx and sequence dictionary for reference
+  fasta file if not provided. Automatically create dbsnpVCF index if not 
+  provided.
 + Tumor only samples (with no control) will now be analysed in the somatic
   variant calling pipeline.
 + GRIDSS results will now be included in survivor.
