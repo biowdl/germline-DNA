@@ -11,12 +11,17 @@ that users understand how the changes affect the new version.
 
 development
 ---------------------------
++ Fixed a bug in structural variant calling which led to all INV, INS and BND
+  events to be deleted if duphold filtering was enabled.
++ Added a workaround for an issue with survivor's parsing of SVs detected by
+  clever.
++ Updated default survivor version to 1.0.7.
 + Automatically create BWA index, faidx and sequence dictionary for reference
   fasta file if not provided. Automatically create dbsnpVCF index if not 
   provided.
 + Tumor only samples (with no control) will now be analysed in the somatic
   variant calling pipeline.
-+ GRIDSS results will now be included in survivor.
++ ~~GRIDSS results will now be included in survivor.~~
 + Adapters should be set by the user from now on. The default adapter 
   `AGATCGGAAGAG` (illumina universal adapter short version) actually appears 
   several times in the human genome. It is recommended to use the full adapter
