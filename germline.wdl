@@ -27,19 +27,21 @@ import "gatk-variantcalling/jointgenotyping.wdl" as jgwf
 import "gatk-variantcalling/calculate-regions.wdl" as calcRegions
 import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
+import "tasks/bwa.wdl" as bwa
 import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
 import "tasks/chunked-scatter.wdl" as chunkedScatter
+import "tasks/samtools.wdl" as samtools
 
 workflow Germline {
     input {
         File sampleConfigFile
         String outputDir = "."
         File referenceFasta
-        File referenceFastaFai
-        File referenceFastaDict
+        File? referenceFastaFai
+        File? referenceFastaDict
         File dbsnpVCF
-        File dbsnpVCFIndex
+        File? dbsnpVCFIndex
         Boolean jointgenotyping = true
         Boolean singleSampleGvcf = false
         String platform = "illumina"
@@ -71,6 +73,35 @@ workflow Germline {
 
     Boolean mergeVcfs = !jointgenotyping || singleSampleGvcf
 
+    if (!defined(referenceFastaFai) || !defined(referenceFastaDict)) {
+        call samtools.DictAndFaidx as fidx {
+            input:
+                inputFile = referenceFasta
+        }
+    }
+    File refFasta = select_first([fidx.outputFasta, referenceFasta])
+    File refFastaDict = select_first([fidx.outputFastaDict, referenceFastaDict])
+    File refFastaFai = select_first([fidx.outputFastaFai, referenceFastaFai])
+
+    if (!defined(dbsnpVCFIndex)) {
+        call samtools.Tabix as tabix {
+            input:
+                inputFile = dbsnpVCF,
+                type = "vcf"
+        }
+    }
+    File dbsnpVcf = select_first([tabix.indexedFile, dbsnpVCF])
+    File dbsnpVcfIndex = select_first([tabix.index, dbsnpVCFIndex])
+
+    if (!defined(bwaIndex) && !defined(bwaMem2Index)) {
+        call bwa.Index as bwaIndexTask {
+            input:
+                fasta = refFasta
+        }
+    }
+
+    BwaIndex bwidx = select_first([bwaIndexTask.index, bwaIndex])
+
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {
         input:
@@ -90,9 +121,9 @@ workflow Germline {
 
     call calcRegions.CalculateRegions as calculateRegions {
         input:
-            referenceFasta = referenceFasta,
-            referenceFastaFai = referenceFastaFai,
-            referenceFastaDict = referenceFastaDict,
+            referenceFasta = refFasta,
+            referenceFastaFai = refFastaFai,
+            referenceFastaDict = refFastaDict,
             XNonParRegions = XNonParRegions,
             YNonParRegions = YNonParRegions,
             regions = regions,
@@ -103,7 +134,7 @@ workflow Germline {
 
     call chunkedScatter.ScatterRegions as scatterList {
         input:
-            inputFile = select_first([regions, referenceFastaFai]),
+            inputFile = select_first([regions, refFastaFai]),
             scatterSize = scatterSize,
             scatterSizeMillions = scatterSizeMillions,
             dockerImage = dockerImages["chunked-scatter"]
@@ -117,13 +148,13 @@ workflow Germline {
             input:
                 sampleDir = sampleDir,
                 sample = sample,
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
-                bwaIndex = bwaIndex,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
+                bwaIndex = bwidx,
                 bwaMem2Index = bwaMem2Index,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFIndex = dbsnpVCFIndex,
+                dbsnpVCF = dbsnpVcf,
+                dbsnpVCFIndex = dbsnpVcfIndex,
                 adapterForward = adapterForward,
                 adapterReverse = adapterReverse,
                 useBwaKit = useBwaKit,
@@ -142,11 +173,11 @@ workflow Germline {
                 gender = select_first([sample.gender, "unknown"]),
                 sampleName = sample.id,
                 outputDir = sampleDir,
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
-                dbsnpVCF = dbsnpVCF,
-                dbsnpVCFIndex = dbsnpVCFIndex,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
+                dbsnpVCF = dbsnpVcf,
+                dbsnpVCFIndex = dbsnpVcfIndex,
                 XNonParRegions = calculateRegions.Xregions,
                 YNonParRegions = calculateRegions.Yregions,
                 statsRegions = regions,
@@ -161,9 +192,9 @@ workflow Germline {
                 input:
                     bamFile = sampleWorkflow.markdupBam,
                     bamIndex = sampleWorkflow.markdupBamIndex,
-                    referenceFasta = referenceFasta,
-                    referenceFastaFai = referenceFastaFai,
-                    referenceFastaDict = referenceFastaDict,
+                    referenceFasta = refFasta,
+                    referenceFastaFai = refFastaFai,
+                    referenceFastaDict = refFastaDict,
                     bwaIndex = select_first([bwaIndex]),
                     sample = sample.id,
                     outputDir = sampleDir,
@@ -179,9 +210,9 @@ workflow Germline {
                 gvcfFilesIndex = flatten(singleSampleCalling.vcfIndexScatters),
                 outputDir = outputDir,
                 vcfBasename = "multisample",
-                referenceFasta = referenceFasta,
-                referenceFastaFai = referenceFastaFai,
-                referenceFastaDict = referenceFastaDict,
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                referenceFastaDict = refFastaDict,
                 sampleIds = sampleIds,
                 dbsnpVCF = dbsnpVCF,
                 dbsnpVCFIndex = dbsnpVCFIndex,
@@ -236,17 +267,17 @@ workflow Germline {
         sampleConfigFile: {description: "The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.", category: "required"}
         outputDir: {description: "The directory the output should be written to.", category: "common"}
         referenceFasta: {description: "The reference fasta file.", category: "required" }
-        referenceFastaFai: {description: "Fasta index (.fai) file of the reference.", category: "required" }
-        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "required" }
+        referenceFastaFai: {description: "Fasta index (.fai) file of the reference. Will be created automatically if not present.", category: "common"}
+        referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "common"}
         dbsnpVCF: {description: "dbsnp VCF file used for checking known sites.", category: "required"}
-        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF.", category: "required"}
+        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF. Will be created automatically if not present.", category: "common"}
         jointgenotyping: {description: "Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not.", category: "common"}
         singleSampleGvcf: {description: "Whether to output single-sample gvcfs.", category: "common"}
         platform: {description: "The platform used for sequencing.", category: "advanced"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
         scatterSizeMillions:{description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.", category: "advanced"}
         runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
-        bwaIndex: {description: "The BWA index files. When these are provided BWA will be used.", category: "common"}
+        bwaIndex: {description: "The BWA index files. When these are provided BWA will be used. Will be created automatically if both bwaIndex and bwaMem2Index are not present.", category: "common"}
         bwaMem2Index: {description: "The bwa-mem2 index files. When these are provided bwa-mem2 will be used.", category: "common"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}
