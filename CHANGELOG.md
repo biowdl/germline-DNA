@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 development
 ---------------------------
++ Clever is now disabled by default for SV calling. It can be enabled by setting
+  the `Germline.svCalling.runClever` input to `true`.
 + Fixed a bug in structural variant calling which led to all INV, INS and BND
   events to be deleted if duphold filtering was enabled.
 + Added a workaround for an issue with survivor's parsing of SVs detected by
@@ -21,7 +23,7 @@ development
   provided.
 + Tumor only samples (with no control) will now be analysed in the somatic
   variant calling pipeline.
-+ ~~GRIDSS results will now be included in survivor.~~
++ GRIDSS results will now be included in survivor.
 + Adapters should be set by the user from now on. The default adapter 
   `AGATCGGAAGAG` (illumina universal adapter short version) actually appears 
   several times in the human genome. It is recommended to use the full adapter
