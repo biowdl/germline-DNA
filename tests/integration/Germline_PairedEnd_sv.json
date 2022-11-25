@@ -20,5 +20,6 @@
   "Germline.bwaThreads": 1,
   "Germline.runSVcalling": true,
   "Germline.svCalling.runDupHold": true,
+  "Germline.svCalling.runClever": true,
   "Germline.svCalling.gridss.jvmHeapSizeGb": 8
 }
