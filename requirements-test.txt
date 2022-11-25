@@ -7,7 +7,7 @@
 
 cromwell
 pytest-workflow
-miniwdl
+miniwdl >=1.8.0
 wdl-aid
 rtg-tools
 pysam
