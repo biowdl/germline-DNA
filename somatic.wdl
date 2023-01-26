@@ -25,6 +25,7 @@ import "gatk-CNVcalling/CNV-PON.wdl" as cnvPon
 import "sample.wdl" as sampleWorkflow
 import "somatic-variantcalling/somatic-variantcalling.wdl" as somaticVariantcallingWorkflow
 import "structs.wdl" as structs
+import "structural-variantcalling/somatic.wdl" as somaticSvCalling
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/bwa.wdl" as bwa
 import "tasks/common.wdl" as common
@@ -45,6 +46,7 @@ workflow Somatic {
         Boolean umiDeduplication = false
         Boolean collectUmiStats = false
         Boolean performCnvCalling = false
+        Boolean performSvCalling = false
         String platform = "illumina"
         Boolean useBwaKit = false
         Boolean runStrelka = true
@@ -194,7 +196,17 @@ workflow Somatic {
                     sample = select_first([sample.control])
             }
 
+            # Collect the inputs for SV calling, so only paired samples are included.
+            String tumorIdsForSvCalling = sample.id
+            File tumorBamsForSvCalling = sampleWorkflow.recalibratedBam[casePosition.position]
+            File tumorBamIndexesForSvCalling = sampleWorkflow.recalibratedBamIndex[casePosition.position]
+            String controlIdsForSvCalling = select_first([sample.control])
+            File controlBamsForSvCalling = sampleWorkflow.recalibratedBam[controlPostition.position]
+            File controlBamIndexesForSvCalling = sampleWorkflow.recalibratedBamIndex[controlPostition.position]
+            Pair[String, String] tumorControlPairsForSvCalling = (sample.id, select_first([sample.control]))
         }
+
+        # Allow SNV calling on tumor-only samples as well.
         Int controlPos = select_first([controlPostition.position, 0])
         String? controlSample = if (defined(sample.control)) then sampleIds[controlPos] else DONOTDEFINETHISSTRING
         File? controlBam = if (defined(sample.control)) then sampleWorkflow.recalibratedBam[controlPos] else DONOTDEFINETHISFILE
@@ -242,6 +254,23 @@ workflow Somatic {
                     minimumContigLength = cnvMinimumContigLength,
                     dockerImages = {"gatk": dockerImages["gatk-broad"]}  # These tasks will run into trouble with the biocontainers
             }
+        }
+    }
+
+    if (performSvCalling) {
+        call somaticSvCalling.SomaticSvCalling as SVs {
+            input:
+                normalIds = select_all(controlIdsForSvCalling),
+                normalBams = select_all(controlBamsForSvCalling),
+                normalBamIndexes = select_all(controlBamIndexesForSvCalling),
+                tumorIds = select_all(tumorIdsForSvCalling),
+                tumorBams = select_all(tumorBamsForSvCalling),
+                tumorBamIndexes = select_all(tumorBamIndexesForSvCalling),
+                pairs = select_all(tumorControlPairsForSvCalling),
+                referenceFasta = refFasta,
+                referenceFastaFai = refFastaFai,
+                bwaIndex = bwidx,
+                outputDir = outputDir + "/somatic-sv-calling"
         }
     }
 
