@@ -351,6 +351,7 @@ workflow Somatic {
         dbsnpVCF: {description: "dbsnp VCF file used for checking known sites.", category: "required"}
         dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF. Will be created automatically if not present.", category: "common"}
         performCnvCalling: {description: "Whether or not CNV calling should be performed.", category: "common"}
+        performSvCalling: {description: "Whether or not SV calling should be performed.", category: "common"}
         platform: {description: "The platform used for sequencing.", category: "advanced"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
         runStrelka: {description: "Whether or not to run Strelka.", category: "common"}
