@@ -309,8 +309,10 @@ workflow Germline {
         cleverVcfs: {description: ""}
         matecleverVcfs: {description: ""}
         mantaVcfs: {description: ""}
+        smooveVcfs: {description: ""}
         dellyVcfs: {description: ""}
         survivorVcfs: {description: ""}
+        gridssVcfs: {description: ""}
         gridssVcfIndexes: {description: ""}
         SVunionVcfs: {description: ""}
         SVisecVcfs: {description: ""}
