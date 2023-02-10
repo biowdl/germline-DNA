@@ -18,5 +18,6 @@
   "Germline.dbsnpVCF": "tests/data/wgs2.vcf.gz",
   "Germline.dbsnpVCFIndex": "tests/data/wgs2.vcf.gz.tbi",
   "Germline.bwaThreads": 1,
-  "Germline.umiDeduplication": true
+  "Germline.umiDeduplication": true,
+  "Germline.sampleWorkflow.tagUmi.separatorChar": "_"
 }
