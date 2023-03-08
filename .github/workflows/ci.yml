@@ -48,7 +48,7 @@ jobs:
         uses: pat-s/always-upload-cache@v2.1.5
         env:
           # Increase this value to manually invalidate the cache
-          CACHE_NUMBER: 1
+          CACHE_NUMBER: 5
         with:
           path: /usr/share/miniconda/envs/workflow-test
           key:
@@ -65,7 +65,6 @@ jobs:
           channels: conda-forge,bioconda,defaults
           channel-priority: strict
           auto-activate-base: false
-          use-only-tar-bz2: true  # Needed for proper caching according to the documentation.
         # activate-environment is broken! This always seems to create a new environment.
         # Activation is therefore done separately.    
 
