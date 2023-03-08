@@ -11,6 +11,8 @@ that users understand how the changes affect the new version.
 
 development
 ---------------------------
++ Small changes were made to support miniwdl and miniwdl is not the recommended
+  tool to run this pipeline.
 + Clever is now disabled by default for SV calling. It can be enabled by setting
   the `Germline.svCalling.runClever` input to `true`.
 + Fixed a bug in structural variant calling which led to all INV, INS and BND
