@@ -7,5 +7,7 @@
   "Somatic_PairedEnd",
   "Somatic_PairedEnd_bwakit",
   "Germline_GenderAware",
-  "Germline_PairedEnd_sv"
+  "Germline_PairedEnd_sv",
+  "Germline_PairedEnd_Cromwell",
+  "Somatic_PairedEnd_Cromwell"
 ]

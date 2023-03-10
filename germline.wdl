@@ -99,8 +99,7 @@ workflow Germline {
                 fasta = refFasta
         }
     }
-
-    BwaIndex bwidx = select_first([bwaIndexTask.index, bwaIndex])
+    BwaIndex? bwidx = if defined(bwaIndex) then bwaIndex else bwaIndexTask.index
 
     # Parse docker Tags configuration and sample sheet.
     call common.YamlToJson as convertDockerImagesFile {

@@ -19,7 +19,49 @@ developed by the SASC team
 at [Leiden University Medical Center](https://www.lumc.nl/).
 
 ## Usage
-This workflow can be run using
+
+### MiniWDL
+For local and HPC usage we recommend using [miniwdl](
+https://github.com/chanzuckerberg/miniwdl). Miniwdl can run on HPC clusters 
+using the [miniwdl-slurm](https://github.com/miniwdl-ext/miniwdl-slurm) 
+extension.
+
+First download the latest version of the workflow zip file from
+the [releases page](https://github.com/biowdl/germline-DNA/releases).
+
+
+The workflow can then be started with the following command:
+
+```bash
+miniwdl run \
+  --cfg miniwdl.cfg \
+  -i inputs.json \
+  -d output/. \
+  <workflow>_v<version>.zip
+
+```
+`output/.` ensures the output ends up in the directory called `output`. If the
+`.` is omitted, miniwdl will create a subfolder.
+
+`miniwdl.cfg` contains at least the following settings:
+
+```
+[file_io]
+allow_any_input=true
+copy_input_files_for=["MultiQC"]
+use_relative_output_paths=true  # This will lead to a predictable output structure
+
+[task_runtime]
+as_user = true
+```
+Miniwdl also allows setting global configuration values. See the 
+[miniwdl documentation on configuration](
+https://miniwdl.readthedocs.io/en/latest/runner_reference.html#configuration) 
+for more details.
+
+
+### Cromwell
+This workflow can also be run using
 [Cromwell](http://cromwell.readthedocs.io/en/stable/):
 
 First download the latest version of the workflow wdl file(s)
