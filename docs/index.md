@@ -22,7 +22,9 @@ at [Leiden University Medical Center](https://www.lumc.nl/).
 
 ### MiniWDL
 For local and HPC usage we recommend using [miniwdl](
-https://github.com/chanzuckerberg/miniwdl). 
+https://github.com/chanzuckerberg/miniwdl). Miniwdl can run on HPC clusters 
+using the [miniwdl-slurm](https://github.com/miniwdl-ext/miniwdl-slurm) 
+extension.
 
 First download the latest version of the workflow zip file from
 the [releases page](https://github.com/biowdl/germline-DNA/releases).
