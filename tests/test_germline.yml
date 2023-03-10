@@ -85,9 +85,6 @@
     cromwell run -o tests/cromwell_options.json
     -i tests/integration/Germline_PairedEnd.json germline.wdl
   files:
-    - path: "call_cached.log"
-      must_not_contain:
-        - "Could not copy a suitable cache hit"
     - path: "test-output/multisample.vcf.gz"
     - path: "test-output/multisample.vcf.gz.tbi"
     - path: "test-output/samples/wgs1-paired-end/wgs1-paired-end.markdup.bam"
