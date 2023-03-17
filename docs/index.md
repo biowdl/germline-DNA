@@ -12,7 +12,7 @@ MultiQC), adapter clipping (using cutadapt), mapping (using BWA mem or
 bwakit) and variant calling (based on the
 [GATK Best Practice](https://software.broadinstitute.org/gatk/best-practices/)
 for germline calling, and using a variety of callers for somatic calling).
-Optionally, the somatic workflow can also perform CNV calling.
+Optionally, the somatic workflow can also perform CNV calling and SV calling.
 
 This workflow is part of [BioWDL](https://biowdl.github.io/)
 developed by the SASC team
@@ -358,6 +358,9 @@ This workflow will produce a number of directories and files:
     It contains the vcf file for the sample if germline.wdl was used and
     a single sample vcf was produced.
     It also contains a directory per readgroup.
+    - **structural-variants**: Structural variant calling results per
+      caller and the merged results from SURVIVOR. Only present if 
+      `germline.wdl` is used with SV calling enabled.
     - **CNVcalling**: Contains the CNV calling results for this sample
       and its control sample. Only present if `somatic.wdl` is used with
       CNV calling enabled.
@@ -371,6 +374,11 @@ This workflow will produce a number of directories and files:
 - **PON**: A generated panel of normals and the preprocessed intervals.
   Only present if `somatic.wdl` is used with CNV calling enabled and no
   PON or preprocessed intervals were provided in the inputs.
+- **somatic-sv-calling**: Somatic SV calling results. Only present if
+  `somatic.wdl` is used with SV calling enabled.
+  - **&lt;sample>**: SV results for Delly and Manta per tumor sample.
+  - **gridss**: GRIDSS results per normal and the generated PON files 
+    (if no PON was provided in the inputs).
 
 ## Scattering
 This workflow performs scattering to speed up analysis on grid computing
