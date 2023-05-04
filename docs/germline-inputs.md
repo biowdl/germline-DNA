@@ -16,11 +16,6 @@ Germline.
     <i>File </i><br />
     dbsnp VCF file used for checking known sites.
 </dd>
-<dt id="Germline.dbsnpVCFIndex"><a href="#Germline.dbsnpVCFIndex">Germline.dbsnpVCFIndex</a></dt>
-<dd>
-    <i>File </i><br />
-    Index (.tbi) file for the dbsnp VCF.
-</dd>
 <dt id="Germline.dockerImagesFile"><a href="#Germline.dockerImagesFile">Germline.dockerImagesFile</a></dt>
 <dd>
     <i>File </i><br />
@@ -31,20 +26,20 @@ Germline.
     <i>File </i><br />
     The reference fasta file.
 </dd>
-<dt id="Germline.referenceFastaDict"><a href="#Germline.referenceFastaDict">Germline.referenceFastaDict</a></dt>
-<dd>
-    <i>File </i><br />
-    Sequence dictionary (.dict) file of the reference.
-</dd>
-<dt id="Germline.referenceFastaFai"><a href="#Germline.referenceFastaFai">Germline.referenceFastaFai</a></dt>
-<dd>
-    <i>File </i><br />
-    Fasta index (.fai) file of the reference.
-</dd>
 <dt id="Germline.sampleConfigFile"><a href="#Germline.sampleConfigFile">Germline.sampleConfigFile</a></dt>
 <dd>
     <i>File </i><br />
     The samplesheet, including sample ids, library ids, readgroup ids and fastq file locations.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.outputPathMetrics"><a href="#Germline.sampleWorkflow.umiDedup.outputPathMetrics">Germline.sampleWorkflow.umiDedup.outputPathMetrics</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>outputPath + ".metrics"</code><br />
+    The location the output metrics file should be written to.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.outputPathUmiMetrics"><a href="#Germline.sampleWorkflow.umiDedup.outputPathUmiMetrics">Germline.sampleWorkflow.umiDedup.outputPathUmiMetrics</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>outputPath + ".umi-metrics"</code><br />
+    The location the output UMI metrics file should be written to.
 </dd>
 <dt id="Germline.svCalling.manta.cores"><a href="#Germline.svCalling.manta.cores">Germline.svCalling.manta.cores</a></dt>
 <dd>
@@ -62,23 +57,28 @@ Germline.
 <dl>
 <dt id="Germline.adapterForward"><a href="#Germline.adapterForward">Germline.adapterForward</a></dt>
 <dd>
-    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
+    <i>String? </i><br />
     The adapter to be removed from the reads first or single end reads.
 </dd>
 <dt id="Germline.adapterReverse"><a href="#Germline.adapterReverse">Germline.adapterReverse</a></dt>
 <dd>
-    <i>String? </i><i>&mdash; Default:</i> <code>"AGATCGGAAGAG"</code><br />
+    <i>String? </i><br />
     The adapter to be removed from the reads second end reads.
 </dd>
 <dt id="Germline.bwaIndex"><a href="#Germline.bwaIndex">Germline.bwaIndex</a></dt>
 <dd>
-    <i>struct(fastaFile : File, indexFiles : Array[File])? </i><br />
-    The BWA index files. When these are provided BWA will be used.
+    <i>BwaIndex? </i><br />
+    The BWA index files. When these are provided BWA will be used. Will be created automatically if both bwaIndex and bwaMem2Index are not present.
 </dd>
 <dt id="Germline.bwaMem2Index"><a href="#Germline.bwaMem2Index">Germline.bwaMem2Index</a></dt>
 <dd>
-    <i>struct(fastaFile : File, indexFiles : Array[File])? </i><br />
+    <i>BwaIndex? </i><br />
     The bwa-mem2 index files. When these are provided bwa-mem2 will be used.
+</dd>
+<dt id="Germline.dbsnpVCFIndex"><a href="#Germline.dbsnpVCFIndex">Germline.dbsnpVCFIndex</a></dt>
+<dd>
+    <i>File? </i><br />
+    Index (.tbi) file for the dbsnp VCF. Will be created automatically if not present.
 </dd>
 <dt id="Germline.jointgenotyping"><a href="#Germline.jointgenotyping">Germline.jointgenotyping</a></dt>
 <dd>
@@ -105,6 +105,16 @@ Germline.
     <i>String </i><i>&mdash; Default:</i> <code>"."</code><br />
     The directory the output should be written to.
 </dd>
+<dt id="Germline.referenceFastaDict"><a href="#Germline.referenceFastaDict">Germline.referenceFastaDict</a></dt>
+<dd>
+    <i>File? </i><br />
+    Sequence dictionary (.dict) file of the reference.
+</dd>
+<dt id="Germline.referenceFastaFai"><a href="#Germline.referenceFastaFai">Germline.referenceFastaFai</a></dt>
+<dd>
+    <i>File? </i><br />
+    Fasta index (.fai) file of the reference. Will be created automatically if not present.
+</dd>
 <dt id="Germline.regions"><a href="#Germline.regions">Germline.regions</a></dt>
 <dd>
     <i>File? </i><br />
@@ -119,6 +129,11 @@ Germline.
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Whether or not the index uses the '.64' suffixes.
+</dd>
+<dt id="Germline.sampleWorkflow.bwaMem.useSoftclippingForSupplementary"><a href="#Germline.sampleWorkflow.bwaMem.useSoftclippingForSupplementary">Germline.sampleWorkflow.bwaMem.useSoftclippingForSupplementary</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Use soft-clipping for supplementary alignments instead of hard-clipping
 </dd>
 <dt id="Germline.sampleWorkflow.bwamem2Mem.sixtyFour"><a href="#Germline.sampleWorkflow.bwamem2Mem.sixtyFour">Germline.sampleWorkflow.bwamem2Mem.sixtyFour</a></dt>
 <dd>
@@ -154,6 +169,26 @@ Germline.
 <dd>
     <i>String </i><i>&mdash; Default:</i> <code>sub(basename(read1),"(\.fq)?(\.fastq)?(\.gz)?","")</code><br />
     The name of the readgroup.
+</dd>
+<dt id="Germline.sampleWorkflow.tagUmi.separatorChar"><a href="#Germline.sampleWorkflow.tagUmi.separatorChar">Germline.sampleWorkflow.tagUmi.separatorChar</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"_"</code><br />
+    Character used to separate the UMIs from the read name.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.assumeSortOrder"><a href="#Germline.sampleWorkflow.umiDedup.assumeSortOrder">Germline.sampleWorkflow.umiDedup.assumeSortOrder</a></dt>
+<dd>
+    <i>String? </i><br />
+    Assume a certain sort order even though the header might say otherwise.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.removeDuplicates"><a href="#Germline.sampleWorkflow.umiDedup.removeDuplicates">Germline.sampleWorkflow.umiDedup.removeDuplicates</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether the duplicate reads should be removed instead of marked.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.umiTagName"><a href="#Germline.sampleWorkflow.umiDedup.umiTagName">Germline.sampleWorkflow.umiDedup.umiTagName</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"RX"</code><br />
+    Which tag in the BAM file holds the UMI.
 </dd>
 <dt id="Germline.singleSampleCalling.callAutosomal.excludeIntervalList"><a href="#Germline.singleSampleCalling.callAutosomal.excludeIntervalList">Germline.singleSampleCalling.callAutosomal.excludeIntervalList</a></dt>
 <dd>
@@ -225,6 +260,26 @@ Germline.
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     Whether or not the data is from exome sequencing.
 </dd>
+<dt id="Germline.svCalling.setId.annsFile"><a href="#Germline.svCalling.setId.annsFile">Germline.svCalling.setId.annsFile</a></dt>
+<dd>
+    <i>File? </i><br />
+    Bgzip-compressed and tabix-indexed file with annotations (see man page for details).
+</dd>
+<dt id="Germline.svCalling.setId.annsFileIndex"><a href="#Germline.svCalling.setId.annsFileIndex">Germline.svCalling.setId.annsFileIndex</a></dt>
+<dd>
+    <i>File? </i><br />
+    The index for annsFile.
+</dd>
+<dt id="Germline.svCalling.setId.inputFileIndex"><a href="#Germline.svCalling.setId.inputFileIndex">Germline.svCalling.setId.inputFileIndex</a></dt>
+<dd>
+    <i>File? </i><br />
+    The index for the input vcf or bcf.
+</dd>
+<dt id="Germline.tabix.outputFilePath"><a href="#Germline.tabix.outputFilePath">Germline.tabix.outputFilePath</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>basename(inputFile)</code><br />
+    The location where the file should be written to. The index will appear alongside this link to the file.
+</dd>
 <dt id="Germline.umiDeduplication"><a href="#Germline.umiDeduplication">Germline.umiDeduplication</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
@@ -246,6 +301,16 @@ Germline.
 <details>
 <summary> Show/Hide </summary>
 <dl>
+<dt id="Germline.bwaIndexTask.dockerImage"><a href="#Germline.bwaIndexTask.dockerImage">Germline.bwaIndexTask.dockerImage</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"quay.io/biocontainers/bwa:0.7.17--hed695b0_7"</code><br />
+    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+</dd>
+<dt id="Germline.bwaIndexTask.timeMinutes"><a href="#Germline.bwaIndexTask.timeMinutes">Germline.bwaIndexTask.timeMinutes</a></dt>
+<dd>
+    <i>Int? </i><i>&mdash; Default:</i> <code>5 + ceil((size(fasta,"G") * 5))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Germline.bwaThreads"><a href="#Germline.bwaThreads">Germline.bwaThreads</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>4</code><br />
@@ -253,37 +318,37 @@ Germline.
 </dd>
 <dt id="Germline.calculateRegions.intersectAutosomalRegions.memory"><a href="#Germline.calculateRegions.intersectAutosomalRegions.memory">Germline.calculateRegions.intersectAutosomalRegions.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size([regionsA, regionsB],"M"))}M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size([regionsA, regionsB],"MiB"))}MiB"</code><br />
     The amount of memory needed for the job.
 </dd>
 <dt id="Germline.calculateRegions.intersectAutosomalRegions.timeMinutes"><a href="#Germline.calculateRegions.intersectAutosomalRegions.timeMinutes">Germline.calculateRegions.intersectAutosomalRegions.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size([regionsA, regionsB],"G"))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size([regionsA, regionsB],"GiB"))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.calculateRegions.intersectX.memory"><a href="#Germline.calculateRegions.intersectX.memory">Germline.calculateRegions.intersectX.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size([regionsA, regionsB],"M"))}M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size([regionsA, regionsB],"MiB"))}MiB"</code><br />
     The amount of memory needed for the job.
 </dd>
 <dt id="Germline.calculateRegions.intersectX.timeMinutes"><a href="#Germline.calculateRegions.intersectX.timeMinutes">Germline.calculateRegions.intersectX.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size([regionsA, regionsB],"G"))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size([regionsA, regionsB],"GiB"))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.calculateRegions.intersectY.memory"><a href="#Germline.calculateRegions.intersectY.memory">Germline.calculateRegions.intersectY.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size([regionsA, regionsB],"M"))}M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size([regionsA, regionsB],"MiB"))}MiB"</code><br />
     The amount of memory needed for the job.
 </dd>
 <dt id="Germline.calculateRegions.intersectY.timeMinutes"><a href="#Germline.calculateRegions.intersectY.timeMinutes">Germline.calculateRegions.intersectY.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size([regionsA, regionsB],"G"))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size([regionsA, regionsB],"GiB"))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.calculateRegions.inverseBed.memory"><a href="#Germline.calculateRegions.inverseBed.memory">Germline.calculateRegions.inverseBed.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size([inputBed, faidx],"M"))}M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size([inputBed, faidx],"MiB"))}MiB"</code><br />
     The amount of memory needed for the job.
 </dd>
 <dt id="Germline.calculateRegions.inverseBed.timeMinutes"><a href="#Germline.calculateRegions.inverseBed.timeMinutes">Germline.calculateRegions.inverseBed.timeMinutes</a></dt>
@@ -293,7 +358,7 @@ Germline.
 </dd>
 <dt id="Germline.calculateRegions.mergeBeds.memory"><a href="#Germline.calculateRegions.mergeBeds.memory">Germline.calculateRegions.mergeBeds.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size(bedFiles,"M"))}M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"~{512 + ceil(size(bedFiles,"MiB"))}MiB"</code><br />
     The amount of memory needed for the job.
 </dd>
 <dt id="Germline.calculateRegions.mergeBeds.outputBed"><a href="#Germline.calculateRegions.mergeBeds.outputBed">Germline.calculateRegions.mergeBeds.outputBed</a></dt>
@@ -308,7 +373,7 @@ Germline.
 </dd>
 <dt id="Germline.calculateRegions.scatterAutosomalRegions.memory"><a href="#Germline.calculateRegions.scatterAutosomalRegions.memory">Germline.calculateRegions.scatterAutosomalRegions.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.calculateRegions.scatterAutosomalRegions.prefix"><a href="#Germline.calculateRegions.scatterAutosomalRegions.prefix">Germline.calculateRegions.scatterAutosomalRegions.prefix</a></dt>
@@ -338,7 +403,7 @@ Germline.
 </dd>
 <dt id="Germline.convertDockerImagesFile.memory"><a href="#Germline.convertDockerImagesFile.memory">Germline.convertDockerImagesFile.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"128M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"128MiB"</code><br />
     The maximum amount of memory the job will need.
 </dd>
 <dt id="Germline.convertDockerImagesFile.timeMinutes"><a href="#Germline.convertDockerImagesFile.timeMinutes">Germline.convertDockerImagesFile.timeMinutes</a></dt>
@@ -353,7 +418,7 @@ Germline.
 </dd>
 <dt id="Germline.convertSampleConfig.memory"><a href="#Germline.convertSampleConfig.memory">Germline.convertSampleConfig.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"128M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"128MiB"</code><br />
     The amount of memory needed for the job.
 </dd>
 <dt id="Germline.convertSampleConfig.old"><a href="#Germline.convertSampleConfig.old">Germline.convertSampleConfig.old</a></dt>
@@ -376,6 +441,26 @@ Germline.
     <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
+<dt id="Germline.fidx.dockerImage"><a href="#Germline.fidx.dockerImage">Germline.fidx.dockerImage</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"quay.io/biocontainers/samtools:1.16.1--h6899075_1"</code><br />
+    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+</dd>
+<dt id="Germline.fidx.javaXmx"><a href="#Germline.fidx.javaXmx">Germline.fidx.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Germline.fidx.memory"><a href="#Germline.fidx.memory">Germline.fidx.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"3GiB"</code><br />
+    The amount of memory available to the job.
+</dd>
+<dt id="Germline.fidx.timeMinutes"><a href="#Germline.fidx.timeMinutes">Germline.fidx.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>5 + ceil((size(inputFile,"GiB") * 5))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
 <dt id="Germline.JointGenotyping.gatherGvcfs.intervals"><a href="#Germline.JointGenotyping.gatherGvcfs.intervals">Germline.JointGenotyping.gatherGvcfs.intervals</a></dt>
 <dd>
     <i>Array[File] </i><i>&mdash; Default:</i> <code>[]</code><br />
@@ -388,7 +473,7 @@ Germline.
 </dd>
 <dt id="Germline.JointGenotyping.gatherGvcfs.memory"><a href="#Germline.JointGenotyping.gatherGvcfs.memory">Germline.JointGenotyping.gatherGvcfs.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.JointGenotyping.gatherGvcfs.timeMinutes"><a href="#Germline.JointGenotyping.gatherGvcfs.timeMinutes">Germline.JointGenotyping.gatherGvcfs.timeMinutes</a></dt>
@@ -408,12 +493,12 @@ Germline.
 </dd>
 <dt id="Germline.JointGenotyping.gatherVcfs.memory"><a href="#Germline.JointGenotyping.gatherVcfs.memory">Germline.JointGenotyping.gatherVcfs.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.JointGenotyping.gatherVcfs.timeMinutes"><a href="#Germline.JointGenotyping.gatherVcfs.timeMinutes">Germline.JointGenotyping.gatherVcfs.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputVCFs,"G")) * 2</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputVCFs,"GiB")) * 2</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.JointGenotyping.gatherVcfs.useJdkDeflater"><a href="#Germline.JointGenotyping.gatherVcfs.useJdkDeflater">Germline.JointGenotyping.gatherVcfs.useJdkDeflater</a></dt>
@@ -423,7 +508,7 @@ Germline.
 </dd>
 <dt id="Germline.JointGenotyping.gatherVcfs.useJdkInflater"><a href="#Germline.JointGenotyping.gatherVcfs.useJdkInflater">Germline.JointGenotyping.gatherVcfs.useJdkInflater</a></dt>
 <dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     True, uses the java inflater. False, uses the optimized intel inflater.
 </dd>
 <dt id="Germline.JointGenotyping.genotypeGvcfs.annotationGroups"><a href="#Germline.JointGenotyping.genotypeGvcfs.annotationGroups">Germline.JointGenotyping.genotypeGvcfs.annotationGroups</a></dt>
@@ -438,7 +523,7 @@ Germline.
 </dd>
 <dt id="Germline.JointGenotyping.genotypeGvcfs.memory"><a href="#Germline.JointGenotyping.genotypeGvcfs.memory">Germline.JointGenotyping.genotypeGvcfs.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"7G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"7GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.JointGenotyping.genotypeGvcfs.timeMinutes"><a href="#Germline.JointGenotyping.genotypeGvcfs.timeMinutes">Germline.JointGenotyping.genotypeGvcfs.timeMinutes</a></dt>
@@ -448,7 +533,7 @@ Germline.
 </dd>
 <dt id="Germline.JointGenotyping.scatterRegions.memory"><a href="#Germline.JointGenotyping.scatterRegions.memory">Germline.JointGenotyping.scatterRegions.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.JointGenotyping.scatterRegions.prefix"><a href="#Germline.JointGenotyping.scatterRegions.prefix">Germline.JointGenotyping.scatterRegions.prefix</a></dt>
@@ -515,7 +600,7 @@ Germline.
 </dd>
 <dt id="Germline.JointGenotyping.Stats.memory"><a href="#Germline.JointGenotyping.Stats.memory">Germline.JointGenotyping.Stats.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.JointGenotyping.Stats.regions"><a href="#Germline.JointGenotyping.Stats.regions">Germline.JointGenotyping.Stats.regions</a></dt>
@@ -690,7 +775,7 @@ Germline.
 </dd>
 <dt id="Germline.multiqcTask.timeMinutes"><a href="#Germline.multiqcTask.timeMinutes">Germline.multiqcTask.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>10 + ceil((size(reports,"G") * 8))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>10 + ceil((size(reports,"GiB") * 8))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.multiqcTask.title"><a href="#Germline.multiqcTask.title">Germline.multiqcTask.title</a></dt>
@@ -815,7 +900,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.bwaMem.timeMinutes"><a href="#Germline.sampleWorkflow.bwaMem.timeMinutes">Germline.sampleWorkflow.bwaMem.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size([read1, read2],"G") * 220 / threads))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>10 + ceil((size([read1, read2],"GiB") * 300 / threads))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.sampleWorkflow.bwamem2Mem.compressionLevel"><a href="#Germline.sampleWorkflow.bwamem2Mem.compressionLevel">Germline.sampleWorkflow.bwamem2Mem.compressionLevel</a></dt>
@@ -840,7 +925,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.bwamem2Mem.timeMinutes"><a href="#Germline.sampleWorkflow.bwamem2Mem.timeMinutes">Germline.sampleWorkflow.bwamem2Mem.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size([read1, read2],"G") * 220 / threads))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size([read1, read2],"GiB") * 220 / threads))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.sampleWorkflow.markdup.compressionLevel"><a href="#Germline.sampleWorkflow.markdup.compressionLevel">Germline.sampleWorkflow.markdup.compressionLevel</a></dt>
@@ -860,7 +945,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.markdup.memoryMb"><a href="#Germline.sampleWorkflow.markdup.memoryMb">Germline.sampleWorkflow.markdup.memoryMb</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1024 + sortBufferSize + 2 * ioBufferSize</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>8192 + sortBufferSize + 2 * ioBufferSize</code><br />
     The amount of memory available to the job in megabytes.
 </dd>
 <dt id="Germline.sampleWorkflow.markdup.overFlowListSize"><a href="#Germline.sampleWorkflow.markdup.overFlowListSize">Germline.sampleWorkflow.markdup.overFlowListSize</a></dt>
@@ -875,7 +960,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.markdup.sortBufferSize"><a href="#Germline.sampleWorkflow.markdup.sortBufferSize">Germline.sampleWorkflow.markdup.sortBufferSize</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2048</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>4096</code><br />
     The amount of mb allocated to the sort buffer.
 </dd>
 <dt id="Germline.sampleWorkflow.markdup.threads"><a href="#Germline.sampleWorkflow.markdup.threads">Germline.sampleWorkflow.markdup.threads</a></dt>
@@ -885,7 +970,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.markdup.timeMinutes"><a href="#Germline.sampleWorkflow.markdup.timeMinutes">Germline.sampleWorkflow.markdup.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBams,"G") * 8)) / threads</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBams,"GiB") * 25)) / threads</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.ampliconIntervalsLists.javaXmx"><a href="#Germline.sampleWorkflow.metrics.ampliconIntervalsLists.javaXmx">Germline.sampleWorkflow.metrics.ampliconIntervalsLists.javaXmx</a></dt>
@@ -895,7 +980,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.ampliconIntervalsLists.memory"><a href="#Germline.sampleWorkflow.metrics.ampliconIntervalsLists.memory">Germline.sampleWorkflow.metrics.ampliconIntervalsLists.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.ampliconIntervalsLists.timeMinutes"><a href="#Germline.sampleWorkflow.metrics.ampliconIntervalsLists.timeMinutes">Germline.sampleWorkflow.metrics.ampliconIntervalsLists.timeMinutes</a></dt>
@@ -910,7 +995,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.Flagstat.memory"><a href="#Germline.sampleWorkflow.metrics.Flagstat.memory">Germline.sampleWorkflow.metrics.Flagstat.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory needed for the job.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.Flagstat.timeMinutes"><a href="#Germline.sampleWorkflow.metrics.Flagstat.timeMinutes">Germline.sampleWorkflow.metrics.Flagstat.timeMinutes</a></dt>
@@ -965,7 +1050,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.picardMetrics.timeMinutes"><a href="#Germline.sampleWorkflow.metrics.picardMetrics.timeMinutes">Germline.sampleWorkflow.metrics.picardMetrics.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(referenceFasta,"G") * 3 * 2)) + ceil((size(inputBam,"G") * 6))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(referenceFasta,"GiB") * 3 * 2)) + ceil((size(inputBam,"GiB") * 6))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.rnaSeqMetrics.javaXmx"><a href="#Germline.sampleWorkflow.metrics.rnaSeqMetrics.javaXmx">Germline.sampleWorkflow.metrics.rnaSeqMetrics.javaXmx</a></dt>
@@ -975,12 +1060,12 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.rnaSeqMetrics.memory"><a href="#Germline.sampleWorkflow.metrics.rnaSeqMetrics.memory">Germline.sampleWorkflow.metrics.rnaSeqMetrics.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"9G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"9GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.rnaSeqMetrics.timeMinutes"><a href="#Germline.sampleWorkflow.metrics.rnaSeqMetrics.timeMinutes">Germline.sampleWorkflow.metrics.rnaSeqMetrics.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"G") * 12))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"GiB") * 12))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.targetIntervalsLists.javaXmx"><a href="#Germline.sampleWorkflow.metrics.targetIntervalsLists.javaXmx">Germline.sampleWorkflow.metrics.targetIntervalsLists.javaXmx</a></dt>
@@ -990,7 +1075,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.targetIntervalsLists.memory"><a href="#Germline.sampleWorkflow.metrics.targetIntervalsLists.memory">Germline.sampleWorkflow.metrics.targetIntervalsLists.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.targetIntervalsLists.timeMinutes"><a href="#Germline.sampleWorkflow.metrics.targetIntervalsLists.timeMinutes">Germline.sampleWorkflow.metrics.targetIntervalsLists.timeMinutes</a></dt>
@@ -1005,12 +1090,12 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.targetMetrics.memory"><a href="#Germline.sampleWorkflow.metrics.targetMetrics.memory">Germline.sampleWorkflow.metrics.targetMetrics.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"4G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.metrics.targetMetrics.timeMinutes"><a href="#Germline.sampleWorkflow.metrics.targetMetrics.timeMinutes">Germline.sampleWorkflow.metrics.targetMetrics.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"G") * 6))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputBam,"GiB") * 6))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.Cutadapt.bwa"><a href="#Germline.sampleWorkflow.qualityControl.Cutadapt.bwa">Germline.sampleWorkflow.qualityControl.Cutadapt.bwa</a></dt>
@@ -1115,7 +1200,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.Cutadapt.memory"><a href="#Germline.sampleWorkflow.qualityControl.Cutadapt.memory">Germline.sampleWorkflow.qualityControl.Cutadapt.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.Cutadapt.minimumLength"><a href="#Germline.sampleWorkflow.qualityControl.Cutadapt.minimumLength">Germline.sampleWorkflow.qualityControl.Cutadapt.minimumLength</a></dt>
@@ -1295,7 +1380,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.FastqcRead1.memory"><a href="#Germline.sampleWorkflow.qualityControl.FastqcRead1.memory">Germline.sampleWorkflow.qualityControl.FastqcRead1.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"2GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.FastqcRead1.minLength"><a href="#Germline.sampleWorkflow.qualityControl.FastqcRead1.minLength">Germline.sampleWorkflow.qualityControl.FastqcRead1.minLength</a></dt>
@@ -1370,7 +1455,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.FastqcRead1After.memory"><a href="#Germline.sampleWorkflow.qualityControl.FastqcRead1After.memory">Germline.sampleWorkflow.qualityControl.FastqcRead1After.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"2GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.FastqcRead1After.minLength"><a href="#Germline.sampleWorkflow.qualityControl.FastqcRead1After.minLength">Germline.sampleWorkflow.qualityControl.FastqcRead1After.minLength</a></dt>
@@ -1445,7 +1530,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.FastqcRead2.memory"><a href="#Germline.sampleWorkflow.qualityControl.FastqcRead2.memory">Germline.sampleWorkflow.qualityControl.FastqcRead2.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"2GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.FastqcRead2.minLength"><a href="#Germline.sampleWorkflow.qualityControl.FastqcRead2.minLength">Germline.sampleWorkflow.qualityControl.FastqcRead2.minLength</a></dt>
@@ -1520,7 +1605,7 @@ Germline.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.FastqcRead2After.memory"><a href="#Germline.sampleWorkflow.qualityControl.FastqcRead2After.memory">Germline.sampleWorkflow.qualityControl.FastqcRead2After.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"2G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"2GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.qualityControl.FastqcRead2After.minLength"><a href="#Germline.sampleWorkflow.qualityControl.FastqcRead2After.minLength">Germline.sampleWorkflow.qualityControl.FastqcRead2After.minLength</a></dt>
@@ -1558,24 +1643,64 @@ Germline.
     <i>Boolean </i><i>&mdash; Default:</i> <code>defined(adapterForward) || defined(adapterReverse) || length(select_first([contaminations, []])) > 0</code><br />
     Whether or not adapters should be removed from the reads.
 </dd>
+<dt id="Germline.sampleWorkflow.tagUmi.dockerImage"><a href="#Germline.sampleWorkflow.tagUmi.dockerImage">Germline.sampleWorkflow.tagUmi.dockerImage</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"quay.io/biocontainers/pysam:0.17.0--py39h051187c_0"</code><br />
+    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+</dd>
+<dt id="Germline.sampleWorkflow.tagUmi.memory"><a href="#Germline.sampleWorkflow.tagUmi.memory">Germline.sampleWorkflow.tagUmi.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"2GiB"</code><br />
+    The amount of memory available to the job.
+</dd>
+<dt id="Germline.sampleWorkflow.tagUmi.timeMinutes"><a href="#Germline.sampleWorkflow.tagUmi.timeMinutes">Germline.sampleWorkflow.tagUmi.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size([inputBam],"GiB") * 10))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.compressionLevel"><a href="#Germline.sampleWorkflow.umiDedup.compressionLevel">Germline.sampleWorkflow.umiDedup.compressionLevel</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1</code><br />
+    The compression level at which the BAM files are written.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.dockerImage"><a href="#Germline.sampleWorkflow.umiDedup.dockerImage">Germline.sampleWorkflow.umiDedup.dockerImage</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"quay.io/biocontainers/picard:2.26.10--hdfd78af_0"</code><br />
+    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.javaXmx"><a href="#Germline.sampleWorkflow.umiDedup.javaXmx">Germline.sampleWorkflow.umiDedup.javaXmx</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"8G"</code><br />
+    The maximum memory available to the program. Should be lower than `memory` to accommodate JVM overhead.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.maxRecordsInRam"><a href="#Germline.sampleWorkflow.umiDedup.maxRecordsInRam">Germline.sampleWorkflow.umiDedup.maxRecordsInRam</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1500000</code><br />
+    This will specify the number of records stored in RAM before spilling to disk.
+</dd>
 <dt id="Germline.sampleWorkflow.umiDedup.memory"><a href="#Germline.sampleWorkflow.umiDedup.memory">Germline.sampleWorkflow.umiDedup.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"25G"</code><br />
-    The amount of memory required for the task.
+    <i>String </i><i>&mdash; Default:</i> <code>"9GiB"</code><br />
+    The amount of memory this job will use.
 </dd>
 <dt id="Germline.sampleWorkflow.umiDedup.timeMinutes"><a href="#Germline.sampleWorkflow.umiDedup.timeMinutes">Germline.sampleWorkflow.umiDedup.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>30 + ceil((size(inputBam,"G") * 30))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>360</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
-<dt id="Germline.sampleWorkflow.umiDedup.umiSeparator"><a href="#Germline.sampleWorkflow.umiDedup.umiSeparator">Germline.sampleWorkflow.umiDedup.umiSeparator</a></dt>
+<dt id="Germline.sampleWorkflow.umiDedup.useJdkDeflater"><a href="#Germline.sampleWorkflow.umiDedup.useJdkDeflater">Germline.sampleWorkflow.umiDedup.useJdkDeflater</a></dt>
 <dd>
-    <i>String? </i><br />
-    Seperator used for UMIs in the read names.
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    True, uses the java deflator to compress the BAM files. False uses the optimized intel deflater.
+</dd>
+<dt id="Germline.sampleWorkflow.umiDedup.useJdkInflater"><a href="#Germline.sampleWorkflow.umiDedup.useJdkInflater">Germline.sampleWorkflow.umiDedup.useJdkInflater</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    True, uses the java inflater. False, uses the optimized intel inflater.
 </dd>
 <dt id="Germline.scatterList.memory"><a href="#Germline.scatterList.memory">Germline.scatterList.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.scatterList.prefix"><a href="#Germline.scatterList.prefix">Germline.scatterList.prefix</a></dt>
@@ -1690,7 +1815,7 @@ Germline.
 </dd>
 <dt id="Germline.singleSampleCalling.mergeSingleSampleGvcf.memory"><a href="#Germline.singleSampleCalling.mergeSingleSampleGvcf.memory">Germline.singleSampleCalling.mergeSingleSampleGvcf.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.singleSampleCalling.mergeSingleSampleGvcf.timeMinutes"><a href="#Germline.singleSampleCalling.mergeSingleSampleGvcf.timeMinutes">Germline.singleSampleCalling.mergeSingleSampleGvcf.timeMinutes</a></dt>
@@ -1710,12 +1835,12 @@ Germline.
 </dd>
 <dt id="Germline.singleSampleCalling.mergeSingleSampleVcf.memory"><a href="#Germline.singleSampleCalling.mergeSingleSampleVcf.memory">Germline.singleSampleCalling.mergeSingleSampleVcf.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"5G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.singleSampleCalling.mergeSingleSampleVcf.timeMinutes"><a href="#Germline.singleSampleCalling.mergeSingleSampleVcf.timeMinutes">Germline.singleSampleCalling.mergeSingleSampleVcf.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputVCFs,"G")) * 2</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputVCFs,"GiB")) * 2</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.singleSampleCalling.mergeSingleSampleVcf.useJdkDeflater"><a href="#Germline.singleSampleCalling.mergeSingleSampleVcf.useJdkDeflater">Germline.singleSampleCalling.mergeSingleSampleVcf.useJdkDeflater</a></dt>
@@ -1725,7 +1850,7 @@ Germline.
 </dd>
 <dt id="Germline.singleSampleCalling.mergeSingleSampleVcf.useJdkInflater"><a href="#Germline.singleSampleCalling.mergeSingleSampleVcf.useJdkInflater">Germline.singleSampleCalling.mergeSingleSampleVcf.useJdkInflater</a></dt>
 <dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
     True, uses the java inflater. False, uses the optimized intel inflater.
 </dd>
 <dt id="Germline.singleSampleCalling.standardMinConfidenceThresholdForCalling"><a href="#Germline.singleSampleCalling.standardMinConfidenceThresholdForCalling">Germline.singleSampleCalling.standardMinConfidenceThresholdForCalling</a></dt>
@@ -1777,7 +1902,7 @@ Germline.
 </dd>
 <dt id="Germline.singleSampleCalling.Stats.memory"><a href="#Germline.singleSampleCalling.Stats.memory">Germline.singleSampleCalling.Stats.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.singleSampleCalling.Stats.regions"><a href="#Germline.singleSampleCalling.Stats.regions">Germline.singleSampleCalling.Stats.regions</a></dt>
@@ -1832,7 +1957,7 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.annotateDH.memory"><a href="#Germline.svCalling.annotateDH.memory">Germline.svCalling.annotateDH.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"15G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"15GiB"</code><br />
     The memory required to run the programs.
 </dd>
 <dt id="Germline.svCalling.annotateDH.timeMinutes"><a href="#Germline.svCalling.annotateDH.timeMinutes">Germline.svCalling.annotateDH.timeMinutes</a></dt>
@@ -1842,7 +1967,7 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.clever.memory"><a href="#Germline.svCalling.clever.memory">Germline.svCalling.clever.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"55G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"80GiB"</code><br />
     The memory required to run the programs.
 </dd>
 <dt id="Germline.svCalling.clever.threads"><a href="#Germline.svCalling.clever.threads">Germline.svCalling.clever.threads</a></dt>
@@ -1852,17 +1977,27 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.clever.timeMinutes"><a href="#Germline.svCalling.clever.timeMinutes">Germline.svCalling.clever.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>480</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>2200</code><br />
     The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Germline.svCalling.delly.genotypeBcf"><a href="#Germline.svCalling.delly.genotypeBcf">Germline.svCalling.delly.genotypeBcf</a></dt>
+<dd>
+    <i>File? </i><br />
+    A BCF with SVs to get genotyped in the samples.
+</dd>
+<dt id="Germline.svCalling.delly.genotypeBcfIndex"><a href="#Germline.svCalling.delly.genotypeBcfIndex">Germline.svCalling.delly.genotypeBcfIndex</a></dt>
+<dd>
+    <i>File? </i><br />
+    The index for the genotype BCF file.
 </dd>
 <dt id="Germline.svCalling.delly.memory"><a href="#Germline.svCalling.delly.memory">Germline.svCalling.delly.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"15G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"15GiB"</code><br />
     The memory required to run the programs.
 </dd>
 <dt id="Germline.svCalling.delly.timeMinutes"><a href="#Germline.svCalling.delly.timeMinutes">Germline.svCalling.delly.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>300</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>600</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.svCalling.delly2vcf.exclude"><a href="#Germline.svCalling.delly2vcf.exclude">Germline.svCalling.delly2vcf.exclude</a></dt>
@@ -1882,18 +2017,18 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.delly2vcf.memory"><a href="#Germline.svCalling.delly2vcf.memory">Germline.svCalling.delly2vcf.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Germline.svCalling.delly2vcf.samples"><a href="#Germline.svCalling.delly2vcf.samples">Germline.svCalling.delly2vcf.samples</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    A list of sample names to include.
 </dd>
 <dt id="Germline.svCalling.delly2vcf.timeMinutes"><a href="#Germline.svCalling.delly2vcf.timeMinutes">Germline.svCalling.delly2vcf.timeMinutes</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
     The maximum amount of time the job will run in minutes.
-</dd>
-<dt id="Germline.svCalling.excludeFpDupDel"><a href="#Germline.svCalling.excludeFpDupDel">Germline.svCalling.excludeFpDupDel</a></dt>
-<dd>
-    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
-    Option to exclude false positive duplications and deletions according to DUPHOLD.
 </dd>
 <dt id="Germline.svCalling.excludeMisHomRef"><a href="#Germline.svCalling.excludeMisHomRef">Germline.svCalling.excludeMisHomRef</a></dt>
 <dd>
@@ -1902,17 +2037,127 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.FilterShortReadsBam.memory"><a href="#Germline.svCalling.FilterShortReadsBam.memory">Germline.svCalling.FilterShortReadsBam.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"1G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"1GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.svCalling.FilterShortReadsBam.timeMinutes"><a href="#Germline.svCalling.FilterShortReadsBam.timeMinutes">Germline.svCalling.FilterShortReadsBam.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(bamFile,"G") * 8))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(bamFile,"GiB") * 8))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Germline.svCalling.getIntersections.excludeUncalled"><a href="#Germline.svCalling.getIntersections.excludeUncalled">Germline.svCalling.getIntersections.excludeUncalled</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Exclude sites without a called genotype (see man page for details).
+</dd>
+<dt id="Germline.svCalling.getIntersections.include"><a href="#Germline.svCalling.getIntersections.include">Germline.svCalling.getIntersections.include</a></dt>
+<dd>
+    <i>String? </i><br />
+    Select sites for which the expression is true (see man page for details).
+</dd>
+<dt id="Germline.svCalling.getIntersections.memory"><a href="#Germline.svCalling.getIntersections.memory">Germline.svCalling.getIntersections.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Germline.svCalling.getIntersections.samples"><a href="#Germline.svCalling.getIntersections.samples">Germline.svCalling.getIntersections.samples</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    A list of sample names to include.
+</dd>
+<dt id="Germline.svCalling.getIntersections.timeMinutes"><a href="#Germline.svCalling.getIntersections.timeMinutes">Germline.svCalling.getIntersections.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Germline.svCalling.getSVtype.exclude"><a href="#Germline.svCalling.getSVtype.exclude">Germline.svCalling.getSVtype.exclude</a></dt>
+<dd>
+    <i>String? </i><br />
+    Exclude sites for which the expression is true (see man page for details).
+</dd>
+<dt id="Germline.svCalling.getSVtype.excludeUncalled"><a href="#Germline.svCalling.getSVtype.excludeUncalled">Germline.svCalling.getSVtype.excludeUncalled</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Exclude sites without a called genotype (see man page for details).
+</dd>
+<dt id="Germline.svCalling.getSVtype.memory"><a href="#Germline.svCalling.getSVtype.memory">Germline.svCalling.getSVtype.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Germline.svCalling.getSVtype.samples"><a href="#Germline.svCalling.getSVtype.samples">Germline.svCalling.getSVtype.samples</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    A list of sample names to include.
+</dd>
+<dt id="Germline.svCalling.getSVtype.timeMinutes"><a href="#Germline.svCalling.getSVtype.timeMinutes">Germline.svCalling.getSVtype.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Germline.svCalling.gridss.blacklistBed"><a href="#Germline.svCalling.gridss.blacklistBed">Germline.svCalling.gridss.blacklistBed</a></dt>
+<dd>
+    <i>File? </i><br />
+    A bed file with blaclisted regins.
+</dd>
+<dt id="Germline.svCalling.gridss.gridssProperties"><a href="#Germline.svCalling.gridss.gridssProperties">Germline.svCalling.gridss.gridssProperties</a></dt>
+<dd>
+    <i>File? </i><br />
+    A properties file for gridss.
+</dd>
+<dt id="Germline.svCalling.gridss.jvmHeapSizeGb"><a href="#Germline.svCalling.gridss.jvmHeapSizeGb">Germline.svCalling.gridss.jvmHeapSizeGb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>64</code><br />
+    The size of JVM heap for assembly and variant calling
+</dd>
+<dt id="Germline.svCalling.gridss.nonJvmMemoryGb"><a href="#Germline.svCalling.gridss.nonJvmMemoryGb">Germline.svCalling.gridss.nonJvmMemoryGb</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>10</code><br />
+    The amount of memory in Gb to be requested besides JVM memory.
+</dd>
+<dt id="Germline.svCalling.gridss.normalBai"><a href="#Germline.svCalling.gridss.normalBai">Germline.svCalling.gridss.normalBai</a></dt>
+<dd>
+    <i>File? </i><br />
+    The index for normalBam.
+</dd>
+<dt id="Germline.svCalling.gridss.normalBam"><a href="#Germline.svCalling.gridss.normalBam">Germline.svCalling.gridss.normalBam</a></dt>
+<dd>
+    <i>File? </i><br />
+    The BAM file for the normal/control sample.
+</dd>
+<dt id="Germline.svCalling.gridss.normalLabel"><a href="#Germline.svCalling.gridss.normalLabel">Germline.svCalling.gridss.normalLabel</a></dt>
+<dd>
+    <i>String? </i><br />
+    The name of the normal sample.
+</dd>
+<dt id="Germline.svCalling.gridss.threads"><a href="#Germline.svCalling.gridss.threads">Germline.svCalling.gridss.threads</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>12</code><br />
+    The number of the threads to use.
+</dd>
+<dt id="Germline.svCalling.gridss.timeMinutes"><a href="#Germline.svCalling.gridss.timeMinutes">Germline.svCalling.gridss.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>ceil((7200 / threads)) + 1800</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Germline.svCalling.gridssSvTyped.dockerImage"><a href="#Germline.svCalling.gridssSvTyped.dockerImage">Germline.svCalling.gridssSvTyped.dockerImage</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"quay.io/biocontainers/bioconductor-structuralvariantannotation:1.10.0--r41hdfd78af_0"</code><br />
+    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+</dd>
+<dt id="Germline.svCalling.gridssSvTyped.memory"><a href="#Germline.svCalling.gridssSvTyped.memory">Germline.svCalling.gridssSvTyped.memory</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"32GiB"</code><br />
+    The amount of memory this job will use.
+</dd>
+<dt id="Germline.svCalling.gridssSvTyped.timeMinutes"><a href="#Germline.svCalling.gridssSvTyped.timeMinutes">Germline.svCalling.gridssSvTyped.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>240</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.svCalling.manta.timeMinutes"><a href="#Germline.svCalling.manta.timeMinutes">Germline.svCalling.manta.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>60</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>2880</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.svCalling.mateclever.cleverMaxDelLength"><a href="#Germline.svCalling.mateclever.cleverMaxDelLength">Germline.svCalling.mateclever.cleverMaxDelLength</a></dt>
@@ -1932,7 +2177,7 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.mateclever.memory"><a href="#Germline.svCalling.mateclever.memory">Germline.svCalling.mateclever.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"15G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"250GiB"</code><br />
     The memory required to run the programs.
 </dd>
 <dt id="Germline.svCalling.mateclever.threads"><a href="#Germline.svCalling.mateclever.threads">Germline.svCalling.mateclever.threads</a></dt>
@@ -1942,13 +2187,8 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.mateclever.timeMinutes"><a href="#Germline.svCalling.mateclever.timeMinutes">Germline.svCalling.mateclever.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>600</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>2880</code><br />
     The maximum amount of time the job will run in minutes.
-</dd>
-<dt id="Germline.svCalling.newId"><a href="#Germline.svCalling.newId">Germline.svCalling.newId</a></dt>
-<dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"\'%CHROM\\_%POS\'"</code><br />
-    Assign ID on the fly (e.g. --set-id +'%CHROM\_%POS').
 </dd>
 <dt id="Germline.svCalling.removeFpDupDel.exclude"><a href="#Germline.svCalling.removeFpDupDel.exclude">Germline.svCalling.removeFpDupDel.exclude</a></dt>
 <dd>
@@ -1962,8 +2202,13 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.removeFpDupDel.memory"><a href="#Germline.svCalling.removeFpDupDel.memory">Germline.svCalling.removeFpDupDel.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Germline.svCalling.removeFpDupDel.samples"><a href="#Germline.svCalling.removeFpDupDel.samples">Germline.svCalling.removeFpDupDel.samples</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    A list of sample names to include.
 </dd>
 <dt id="Germline.svCalling.removeFpDupDel.timeMinutes"><a href="#Germline.svCalling.removeFpDupDel.timeMinutes">Germline.svCalling.removeFpDupDel.timeMinutes</a></dt>
 <dd>
@@ -1977,8 +2222,13 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.removeMisHomRR.memory"><a href="#Germline.svCalling.removeMisHomRR.memory">Germline.svCalling.removeMisHomRR.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"256MiB"</code><br />
     The amount of memory this job will use.
+</dd>
+<dt id="Germline.svCalling.removeMisHomRR.samples"><a href="#Germline.svCalling.removeMisHomRR.samples">Germline.svCalling.removeMisHomRR.samples</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>[]</code><br />
+    A list of sample names to include.
 </dd>
 <dt id="Germline.svCalling.removeMisHomRR.timeMinutes"><a href="#Germline.svCalling.removeMisHomRR.timeMinutes">Germline.svCalling.removeMisHomRR.timeMinutes</a></dt>
 <dd>
@@ -1992,18 +2242,28 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.renameSample.memory"><a href="#Germline.svCalling.renameSample.memory">Germline.svCalling.renameSample.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"9G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"9GiB"</code><br />
     The memory required to run the programs.
 </dd>
 <dt id="Germline.svCalling.renameSample.timeMinutes"><a href="#Germline.svCalling.renameSample.timeMinutes">Germline.svCalling.renameSample.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputVcf,"G") * 2))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputVcf,"GiB") * 2))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
-<dt id="Germline.svCalling.setId.annsFile"><a href="#Germline.svCalling.setId.annsFile">Germline.svCalling.setId.annsFile</a></dt>
+<dt id="Germline.svCalling.runClever"><a href="#Germline.svCalling.runClever">Germline.svCalling.runClever</a></dt>
 <dd>
-    <i>File? </i><br />
-    Bgzip-compressed and tabix-indexed file with annotations (see man page for details).
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Whether or not to run clever.
+</dd>
+<dt id="Germline.svCalling.runDupHold"><a href="#Germline.svCalling.runDupHold">Germline.svCalling.runDupHold</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>false</code><br />
+    Option to run duphold annotation and filter FP deletions and duplications.
+</dd>
+<dt id="Germline.svCalling.runSmoove"><a href="#Germline.svCalling.runSmoove">Germline.svCalling.runSmoove</a></dt>
+<dd>
+    <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
+    Whether or not to run smoove.
 </dd>
 <dt id="Germline.svCalling.setId.collapse"><a href="#Germline.svCalling.setId.collapse">Germline.svCalling.setId.collapse</a></dt>
 <dd>
@@ -2047,7 +2307,7 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.setId.memory"><a href="#Germline.svCalling.setId.memory">Germline.svCalling.setId.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"4GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.svCalling.setId.noVersion"><a href="#Germline.svCalling.setId.noVersion">Germline.svCalling.setId.noVersion</a></dt>
@@ -2097,12 +2357,12 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.setId.timeMinutes"><a href="#Germline.svCalling.setId.timeMinutes">Germline.svCalling.setId.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>60 + ceil(size(inputFile,"G"))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.svCalling.smoove.memory"><a href="#Germline.svCalling.smoove.memory">Germline.svCalling.smoove.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"15G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"15GiB"</code><br />
     The memory required to run the programs.
 </dd>
 <dt id="Germline.svCalling.smoove.timeMinutes"><a href="#Germline.svCalling.smoove.timeMinutes">Germline.svCalling.smoove.timeMinutes</a></dt>
@@ -2112,12 +2372,12 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.sort.memory"><a href="#Germline.svCalling.sort.memory">Germline.svCalling.sort.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"256M"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"5GiB"</code><br />
     The amount of memory this job will use.
 </dd>
 <dt id="Germline.svCalling.sort.timeMinutes"><a href="#Germline.svCalling.sort.timeMinutes">Germline.svCalling.sort.timeMinutes</a></dt>
 <dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G"))</code><br />
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil(size(inputFile,"G")) * 5</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.svCalling.survivor.breakpointDistance"><a href="#Germline.svCalling.survivor.breakpointDistance">Germline.svCalling.survivor.breakpointDistance</a></dt>
@@ -2132,7 +2392,7 @@ Germline.
 </dd>
 <dt id="Germline.svCalling.survivor.memory"><a href="#Germline.svCalling.survivor.memory">Germline.svCalling.survivor.memory</a></dt>
 <dd>
-    <i>String </i><i>&mdash; Default:</i> <code>"24G"</code><br />
+    <i>String </i><i>&mdash; Default:</i> <code>"24GiB"</code><br />
     The memory required to run the programs.
 </dd>
 <dt id="Germline.svCalling.survivor.minSize"><a href="#Germline.svCalling.survivor.minSize">Germline.svCalling.survivor.minSize</a></dt>
@@ -2145,11 +2405,6 @@ Germline.
     <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
     A boolean to include strand type of an SV to be merged.
 </dd>
-<dt id="Germline.svCalling.survivor.suppVecs"><a href="#Germline.svCalling.survivor.suppVecs">Germline.svCalling.survivor.suppVecs</a></dt>
-<dd>
-    <i>Int </i><i>&mdash; Default:</i> <code>2</code><br />
-    The minimum number of SV callers to support the merging.
-</dd>
 <dt id="Germline.svCalling.survivor.svType"><a href="#Germline.svCalling.survivor.svType">Germline.svCalling.survivor.svType</a></dt>
 <dd>
     <i>Boolean </i><i>&mdash; Default:</i> <code>true</code><br />
@@ -2158,6 +2413,21 @@ Germline.
 <dt id="Germline.svCalling.survivor.timeMinutes"><a href="#Germline.svCalling.survivor.timeMinutes">Germline.svCalling.survivor.timeMinutes</a></dt>
 <dd>
     <i>Int </i><i>&mdash; Default:</i> <code>60</code><br />
+    The maximum amount of time the job will run in minutes.
+</dd>
+<dt id="Germline.svCalling.svtypes"><a href="#Germline.svCalling.svtypes">Germline.svCalling.svtypes</a></dt>
+<dd>
+    <i>Array[String] </i><i>&mdash; Default:</i> <code>["DEL", "DUP", "INS", "INV", "BND"]</code><br />
+    List of svtypes to be further processed and output by the pipeline.
+</dd>
+<dt id="Germline.tabix.dockerImage"><a href="#Germline.tabix.dockerImage">Germline.tabix.dockerImage</a></dt>
+<dd>
+    <i>String </i><i>&mdash; Default:</i> <code>"quay.io/biocontainers/tabix:0.2.6--ha92aebf_0"</code><br />
+    The docker image used for this task. Changing this may result in errors which the developers may choose not to address.
+</dd>
+<dt id="Germline.tabix.timeMinutes"><a href="#Germline.tabix.timeMinutes">Germline.tabix.timeMinutes</a></dt>
+<dd>
+    <i>Int </i><i>&mdash; Default:</i> <code>1 + ceil((size(inputFile,"GiB") * 2))</code><br />
     The maximum amount of time the job will run in minutes.
 </dd>
 <dt id="Germline.useBwaKit"><a href="#Germline.useBwaKit">Germline.useBwaKit</a></dt>
@@ -2176,13 +2446,12 @@ Germline.
 The following inputs should ***not*** be set, even though womtool may
 show them as being available inputs.
 
-* Germline.DONOTDEFINE
 * Germline.sampleWorkflow.DONOTDEFINE
-* Germline.sampleWorkflow.qualityControl.FastqcRead1.noneFile
 * Germline.sampleWorkflow.qualityControl.FastqcRead1.noneArray
-* Germline.sampleWorkflow.qualityControl.FastqcRead2.noneFile
+* Germline.sampleWorkflow.qualityControl.FastqcRead1.noneFile
 * Germline.sampleWorkflow.qualityControl.FastqcRead2.noneArray
-* Germline.sampleWorkflow.qualityControl.FastqcRead1After.noneFile
+* Germline.sampleWorkflow.qualityControl.FastqcRead2.noneFile
 * Germline.sampleWorkflow.qualityControl.FastqcRead1After.noneArray
-* Germline.sampleWorkflow.qualityControl.FastqcRead2After.noneFile
+* Germline.sampleWorkflow.qualityControl.FastqcRead1After.noneFile
 * Germline.sampleWorkflow.qualityControl.FastqcRead2After.noneArray
+* Germline.sampleWorkflow.qualityControl.FastqcRead2After.noneFile
