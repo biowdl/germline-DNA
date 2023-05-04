@@ -9,7 +9,7 @@ This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
 
-development
+version 5.0.0
 ---------------------------
 + Small changes were made to support miniwdl and miniwdl is now the recommended
   tool to run this pipeline.
