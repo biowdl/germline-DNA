@@ -19,7 +19,49 @@ developed by the SASC team
 at [Leiden University Medical Center](https://www.lumc.nl/).
 
 ## Usage
-This workflow can be run using
+
+### MiniWDL
+For local and HPC usage we recommend using [miniwdl](
+https://github.com/chanzuckerberg/miniwdl). Miniwdl can run on HPC clusters 
+using the [miniwdl-slurm](https://github.com/miniwdl-ext/miniwdl-slurm) 
+extension.
+
+First download the latest version of the workflow zip file from
+the [releases page](https://github.com/biowdl/germline-DNA/releases).
+
+
+The workflow can then be started with the following command:
+
+```bash
+miniwdl run \
+  --cfg miniwdl.cfg \
+  -i inputs.json \
+  -d output/. \
+  <workflow>_v<version>.zip
+
+```
+`output/.` ensures the output ends up in the directory called `output`. If the
+`.` is omitted, miniwdl will create a subfolder.
+
+`miniwdl.cfg` contains at least the following settings:
+
+```
+[file_io]
+allow_any_input=true
+copy_input_files_for=["MultiQC"]
+use_relative_output_paths=true  # This will lead to a predictable output structure
+
+[task_runtime]
+as_user = true
+```
+Miniwdl also allows setting global configuration values. See the 
+[miniwdl documentation on configuration](
+https://miniwdl.readthedocs.io/en/latest/runner_reference.html#configuration) 
+for more details.
+
+
+### Cromwell
+This workflow can also be run using
 [Cromwell](http://cromwell.readthedocs.io/en/stable/):
 
 First download the latest version of the workflow wdl file(s)
@@ -59,22 +101,32 @@ For an overview of all available inputs, see the following pages:
 - [germline](./germline-inputs.html)
 - [somatic](./somatic-inputs.html)
 
-Replace `<workflow>` with either `Germline` or `Somatic`.
+Replace `<workflow>` with either `Germline` or `Somatic`. 
 
 ```json
+{
+    "<workflow>.dbsnpVCF": "A path to a dbSNP VCF file.",
+    "<workflow>.sampleConfigFile": "A sample configuration file (see below).",
+    "<workflow>.referenceFasta": "A path to a reference fasta.",
+    "<workflow>.dockerImagesFile": "A file listing the used docker images."
+}
+```
+
+The above omits the index files, which are automatically created if not
+provided. If you want to use a custom BWA index (for instance, using an alt 
+file for use with bwa-kit) you can specify it. Other indexes can also be given
+to omit the indexing tasks:
+
+```json 
 {
     "<workflow>.bwaIndex": {
         "fastaFile": "A path to the fasta file from the bwa index.",
         "indexFiles": "A list containing the other bwa index files."
     },
-    "<workflow>.dbsnpVCF": "A path to a dbSNP VCF file.",
     "<workflow>.dbsnpVCFIndex": "The path to the index (.tbi) file associated with the dbSNP VCF.",
-    "<workflow>.sampleConfigFile": "A sample configuration file (see below).",
-    "<workflow>.referenceFasta": "A path to a reference fasta.",
     "<workflow>.referenceFastaFai": "The path to the index associated with the reference fasta.",
-    "<workflow>.referenceFastaDict": "The path to the dict file associated with the reference fasta.",
-    "<workflow>.dockerImagesFile": "A file listing the used docker images."
-}
+    "<workflow>.referenceFastaDict": "The path to the dict file associated with the reference fasta."
+}    
 ```
 
 Alternatively you can specify an index for bwa-mem2. When you do so, bwa-mem2
@@ -135,6 +187,13 @@ Some additional inputs which may be of interest are:
   "<workflow>.useBwaKit": "Whether bwakit should be used instead of plain BWA mem, this will required an '.alt' file to be present in the index."
 }
 ```
+#### UMI
+
+In case UMI deduplication needs to be performed `"<workflow>.umiDeduplication": true`
+needs to be set in the inputs JSON file. 
+The FASTQ files need to be processed such that the UMI is appended to the 
+read ID. [umi-tools extract](https://umi-tools.readthedocs.io/en/latest/reference/extract.html) 
+can be used to perform this task.
 
 #### Sample configuration
 ##### Verification
