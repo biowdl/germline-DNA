@@ -52,6 +52,7 @@ workflow Somatic {
         Boolean runMutect2 = true
         Boolean runManta = true
         Boolean runCombineVariants = false
+        Boolean runMultiQC = true
         Int scatterSizeMillions = 1000
 
         File? regions
@@ -245,16 +246,18 @@ workflow Somatic {
         }
     }
 
-    call multiqc.MultiQC as multiqcTask {
-        input:
-            reports = flatten(sampleWorkflow.reports),
-            outDir = outputDir,
-            dockerImage = dockerImages["multiqc"]
+    if (runMultiQC) {
+        call multiqc.MultiQC as multiqcTask {
+            input:
+                reports = flatten(sampleWorkflow.reports),
+                outDir = outputDir,
+                dockerImage = dockerImages["multiqc"]
+        }
     }
 
     output {
         File dockerImagesList = convertDockerImagesFile.json
-        File multiqcReport = multiqcTask.multiqcReport
+        File? multiqcReport = multiqcTask.multiqcReport
         Array[File] recalibratedBams = sampleWorkflow.recalibratedBam
         Array[File] reports = flatten(sampleWorkflow.reports)
         Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
@@ -329,6 +332,7 @@ workflow Somatic {
         runMutect2: {description: "Whether or not to run Mutect2.", category: "common"}
         runManta: {description: "Whether or not manta should be run as part of the Strelka pipeline.", category: "common"}
         runCombineVariants: {description: "Whether or not to combine the variant calling results into one VCF file.", category: "advanced"}
+        runMultiQC: {description: "Whether or not to run multiQC", category: "advanced"}
         scatterSizeMillions:{description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.", category: "advanced"}
         regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
         cnvPanelOfNormals: {description: "The panel of normals file to be used for CNV calling. If not provided (and performCnvCalling is set to true) then this will be generated on the fly using the samples lacking a control sample in the samplesheet.", category: "common"}

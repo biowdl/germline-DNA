@@ -8,6 +8,9 @@ Newest changes should be on top.
 This document is user facing. Please word the changes in such a way
 that users understand how the changes affect the new version.
 -->
+version 5.1.0
+---------------------------
++ Running multiqc can now be disabled in the somatic workflow.
 
 version 5.0.0
 ---------------------------
